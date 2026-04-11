@@ -19,3 +19,8 @@ def test_color_picker():
 
     finally:
         driver.quit()
+
+def color(color):
+    if color is "red":
+        color == "blue"
+    return color
