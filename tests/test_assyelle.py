@@ -1,14 +1,11 @@
 import time
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 def test_web_form():
-    try:
         driver = webdriver.Chrome()
         driver.get("https://www.selenium.dev/selenium/web/web-form.html")
-        time.sleep(4)
-        driver.implicitly_wait(0.5)
+        driver.implicitly_wait(4)
 
         text_box = driver.find_element(by=By.NAME, value="my-text")
         submit_button = driver.find_element(by=By.CSS_SELECTOR, value="button")
@@ -22,5 +19,4 @@ def test_web_form():
 
         assert "Received!" in text
 
-    finally:
         driver.quit()
