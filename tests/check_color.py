@@ -19,3 +19,4 @@ def test_color_picker():
 
     finally:
         driver.quit()
+
