@@ -20,7 +20,7 @@ try:
 
     element_textarea = driver.find_element(By.CSS_SELECTOR, "textarea[name='my-textarea']")
     element_textarea.clear()
-    element_textarea.send_keys("Текстовый пример")
+    element_textarea.send_keys("Теcтовое поле")
 
 
 
@@ -28,9 +28,7 @@ try:
 
     assert element_text_input.get_attribute("value") == "Тестовый пример"
     assert element_password.get_attribute("value") == "Qwery"
-    assert element_textarea.get_attribute("value") == "Текстовый пример"
+    assert element_textarea.get_attribute("value") == "Тестовое поле"
 
 finally:
     driver.quit()
-
-
