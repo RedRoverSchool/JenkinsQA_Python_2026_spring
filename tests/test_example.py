@@ -8,6 +8,10 @@ def test_python_org_title(browser):
     assert "Python" in browser.title
 
 def test_python_org_search_input(browser):
+    """Тест проверки заголовка страницы"""
+    browser.get("https://www.python.org/")
+    assert "Python" in browser.title
+
     """Тест заполнения поля поиска"""
     browser.get("https://www.python.org/")
     
