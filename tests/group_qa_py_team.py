@@ -45,7 +45,26 @@ def test_jana_product_title_matches_between_plp_and_pdp():
     driver.quit()
 
 
+def test_arina_required_field(browser):
 
+    browser.get("https://testauto.md/")
+    time.sleep(2)
+
+    element = browser.find_element(By.ID, "wpforms-804-field_1")
+    assert element.is_displayed(), "Element is not displayed"
+    element.click()
+    time.sleep(2)
+    element.send_keys("Test")
+    time.sleep(2)
+
+    next = browser.find_element(By.XPATH, "//button[normalize-space()='Next']")
+    next.click()
+    time.sleep(3)
+
+    assert "required" in browser.page_source.lower(), \
+        "Error message is not displayed"
+
+    browser.quit()
 
 
 
