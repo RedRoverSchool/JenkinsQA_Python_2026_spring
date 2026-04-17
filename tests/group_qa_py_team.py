@@ -44,7 +44,17 @@ def test_jana_product_title_matches_between_plp_and_pdp():
 
     driver.quit()
 
+def test_alinasuomi():
+    driver = webdriver.Chrome()
+    username = "Alina"
 
+    driver.get("https://www.saucedemo.com/")
+
+    user_name_input = driver.find_element(By.NAME, "user-name")
+
+    user_name_input.send_keys(username)
+    time.sleep(3)
+    assert user_name_input.get_attribute("value") == username
 
 
 
