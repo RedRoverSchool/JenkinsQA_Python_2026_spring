@@ -1,4 +1,3 @@
-
 from selenium.webdriver.common.by import By
 
 def test_empty_item_mame(browser):
