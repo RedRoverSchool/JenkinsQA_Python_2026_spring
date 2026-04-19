@@ -55,8 +55,3 @@ def get_browser() -> str:
         raise ValueError(f"Unsupported browser '{browser_name}'. Only 'chrome' is supported.")
 
     return browser_name
-
-
-print(get_options())
-print(get_browser())
-print(get_user_name())
