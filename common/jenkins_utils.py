@@ -12,9 +12,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 
 try:
-    from .project_utils import ProjectUtils
+    from .project_utils import get_password, get_url, get_user_name
 except ImportError:
-    from project_utils import ProjectUtils
+    from project_utils import get_password, get_url, get_user_name
 
 
 @dataclass(frozen=True)
@@ -65,7 +65,7 @@ class JenkinsUtils:
     @classmethod
     def _get_header_authorization(cls) -> tuple[str, str]:
         if cls._header_authorization is None:
-            credentials = f"{ProjectUtils.get_user_name()}:{ProjectUtils.get_password()}"
+            credentials = f"{get_user_name()}:{get_password()}"
             encoded_credentials = base64.b64encode(credentials.encode("utf-8")).decode("ascii")
             cls._header_authorization = ("Authorization", f"Basic {encoded_credentials}")
 
@@ -75,12 +75,12 @@ class JenkinsUtils:
     def _get_header_crumb(cls) -> tuple[str, str]:
         if cls._header_crumb is None:
             json_response = cls._get_http(
-                f"{ProjectUtils.get_url()}crumbIssuer/api/json",
+                f"{get_url()}crumbIssuer/api/json",
                 headers=[cls._get_header_authorization()],
             )
             if json_response.status_code == 403:
                 raise RuntimeError(
-                    f'Authorization does not work with user: "{ProjectUtils.get_user_name()}"'
+                    f'Authorization does not work with user: "{get_user_name()}"'
                 )
             if json_response.status_code != 200:
                 raise RuntimeError("Something went wrong while clearing data")
@@ -124,7 +124,7 @@ class JenkinsUtils:
 
     @classmethod
     def _get_page(cls, uri: str) -> str:
-        page_response = cls._get_http(f"{ProjectUtils.get_url()}{uri}", headers=cls._get_default_headers())
+        page_response = cls._get_http(f"{get_url()}{uri}", headers=cls._get_default_headers())
         if page_response.status_code != 200:
             raise RuntimeError("Something went wrong while clearing data")
 
@@ -133,11 +133,11 @@ class JenkinsUtils:
     @classmethod
     def _delete_by_link(cls, link: str, names: set[str], crumb: str) -> None:
         for name in names:
-            cls._post_http(f"{ProjectUtils.get_url()}{link % name}", crumb)
+            cls._post_http(f"{get_url()}{link % name}", crumb)
 
     @classmethod
     def _reset_theme(cls) -> None:
-        url = f"{ProjectUtils.get_url()}user/{ProjectUtils.get_user_name()}/appearance/configSubmit"
+        url = f"{get_url()}user/{get_user_name()}/appearance/configSubmit"
         json_payload = (
             '{"userProperty0":{"theme":{"value":"0","stapler-class":'
             '"io.jenkins.plugins.thememanager.none.NoOpThemeManagerFactory",'
@@ -165,7 +165,7 @@ class JenkinsUtils:
             cls._get_crumb_as_string(),
         )
 
-        user_name = ProjectUtils.get_user_name()
+        user_name = get_user_name()
         view_page = cls._get_page("me/my-views/view/all/")
         cls._delete_by_link(
             f"user/{user_name}/my-views/view/%s/doDelete",
@@ -181,7 +181,7 @@ class JenkinsUtils:
     def _delete_users(cls) -> None:
         user_page = cls._get_page("manage/securityRealm/")
         users = cls._get_substrings_from_page(user_page, 'href="user/', '/"')
-        users.discard(ProjectUtils.get_user_name())
+        users.discard(get_user_name())
         cls._delete_by_link(
             "manage/securityRealm/user/%s/doDelete",
             users,
@@ -207,7 +207,7 @@ class JenkinsUtils:
             f"description=&Submit=&{crumb}&"
             f'json=%7B%22description%22%3A+%22%22%2C+%22Submit%22%3A+%22%22%2C+%22Jenkins-Crumb%22%3A+%22{crumb}%22%7D'
         )
-        cls._post_http(f"{ProjectUtils.get_url()}{uri}", body)
+        cls._post_http(f"{get_url()}{uri}", body)
 
     @classmethod
     def _delete_main_description(cls) -> None:
@@ -233,7 +233,7 @@ class JenkinsUtils:
             f"system_message=&{crumb}&"
             f'json=%7B%22system_message%22%3A%22%22%2C%22Jenkins-Crumb%22%3A%22{crumb}%22%7D'
         )
-        cls._post_http(f"{ProjectUtils.get_url()}manage/configSubmit", body)
+        cls._post_http(f"{get_url()}manage/configSubmit", body)
 
     @classmethod
     def clear_data(cls) -> None:
@@ -249,8 +249,8 @@ class JenkinsUtils:
 
     @staticmethod
     def login(driver: WebDriver, user_name: str | None = None, password: str | None = None) -> None:
-        login_user = user_name or ProjectUtils.get_user_name()
-        login_password = password or ProjectUtils.get_password()
+        login_user = user_name or get_user_name()
+        login_password = password or get_password()
 
         driver.find_element(By.NAME, "j_username").send_keys(login_user)
         driver.find_element(By.NAME, "j_password").send_keys(login_password)
@@ -258,7 +258,7 @@ class JenkinsUtils:
 
     @staticmethod
     def logout(driver: WebDriver) -> None:
-        driver.get(f"{ProjectUtils.get_url()}logout")
+        driver.get(f"{get_url()}logout")
 
 
 def clear_data() -> None:
