@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
 
+
 def test_empty_item_mame(browser):
     element_button = browser.find_element(By.XPATH, '//a[contains(., "New Item")]')
     element_button.click()
