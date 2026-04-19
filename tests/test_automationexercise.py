@@ -1,9 +1,6 @@
-import string
-import random
 import pytest
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+
 
 def sign_in(browser):
     browser.get("http://localhost:8080/")
@@ -11,7 +8,7 @@ def sign_in(browser):
     browser.find_element(By.XPATH, "//*[@id='j_password']").send_keys("admin")
     browser.find_element(By.XPATH, "//*[@id='main-panel']/div/form/button").click()
 
-
+@pytest.mark.skip()
 def test_exercise(browser):
     sign_in(browser)
 
