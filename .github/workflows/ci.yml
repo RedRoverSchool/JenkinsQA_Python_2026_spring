@@ -46,13 +46,13 @@ jobs:
       - name: Wait for the Jenkins
         run: ./.github/wait-for-jenkins.sh
 
-#      - name: Pytest
-#        run: pytest -v -s --ignore=tests/old/
-#        env:
-#          JENKINS_USERNAME: ${{ secrets.ADMIN_USERNAME }}
-#          JENKINS_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-#          JENKINS_HOST: localhost
-#          JENKINS_PORT: 8080
-#          BROWSER_NAME: chrome
-#          BROWSER_OPTIONS_CHROME: --remote-allow-origins=*;--disable-gpu;--no-sandbox;--disable-dev-shm-usage;--headless=new;--window-size=1920,1080
-#          RUN_CI: true
+      - name: Pytest
+        run: pytest -v -s --ignore=tests/old/
+        env:
+          JENKINS_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+          JENKINS_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          JENKINS_HOST: localhost
+          JENKINS_PORT: 8080
+          BROWSER_NAME: chrome
+          BROWSER_OPTIONS_CHROME: --remote-allow-origins=*;--disable-gpu;--no-sandbox;--disable-dev-shm-usage;--headless=new;--window-size=1920,1080
+          RUN_CI: true
