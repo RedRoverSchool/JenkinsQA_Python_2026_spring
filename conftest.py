@@ -13,7 +13,17 @@ if not load_dotenv():
 
 @pytest.fixture(scope="session")
 def chrome_options() -> list[str]:
-    return [option.strip() for option in os.getenv("BROWSER_OPTIONS_CHROME", "").split(";") if option.strip()]
+    options = [
+        "--disable-blink-features=AutomationControlled",
+        "--disable-infobars",
+        "--disable-notifications",
+        "--password-store=basic",
+        "--use-mock-keychain",
+    ]
+    env_options = os.getenv("BROWSER_OPTIONS_CHROME", "")
+    if env_options:
+        options.extend([opt.strip() for opt in env_options.split(";") if opt.strip()])
+    return options
 
 
 @pytest.fixture(scope="session")
