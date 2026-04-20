@@ -12,7 +12,10 @@ PIPELINE_ITEM_TYPE = (By.XPATH, "((//ul[@class='j-item-options'])[1]//li)[1]")
 OK_BUTTON = (By.XPATH, "//button[@id='ok-button']")
 SUBMIT_BUTTON = (By.XPATH, "//button[@name='Submit']")
 JOB_TITLE = (By.XPATH, "//h1[@class='job-index-headline page-headline']")
-DELETE_JOB = (By.XPATH, "//div[@id='tasks']/*[6]")
+DELETE_JOB = (By.XPATH, "//a[contains(@data-title, 'Delete')]")
+NOT_FOUND_JOB_TITLE = (By.XPATH, "//h2[text()='Not Found']")
+CONFIRM_DELETE_BUTTON = (By.XPATH, "//button[@data-id='ok']")
+CANCEL_DELETE_BUTTON = (By.XPATH, "//button[@data-id='cancel']")
 
 @pytest.fixture
 def click(browser):
@@ -27,35 +30,55 @@ def fill(browser):
     return filling
 
 @pytest.fixture
-def check_visability(browser):
+def check_visibility(browser):
     def checking(element, duration):
         WebDriverWait(browser, duration).until(EC.visibility_of_element_located(element))
     return checking
 
-def random_name():
+def generate_project_name():
     chars = string.ascii_letters + string.digits
     return ''.join(random.choice(chars) for _ in range(10))
 
-def create_job(click, fill, check_visability, current_project_name):
+def create_job(click, fill, check_visibility, current_project_name):
+
     click(NEW_ITEM_BUTTON, 2)
+
     fill(INPUT_NEW_ITEM_FIELD, current_project_name, 5)
     click(PIPELINE_ITEM_TYPE, 2)
     click(OK_BUTTON, 2)
+
     click(SUBMIT_BUTTON, 2)
-    check_visability(JOB_TITLE, 5)
+
+    check_visibility(JOB_TITLE, 5)
     click(JENKINS_LOGO, 2)
-    check_visability(JENKINS_LOGO, 2)
+    check_visibility(JENKINS_LOGO, 2)
 
-def test_delete_account(browser, click, fill, check_visability):
+def test_delete_job(browser, click, fill, check_visibility):
 
-    current_project_name = random_name()
+    current_project_name = generate_project_name()
 
-    create_job(click, fill, check_visability, current_project_name)
+    create_job(click, fill, check_visibility, current_project_name)
     browser.get(browser.current_url + f"/job/{current_project_name}/")
+
     click(DELETE_JOB, 2)
-    click((By.XPATH, "//button[@data-id='ok']"), 2)
+    click(CONFIRM_DELETE_BUTTON, 2)
+
     browser.get(browser.current_url + f"/job/{current_project_name}/")
-    check_visability((By.XPATH, "//h2[text()='Not Found']"), 5)
+    check_visibility(NOT_FOUND_JOB_TITLE, 5)
 
-    assert browser.find_element(By.XPATH, "//h2[text()='Not Found']").text == "Not Found"
+    assert browser.find_element(*NOT_FOUND_JOB_TITLE).text == "Not Found"
 
+def test_cancel_delete_job(browser, click, fill, check_visibility):
+
+    current_project_name = generate_project_name()
+
+    create_job(click, fill, check_visibility, current_project_name)
+    browser.get(browser.current_url + f"/job/{current_project_name}/")
+
+    click(DELETE_JOB, 2)
+    click(CANCEL_DELETE_BUTTON, 2)
+
+    browser.refresh()
+    check_visibility(JOB_TITLE, 5)
+
+    assert browser.find_element(*JOB_TITLE).text == current_project_name
