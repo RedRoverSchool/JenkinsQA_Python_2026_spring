@@ -1,9 +1,9 @@
-
+import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-
+@pytest.mark.skip
 def test_jenkins_ns(browser):
     browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
 

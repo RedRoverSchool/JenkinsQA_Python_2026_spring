@@ -1,7 +1,5 @@
-import pytest
 from selenium.webdriver.common.by import By
 
-@pytest.mark.skip
 def test_create_disabled_pipeline(browser):
     browser.find_element(By.LINK_TEXT, "New Item").click()
 
