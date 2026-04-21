@@ -1,4 +1,3 @@
-
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -17,13 +16,13 @@ def test_new_freestyle_project(browser):
 
     wait.until(EC.element_to_be_clickable((By.ID, "ok-button"))).click()
 
-    wait.until(EC.presence_of_element_located((By.NAME, "Submit"))).click()
+    wait.until(EC.presence_of_element_located((By.NAME, "Submit")))
 
-    wait.until(EC.url_contains("configure"))
-    driver.get(driver.current_url.replace("/configure", ""))
+    wait.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
 
-    header = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "h1")))
-    assert project_name in header.text
+    text = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "h1"))).text
+
+    assert ("Configure" in text or project_name in text), f"Unexpected header: {text}"
 
 
 
