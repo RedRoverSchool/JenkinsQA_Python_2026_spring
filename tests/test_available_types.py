@@ -3,7 +3,7 @@ import pytest
 from selenium.webdriver.common.by import By
 
 def test_available_types(browser):
-    browser.get("http://localhost:8080/")
+
     browser.find_element(By.XPATH,"//a[@href='/view/all/newJob']").click()
 
 
