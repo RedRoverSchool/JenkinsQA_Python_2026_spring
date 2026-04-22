@@ -27,8 +27,8 @@ def test_available_types(browser):
 
     element_multibranch_project = browser.find_element(By.XPATH, '//li[@class="org_jenkinsci_plugins_workflow_multibranch_WorkflowMultiBranchProject"]')
     is_enabled = element_multibranch_project.is_enabled()
-    print(f"MultiBranchProject is enabled: {is_enabled}  and  is displayed : {is_displayed}")
+    print(f"MultiBranch Project is enabled: {is_enabled}  and  is displayed : {is_displayed}")
 
     element_organization_folder = browser.find_element(By.XPATH,'//li[@class="jenkins_branch_OrganizationFolder"]')
     is_enabled = element_organization_folder.is_enabled()
-    print(f"OrganizationFolder is enabled: {is_enabled}  and  is displayed : {is_displayed}")
+    print(f"Organization Folder is enabled: {is_enabled}  and  is displayed : {is_displayed}")
