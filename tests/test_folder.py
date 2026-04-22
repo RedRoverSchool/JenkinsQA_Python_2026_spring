@@ -1,5 +1,4 @@
 import pytest
-@pytest.mark.skip()
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -105,6 +104,7 @@ def test_create_folder_with_empty_name_negative(browser):
     assert browser.find_element(By.ID, "itemname-required").text == "» This field cannot be empty, please enter a valid name"
     assert not browser.find_element(By.ID, "ok-button").is_enabled()
 
+@pytest.mark.skip()
 @pytest.mark.parametrize("character", ["/", "\\", "|", "?", "*", ":", ">", "<"])
 def test_create_folder_with_invalid_characters_negative(browser, character):
     browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()

@@ -1,4 +1,3 @@
-@pytest.mark.skip()
 import time
 
 from selenium.webdriver.common.by import By
@@ -6,7 +5,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 freestyle_name = "Freestyle_Name"
-
+@pytest.mark.skip()
 def test_create_freestyle_project(browser):
     browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
     browser.find_element(By.ID, "name").send_keys(freestyle_name)
