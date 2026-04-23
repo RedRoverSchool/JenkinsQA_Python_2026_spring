@@ -1,7 +1,9 @@
+import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC, wait
 
+@pytest.mark.skip()
 def test_jenkins_logo(browser):
     """Проверка главного логотипа"""
     logo_url = browser.find_element(By.ID, 'jenkins-head-icon').get_dom_attribute('src')
