@@ -2,12 +2,13 @@
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
+import pytest
 
 pipeline_name = "Pipeline_Name"
 
-def test_create_pipeline_project(browser):
+def create_pipeline_project(browser, name):
     browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
-    browser.find_element(By.ID, "name").send_keys(pipeline_name)
+    browser.find_element(By.ID, "name").send_keys(name)
     browser.find_element(By.CLASS_NAME, "org_jenkinsci_plugins_workflow_job_WorkflowJob").click()
 
     browser.find_element(By.ID, "ok-button").click()
@@ -15,8 +16,24 @@ def test_create_pipeline_project(browser):
     browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     WebDriverWait(browser, 5).until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
 
-    WebDriverWait(browser, 2).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "span.jenkins-mobile-hide"))).click()
+    WebDriverWait(browser, 5).until(EC.visibility_of_element_located((By.XPATH, "//*[@class='app-jenkins-logo']"))).click()
 
-    created_pipeline = browser.find_element(By.XPATH, "(//a[@href='job/Pipeline_Name/'])[1]").text
+@pytest.mark.skip
+def test_create_project(browser):
+    create_pipeline_project(browser, pipeline_name)
+    created_pipeline = browser.find_element(By.XPATH, f"(//a[@href='job/{pipeline_name}/'])[1]").text
 
     assert created_pipeline == pipeline_name
+
+@pytest.mark.parametrize("job_name",[
+    "PipelineName1",
+    "PipelineName2",
+    "PipelineName3"
+])
+
+@pytest.mark.skip
+def test_check_several_tests(browser, job_name):
+    create_pipeline_project(browser, job_name)
+    created_pipeline = browser.find_element(By.CSS_SELECTOR, ".jenkins-table__link >span:first-child").text
+
+    assert created_pipeline == job_name

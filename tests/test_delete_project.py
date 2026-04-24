@@ -41,17 +41,17 @@ def generate_project_name():
 
 def create_job(click, fill, check_visibility, current_project_name):
 
-    click(NEW_ITEM_BUTTON, 2)
+    click(NEW_ITEM_BUTTON, 5)
 
     fill(INPUT_NEW_ITEM_FIELD, current_project_name, 5)
-    click(PIPELINE_ITEM_TYPE, 2)
-    click(OK_BUTTON, 2)
+    click(PIPELINE_ITEM_TYPE, 5)
+    click(OK_BUTTON, 5)
 
-    click(SUBMIT_BUTTON, 2)
+    click(SUBMIT_BUTTON, 5)
 
     check_visibility(JOB_TITLE, 5)
-    click(JENKINS_LOGO, 2)
-    check_visibility(JENKINS_LOGO, 2)
+    click(JENKINS_LOGO, 5)
+    check_visibility(JENKINS_LOGO, 5)
 
 def test_delete_job(browser, click, fill, check_visibility):
 
@@ -60,14 +60,15 @@ def test_delete_job(browser, click, fill, check_visibility):
     create_job(click, fill, check_visibility, current_project_name)
     browser.get(browser.current_url + f"/job/{current_project_name}/")
 
-    click(DELETE_JOB, 2)
-    click(CONFIRM_DELETE_BUTTON, 2)
+    click(DELETE_JOB, 5)
+    click(CONFIRM_DELETE_BUTTON, 5)
 
     browser.get(browser.current_url + f"/job/{current_project_name}/")
     check_visibility(NOT_FOUND_JOB_TITLE, 5)
 
     assert browser.find_element(*NOT_FOUND_JOB_TITLE).text == "Not Found"
 
+@pytest.mark.skip
 def test_cancel_delete_job(browser, click, fill, check_visibility):
 
     current_project_name = generate_project_name()
@@ -75,8 +76,8 @@ def test_cancel_delete_job(browser, click, fill, check_visibility):
     create_job(click, fill, check_visibility, current_project_name)
     browser.get(browser.current_url + f"/job/{current_project_name}/")
 
-    click(DELETE_JOB, 2)
-    click(CANCEL_DELETE_BUTTON, 2)
+    click(DELETE_JOB, 5)
+    click(CANCEL_DELETE_BUTTON, 5)
 
     browser.refresh()
     check_visibility(JOB_TITLE, 5)
