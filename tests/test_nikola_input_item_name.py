@@ -70,19 +70,9 @@ def test_valid_input_item_name(browser, valid_name):
 
 
 @pytest.mark.parametrize("invalid_name", [
-    # Пробелы
-    "my item",
-    "my  item",
-    " item",
-    "item ",
-    "my   item   ",
-    " ",
-    "   ",
+    # Пробелы - Jenkins разрешает
 
-    # Русские буквы
-    "моязадача",
-    "моя_задача",
-    "мой item",
+    # Русские буквы - Jenkins разрешает
 
     # Спецсимволы
     "my@item",  # @
@@ -92,32 +82,32 @@ def test_valid_input_item_name(browser, valid_name):
     "my^item",  # ^
     "my&item",  # &
     "my*item",  # *
-    "my(item)",  # ( )
-    "my+item",  # +
-    "my=item",  # =
-    "my~item",  # ~
+    # "my(item)",  # Jenkins разрешает ( )
+    # "my+item",  # Jenkins разрешает +
+    # "my=item",  # Jenkins разрешает =
+    # "my~item",  # Jenkins разрешает ~
     "my:item",  # :
     "my;item",  # ;
     "my<item>",  # < >
-    "my,item",  # ,
-    "my.item",  # .
+    # "my,item",  # Jenkins разрешает ,
+    # "my.item",  # Jenkins разрешает .
     "my?item",  # ?
     "my/item",  # /
     "my\\item",  # \
     "my|item",  # |
     "my[item]",  # [ ]
-    "my{item}",  # { }
-    "my`item",  # `
-    "my'item",  # '
-    'my"item',  # "
+    # "my{item}",  # Jenkins разрешает {}
+    # "my`item",  # Jenkins разрешает `
+    # "my'item",  # Jenkins разрешает '
+    # 'my"item',  # Jenkins разрешает "
     "my!item",  # !
 
     # Пустые
     "",
 
     # Только спецсимволы
-    "---",
-    "___",
+    # "---",
+    # "___",
     "!@#$%",
 ])
 
