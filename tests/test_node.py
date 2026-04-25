@@ -18,6 +18,11 @@ def create_new_node(browser):
 
     browser.find_element(By.XPATH, "//a[@href='../computer/%s/']" % new_node_name.replace(" ", "%20"))
 
+def go_to_node_management_page(browser):
+        browser.find_element(By.ID, "root-action-ManageJenkinsAction").click()
+        browser.find_element(By.XPATH, "//a[@href='computer']").click()
+        browser.find_element(By.XPATH, "//a[@href='../computer/%s/']" % new_node_name.replace(" ", "%20")).click()
+
 def test_create_node(browser):
 
     browser.find_element(By.ID, "root-action-ManageJenkinsAction").click()
@@ -53,3 +58,13 @@ def test_node_configuration(browser, create_new_node):
     actual_attributes.append(browser.find_element(By.XPATH, "//a[@href='/label/%s']" % labels).text)
 
     assert actual_attributes == expect_attributes
+
+def test_mark_node_offline(browser, create_new_node):
+
+    go_to_node_management_page(browser)
+
+    browser.find_element(By.XPATH, "//form [@action='markOffline']").click()
+    browser.find_element(By.XPATH, "//*[@id='main-panel']/form/p/button").click()
+
+    expected_text = browser.find_element(By.CSS_SELECTOR, ".message")
+    assert expected_text.text == "Disconnected by admin"

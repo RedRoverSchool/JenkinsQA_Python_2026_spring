@@ -122,3 +122,26 @@ def test_create_folder_with_invalid_characters_negative(browser, character):
     WebDriverWait(browser,5).until_not(EC.title_contains("New Item"))
     assert browser.find_element(By.TAG_NAME, "h1").text == "Error"
     assert browser.find_element(By.TAG_NAME, "p").text == expected_error
+
+def test_create_folder_with_duplicate_name_in_same_parent_negative(browser):
+    browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
+
+    browser.find_element(By.ID, "name").send_keys(FOLDER_NAME)
+    browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
+    browser.find_element(By.ID, "ok-button").click()
+
+    browser.find_element(By.NAME, "Submit").click()
+
+    logo = WebDriverWait(browser, 5).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "jenkins-mobile-hide"))
+    )
+    browser.execute_script("arguments[0].click();", logo)
+    browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
+
+    browser.find_element(By.ID, "name").send_keys(FOLDER_NAME)
+    browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
+
+    error_message = WebDriverWait(browser, 5).until(
+        EC.visibility_of_element_located((By.ID, "itemname-invalid"))
+    )
+    assert error_message.text == f"» A job already exists with the name ‘{FOLDER_NAME}’"
