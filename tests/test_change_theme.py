@@ -18,9 +18,7 @@ def disable_theme_manager(browser):
 
     theme_manager_plugin = browser.find_element(By.CSS_SELECTOR, 'tr[data-plugin-name="Theme Manager"] input')
     if theme_manager_plugin.get_attribute('checked'):
-        # theme_manager_plugin.click()
-        browser.find_element(By.CSS_SELECTOR, 'tr[data-plugin-name="Theme Manager"] .attach-previous').click()
-        browser.find_element(By.CSS_SELECTOR, 'tr[data-plugin-name="Theme Manager"] input')
+        browser.find_element(By.CSS_SELECTOR, 'tr[data-plugin-name="Theme Manager"] span.jenkins-toggle-switch').click()
         browser.find_element(By.NAME, 'Submit').click()
         WebDriverWait(browser, 60).until(
         EC.visibility_of_element_located((By.XPATH, "//h1[text() = 'Sign in to Jenkins']"))
