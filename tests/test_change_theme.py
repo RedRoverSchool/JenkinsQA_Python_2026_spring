@@ -18,8 +18,11 @@ def disable_theme_manager(browser):
 
     theme_manager_plugin = browser.find_element(By.CSS_SELECTOR, 'tr[data-plugin-name="Theme Manager"] input')
     if theme_manager_plugin.get_attribute('checked'):
+
         browser.find_element(By.CSS_SELECTOR, 'tr[data-plugin-name="Theme Manager"] span.jenkins-toggle-switch').click()
-        browser.find_element(By.NAME, 'Submit').click()
+        #######
+        browser.find_element(By.CSS_SELECTOR, '#needRestart > form > button').click()
+
         WebDriverWait(browser, 60).until(
         EC.visibility_of_element_located((By.XPATH, "//h1[text() = 'Sign in to Jenkins']"))
         )    # ждем долгую перезагрузку дженкинса, неявных 5 секунд ожидания мало.
