@@ -45,8 +45,11 @@ def test_create_from_copy(browser):
     wait.until(
         EC.element_to_be_clickable((By.XPATH, '//button[@value="Save"]'))
     ).click()
+    time.sleep(2)
 
-    browser.find_element(By.ID, 'jenkins-head-icon').click()
+    wait.until(
+        EC.element_to_be_clickable((By.ID, 'jenkins-head-icon'))
+    ).click()
 
     folder = wait.until(EC.visibility_of_element_located((By.LINK_TEXT, 'Folder from copy')))
     assert folder.is_displayed()
