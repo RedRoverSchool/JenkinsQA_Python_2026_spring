@@ -15,7 +15,7 @@ DELETE_JOB = (By.XPATH, "//a[contains(@data-title, 'Delete')]")
 NOT_FOUND_JOB_TITLE = (By.XPATH, "//h2[text()='Not Found']")
 CONFIRM_DELETE_BUTTON = (By.XPATH, "//button[@data-id='ok']")
 CANCEL_DELETE_BUTTON = (By.XPATH, "//button[@data-id='cancel']")
-п
+
 @pytest.fixture
 def click(browser):
     def clicking(element, duration):
