@@ -16,19 +16,19 @@ DELETE_JOB = (By.XPATH, "//a[contains(@data-title, 'Delete')]")
 NOT_FOUND_JOB_TITLE = (By.XPATH, "//h2[text()='Not Found']")
 CONFIRM_DELETE_BUTTON = (By.XPATH, "//button[@data-id='ok']")
 CANCEL_DELETE_BUTTON = (By.XPATH, "//button[@data-id='cancel']")
-@pytest.mark.skip()
+
 @pytest.fixture
 def click(browser):
     def clicking(element, duration):
         WebDriverWait(browser, duration).until(EC.element_to_be_clickable(element)).click()
     return clicking
-@pytest.mark.skip()
+
 @pytest.fixture
 def fill(browser):
     def filling(element, text, duration):
         WebDriverWait(browser, duration).until(EC.visibility_of_element_located(element)).send_keys(text)
     return filling
-@pytest.mark.skip()
+
 @pytest.fixture
 def check_visibility(browser):
     def checking(element, duration):
