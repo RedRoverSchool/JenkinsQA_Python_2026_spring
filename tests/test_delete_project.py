@@ -11,19 +11,19 @@ NEW_ITEM_BUTTON = (By.XPATH, "//a[@it]")
 INPUT_NEW_ITEM_FIELD = (By.XPATH, "//input[@id='name']")
 PIPELINE_ITEM_TYPE = (By.XPATH, "((//ul[@class='j-item-options'])[1]//li)[1]")
 JOB_TITLE = (By.XPATH, "//h1[@class='job-index-headline page-headline']")
-@pytest.mark.skip()
+
 @pytest.fixture
 def click(browser):
     def clicking(element, duration):
         WebDriverWait(browser, duration).until(EC.element_to_be_clickable(element)).click()
     return clicking
-@pytest.mark.skip()
+
 @pytest.fixture
 def fill(browser):
     def filling(element, text, duration):
         WebDriverWait(browser, duration).until(EC.visibility_of_element_located(element)).send_keys(text)
     return filling
-@pytest.mark.skip()
+
 @pytest.fixture
 def check_visibility(browser):
     def checking(element, duration):
