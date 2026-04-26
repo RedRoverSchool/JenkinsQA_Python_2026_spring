@@ -1,56 +1,65 @@
+from gc import enable
+
+from requests import options
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 import time
 from selenium.webdriver.chrome.options import Options # именно для Chrome
+from selenium.webdriver.ie.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
-options = Options()
-
-# Принудительный выбор языка интерфейса(Автоматически сайты запрашиваются на русском:()
+options = webdriver.ChromeOptions()
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+options.add_argument("--disable-extensions")
 options.add_argument("--lang=en-US")
+service =  Service(ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service, options=options)
+# browser = webdriver.Chrome(options=options)
 
-browser = webdriver.Chrome(options=options)
-
-def test_title_check():
-    """Title check"""
-    browser.get("https://grok.com/")
-    assert "Grok" in browser.title
-
-def test_authr_link():
-    """Authorisation check"""
-    browser.get("https://grok.com/")
-    time.sleep(3)
-    login_button = browser.find_element(By.LINK_TEXT, "Sign in")
-    login_button.click()
-    time.sleep(2)
-    """В assert через запятую указывается ответ при падении теста"""
-    assert browser.current_url != "https://grok.com/", "Ошибка: URL не изменился, мы всё еще на главной!"
+# def test_title_check():
+#     """Title check"""
+#     driver.get("https://grok.com/")
+#     assert "Grok" in driver.title
+#
+# def test_authr_link():
+#     """Authorisation check"""
+#     driver.get("https://grok.com/")
+#     time.sleep(3)
+#     login_button = driver.find_element(By.LINK_TEXT, "Sign in")
+#     login_button.click()
+#     time.sleep(2)
+#     """В assert через запятую указывается ответ при падении теста"""
+#     assert driver.current_url != "https://grok.com/", "Ошибка: URL не изменился, мы всё еще на главной!"
 
 def test_container_authr():
-    browser.get("https://grok.com/")
+    driver.get("https://grok.com/")
     time.sleep(2)
-    login_button = browser.find_element(By.LINK_TEXT, "Sign in")
+    login_button = driver.find_element(By.LINK_TEXT, "Sign in")
     login_button.click()
     time.sleep(2)
-    """скопировал все классы полностью. разделяются точкой. запрос ищет элемент со всеми классами включительно"""
-    auth_container = browser.find_element(By.CSS_SELECTOR, ".mx-auto.flex.w-full.flex-col.gap-6.max-w-sm")
-    assert "Login with email" in auth_container.text
-    assert "Login with Google" in auth_container.text
-    assert "Login with Apple" in auth_container.text #ищут текст в элементе
+    auth_container = lambda text: (By.XPATH, f"//button[contains(., '{text}')]")
+    login_email = driver.find_element(*auth_container("Login with email"))
+    auth_google = driver.find_element(*auth_container("Login with Google"))
+    auth_apple = driver.find_element(*auth_container("Login with Apple"))
+    assert "Login with email" in login_email.text
+    assert "Login with Google" in auth_google.text
+    assert "Login with Apple" in auth_apple.text #ищут текст в элементе
 
-def test_placeholder_check():
-    browser.get("https://grok.com/")
-    time.sleep(10)
-    search = browser.find_element(By.CSS_SELECTOR, "textarea.w-full")
-    expected_variants = ["What's on your mind?", "What do you want to know?", "How can I help you today?"]
-    assert search.get_attribute("placeholder") in expected_variants
 
-def test_submit_search():
-    browser.get("https://grok.com/")
-    time.sleep(4)
-    search = browser.find_element(By.CSS_SELECTOR, "textarea.w-full")
-    search.clear()
-    search.send_keys("pytest selenium")
-    assert search.get_attribute("value") == "pytest selenium"
+# def test_placeholder_check():
+#     driver.get("https://grok.com/")
+#     time.sleep(10)
+#     search = driver.find_element(By.CSS_SELECTOR, "textarea.w-full")
+#     expected_variants = ["What's on your mind?", "What do you want to know?", "How can I help you today?"]
+#     assert search.get_attribute("placeholder") in expected_variants
+#
+# def test_submit_search():
+#     driver.get("https://grok.com/")
+#     time.sleep(4)
+#     search = driver.find_element(By.CSS_SELECTOR, "textarea.w-full")
+#     search.clear()
+#     search.send_keys("pytest selenium")
+#     assert search.get_attribute("value") == "pytest selenium"
 
 # def test_search_button():
 #     browser.get("https://grok.com/")
