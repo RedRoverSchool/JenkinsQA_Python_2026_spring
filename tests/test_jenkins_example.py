@@ -10,6 +10,7 @@ def test_welcome(browser):
 
     assert label.text == "Welcome to Jenkins!"
 
+@pytest.mark.dependency()
 def test_welcome2(browser):
     label = browser.find_element(By.CSS_SELECTOR, "div.empty-state-block > h1")
 
