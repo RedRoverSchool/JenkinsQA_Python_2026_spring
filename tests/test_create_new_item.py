@@ -2,7 +2,7 @@ import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-@pytest.mark.skip()
+
 @pytest.mark.parametrize("invalid_char", ["?", "*", "/", "|", "!", "%", "&", ";", ":"])
 def test_create_new_item_validate_unsupported_special_characters(browser, invalid_char):
     wait = WebDriverWait(browser, 10)
