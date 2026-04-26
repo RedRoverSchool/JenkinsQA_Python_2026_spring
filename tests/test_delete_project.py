@@ -29,11 +29,11 @@ def check_visibility(browser):
     def checking(element, duration):
         WebDriverWait(browser, duration).until(EC.visibility_of_element_located(element))
     return checking
-@pytest.mark.skip()
+
 def generate_project_name():
     chars = string.ascii_letters + string.digits
     return ''.join(random.choice(chars) for _ in range(10))
-@pytest.mark.skip()
+
 def create_job(click, fill, check_visibility, current_project_name):
 
     click(NEW_ITEM_BUTTON, 5)
@@ -47,7 +47,7 @@ def create_job(click, fill, check_visibility, current_project_name):
     check_visibility(JOB_TITLE, 5)
     click(JENKINS_LOGO, 5)
     check_visibility(JENKINS_LOGO, 5)
-@pytest.mark.skip()
+
 def test_delete_job(browser, click, fill, check_visibility):
 
     current_project_name = generate_project_name()
@@ -63,7 +63,7 @@ def test_delete_job(browser, click, fill, check_visibility):
 
     assert browser.find_element(By.XPATH, "//h2[text()='Not Found']").text == "Not Found"
 
-@pytest.mark.skip
+
 def test_cancel_delete_job(browser, click, fill, check_visibility):
 
     current_project_name = generate_project_name()
