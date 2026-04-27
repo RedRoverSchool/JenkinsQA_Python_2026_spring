@@ -11,6 +11,6 @@ def test_successful_login(browser):
     browser.find_element(By.CSS_SELECTOR, "#j_password").send_keys("admin")
     browser.find_element(By.XPATH, "//button[@type='submit']").click()
 
-    label = browser.find_element(By.CSS_SELECTOR, "div.empty-state-block > h1")
+    label = browser.find_element(By.XPATH, "//*[@id='main-panel']/div[2]/div/h1").text
 
-    assert "Welcome to Jenkins!" in label.text
+    assert "Welcome to Jenkins!" in label
