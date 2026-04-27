@@ -20,13 +20,11 @@ def check_rest_api_visible(driver):
     assert element.is_displayed()
     assert element.text == "REST API"
 
-@pytest.mark.smoke
 def test_rest_api_on_dashboard(browser):
     """Проверка наличия отображения 'REST API' на главной странице"""
     check_rest_api_visible(browser)
 
 
-@pytest.mark.smoke
 def test_rest_api_on_nodes(browser):
     """Проверка наличия отображения 'REST API' на странице 'Nodes'"""
     browser.find_element(*MANAGE_JENKINS_BUTTON).click()
@@ -35,7 +33,6 @@ def test_rest_api_on_nodes(browser):
     check_rest_api_visible(browser)
 
 
-@pytest.mark.smoke
 def test_rest_api_on_credentials(browser):
     """Проверка наличия отображения 'REST API' на странице 'Credentials'"""
     browser.find_element(*MANAGE_JENKINS_BUTTON).click()

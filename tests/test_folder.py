@@ -1,19 +1,21 @@
 import pytest
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 FOLDER_NAME = "TestFolder"
 
 
+def create_folder(driver, name):
+    driver.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
+    driver.find_element(By.ID, "name").send_keys(name)
+    driver.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
+    driver.find_element(By.ID, "ok-button").click()
+    driver.find_element(By.NAME, "Submit").click()
+
+
 def test_create_folder(browser):
-    browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
-
-    browser.find_element(By.ID, "name").send_keys(FOLDER_NAME)
-    browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
-    browser.find_element(By.ID, "ok-button").click()
-
-    browser.find_element(By.NAME, "Submit").click()
+    create_folder(browser, FOLDER_NAME)
 
     assert f"/job/{FOLDER_NAME}/" in browser.current_url
     assert browser.find_element(By.CLASS_NAME, "job-index-headline").text == FOLDER_NAME
@@ -22,11 +24,8 @@ def test_create_folder(browser):
 def test_create_folder_with_display_name(browser):
     display_name = "Display Folder"
 
-    browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
-
-    browser.find_element(By.ID, "name").send_keys(FOLDER_NAME)
-    browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
-    browser.find_element(By.ID, "ok-button").click()
+    create_folder(browser, FOLDER_NAME)
+    browser.find_element(By.XPATH, "//a[contains(@href, '/configure')]").click()
 
     browser.find_element(By.NAME, "_.displayNameOrNull").send_keys(display_name)
     browser.find_element(By.NAME, "Submit").click()
@@ -37,18 +36,17 @@ def test_create_folder_with_display_name(browser):
          line.startswith("Folder name: ")][0]
     assert folder_name_line == f"Folder name: {FOLDER_NAME}"
 
+
 def test_create_folder_with_description(browser):
     description = "Description"
 
-    browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
-
-    browser.find_element(By.ID, "name").send_keys(FOLDER_NAME)
-    browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
-    browser.find_element(By.ID, "ok-button").click()
+    create_folder(browser, FOLDER_NAME)
+    browser.find_element(By.XPATH, "//a[contains(@href, '/configure')]").click()
 
     browser.find_element(By.NAME, "_.description").send_keys(description)
     browser.find_element(By.NAME, "Submit").click()
     assert browser.find_element(By.ID, "view-message").text == description
+
 
 def test_create_new_folder(browser):
     name = "new_folder"
@@ -67,22 +65,9 @@ def test_create_new_folder(browser):
 
 def test_create_nested_folder(browser):
     nested_folder = "NestedFolder"
-    browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
 
-    browser.find_element(By.ID, "name").send_keys(FOLDER_NAME)
-    browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
-    browser.find_element(By.ID, "ok-button").click()
-
-    browser.find_element(By.NAME, "Submit").click()
-
-    # создаем вложенную папку
-    browser.find_element(By.XPATH, f"//a[@href='/job/{FOLDER_NAME}/newJob']").click()
-
-    browser.find_element(By.ID, "name").send_keys(nested_folder)
-    browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
-    browser.find_element(By.ID, "ok-button").click()
-
-    browser.find_element(By.NAME, "Submit").click()
+    create_folder(browser, FOLDER_NAME)
+    create_folder(browser, nested_folder)
 
     assert f"/job/{FOLDER_NAME}/job/{nested_folder}/" in browser.current_url
     assert browser.find_element(By.CLASS_NAME, "job-index-headline").text == nested_folder
@@ -95,14 +80,17 @@ def test_create_nested_folder(browser):
     ]
     assert breadcrumb_texts == [FOLDER_NAME, nested_folder]
 
+
 def test_create_folder_with_empty_name_negative(browser):
     browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
 
     browser.find_element(By.ID, "name").send_keys("")
     browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
 
-    assert browser.find_element(By.ID, "itemname-required").text == "» This field cannot be empty, please enter a valid name"
+    assert browser.find_element(By.ID,
+                                "itemname-required").text == "» This field cannot be empty, please enter a valid name"
     assert not browser.find_element(By.ID, "ok-button").is_enabled()
+
 
 @pytest.mark.parametrize("character", ["/", "\\", "|", "?", "*", ":", ">", "<"])
 def test_create_folder_with_invalid_characters_negative(browser, character):
@@ -111,37 +99,34 @@ def test_create_folder_with_invalid_characters_negative(browser, character):
     browser.find_element(By.ID, "name").send_keys(f"{FOLDER_NAME}{character}")
     browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
 
-    expected_error  = f"‘{character}’ is an unsafe character"
+    expected_error = f"‘{character}’ is an unsafe character"
     error_message = WebDriverWait(browser, 5).until(
         EC.visibility_of_element_located((By.ID, "itemname-invalid"))
-    )
-    assert error_message.text == "» " + expected_error
+    ).text
 
+    assert error_message == "» " + expected_error
     # кнопка ниже по логике должна быть неактивна и тест бы закончился тут
+
     browser.find_element(By.ID, "ok-button").click()
-    WebDriverWait(browser,5).until_not(EC.title_contains("New Item"))
+    WebDriverWait(browser, 5).until_not(EC.title_contains("New Item"))
     assert browser.find_element(By.TAG_NAME, "h1").text == "Error"
     assert browser.find_element(By.TAG_NAME, "p").text == expected_error
 
+
 def test_create_folder_with_duplicate_name_in_same_parent_negative(browser):
-    browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
-
-    browser.find_element(By.ID, "name").send_keys(FOLDER_NAME)
-    browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
-    browser.find_element(By.ID, "ok-button").click()
-
-    browser.find_element(By.NAME, "Submit").click()
+    create_folder(browser, FOLDER_NAME)
 
     logo = WebDriverWait(browser, 5).until(
         EC.presence_of_element_located((By.CLASS_NAME, "jenkins-mobile-hide"))
     )
     browser.execute_script("arguments[0].click();", logo)
-    browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
+
+    browser.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
 
     browser.find_element(By.ID, "name").send_keys(FOLDER_NAME)
     browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
 
     error_message = WebDriverWait(browser, 5).until(
         EC.visibility_of_element_located((By.ID, "itemname-invalid"))
-    )
-    assert error_message.text == f"» A job already exists with the name ‘{FOLDER_NAME}’"
+    ).text
+    assert error_message == f"» A job already exists with the name ‘{FOLDER_NAME}’"

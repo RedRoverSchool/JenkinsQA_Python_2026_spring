@@ -47,7 +47,7 @@ jobs:
         run: ./.github/wait-for-jenkins.sh
 
       - name: Pytest
-        run: pytest -v -s --ignore=tests/old/
+        run: pytest -v -s
         env:
           JENKINS_USERNAME: ${{ secrets.ADMIN_USERNAME }}
           JENKINS_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
