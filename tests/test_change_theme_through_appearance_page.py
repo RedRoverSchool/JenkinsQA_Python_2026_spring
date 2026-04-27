@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 
 
-def test_change_theme_through_appearance_page(browser):
+def test_header_change_theme_through_appearance_page(browser):
 
     user_menu = browser.find_element(By.ID, "root-action-UserAction")
     ActionChains(browser).move_to_element(user_menu).perform()
