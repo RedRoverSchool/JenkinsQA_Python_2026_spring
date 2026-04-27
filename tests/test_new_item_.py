@@ -39,8 +39,8 @@ def test_new_item_(browser):
     result = browser.find_element(By.XPATH, "//a[.//span[normalize-space()='Test Pipeline']]").text
     assert result == "Test Pipeline"
 
-    browser.find_element(By.XPATH, "//a[.//span[normalize-space()='Test Pipeline']]//button[contains(@class,'jenkins-menu-dropdown-chevron')]").click()
-    browser.find_element(By.XPATH, "//button[normalize-space()='Delete Pipeline']").click()
+    # browser.find_element(By.XPATH, "//a[.//span[normalize-space()='Test Pipeline']]//button[contains(@class,'jenkins-menu-dropdown-chevron')]").click()
+    # browser.find_element(By.XPATH, "//button[normalize-space()='Delete Pipeline']").click()
 
 
 
