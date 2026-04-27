@@ -12,7 +12,6 @@ def test_header_change_theme_through_appearance_page(browser):
     browser.find_element(By.XPATH, "//div[contains(@class, 'jenkins-dropdown')]//*[normalize-space()='Appearance']").click()
     browser.find_element(By.XPATH, "//div[@class='app-theme-picker__item']//*[contains(text(),'Dark') or contains(text(), 'dark')]").click()
     browser.find_element(By.XPATH, "//*[@class='jenkins-button apply-button']").click()
-    time.sleep(2)
 
     theme = browser.find_element(By.TAG_NAME, "html").get_attribute("data-theme")
 
