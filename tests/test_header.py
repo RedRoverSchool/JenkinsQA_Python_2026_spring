@@ -37,7 +37,7 @@ def test_check_updated_theme_after_logout(browser):
 
     browser.find_element(By.XPATH, "//*[contains(text(), 'Dark') or contains (text(), 'dark')]").click()
 
-    browser.get("http://localhost:8081/logout")
+    browser.get("http://localhost:8080/logout")
     login(browser)
 
     theme = browser.find_element(By.TAG_NAME, "html").get_attribute("data-theme")
