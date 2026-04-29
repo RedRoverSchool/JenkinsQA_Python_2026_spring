@@ -21,11 +21,6 @@ def test_new_freestyle_project(browser):
 
     wait.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
 
-    wait.until(EC.any_of(
-        EC.url_contains("configure"),
-        EC.presence_of_element_located((By.TAG_NAME, "h1"))
-    ))
-
     text = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "h1"))).text
 
     assert ("Configure" in text or project_name in text), f"Unexpected header: {text}"

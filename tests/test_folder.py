@@ -10,9 +10,12 @@ def create_folder(driver, name):
     driver.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
     driver.find_element(By.ID, "name").send_keys(name)
     driver.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
-    driver.find_element(By.ID, "ok-button").click()
-    driver.find_element(By.NAME, "Submit").click()
-
+    WebDriverWait(driver, 5).until(
+        EC.element_to_be_clickable((By.ID, "ok-button"))
+    ).click()
+    WebDriverWait(driver, 5).until(
+        EC.element_to_be_clickable((By.NAME, "Submit"))
+    ).click()
 
 def test_create_folder(browser):
     create_folder(browser, FOLDER_NAME)
@@ -130,3 +133,26 @@ def test_create_folder_with_duplicate_name_in_same_parent_negative(browser):
         EC.visibility_of_element_located((By.ID, "itemname-invalid"))
     ).text
     assert error_message == f"» A job already exists with the name ‘{FOLDER_NAME}’"
+
+
+def test_create_folder_with_same_name_in_different_parent(browser):
+    create_folder(browser, FOLDER_NAME)
+    first_folder_name = browser.find_element(By.CLASS_NAME, "job-index-headline").text
+    first_breadcrumbs = [
+        crumb.text for crumb in browser.find_elements(By.CSS_SELECTOR, ".jenkins-breadcrumbs__list-item")
+    ]
+
+    browser.execute_script("""
+        var logo = document.querySelector('.jenkins-mobile-hide');
+        if (logo) logo.click();
+    """)
+
+    create_folder(browser, "ParentFolder")
+    create_folder(browser, FOLDER_NAME)
+    second_folder_name = browser.find_element(By.CLASS_NAME, "job-index-headline").text
+    second_breadcrumbs = [
+        crumb.text for crumb in browser.find_elements(By.CSS_SELECTOR, ".jenkins-breadcrumbs__list-item")
+    ]
+
+    assert first_folder_name == second_folder_name
+    assert first_breadcrumbs != second_breadcrumbs
