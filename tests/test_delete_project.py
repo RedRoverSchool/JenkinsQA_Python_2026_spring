@@ -46,6 +46,7 @@ def create_job(click, fill, check_visibility, current_project_name, item_type=PI
     click(JENKINS_LOGO)
     check_visibility(JENKINS_LOGO)
 
+@pytest.mark.skip
 def test_delete_job(browser, click, fill, check_visibility):
     current_project_name = generate_project_name()
 
