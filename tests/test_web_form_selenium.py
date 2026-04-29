@@ -13,7 +13,7 @@ def browser():
 
 def test_web_form(browser):#Тест на то что есть на странице элемент Web Form
     browser.get("https://www.selenium.dev/selenium/web/web-form.html")
-    time.sleep(5)
+    time.sleep(6)
     assert browser.find_element(By.XPATH,"//h1[text()='Web form']").is_displayed()
     browser.quit()
 
