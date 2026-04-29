@@ -1,7 +1,5 @@
-import pytest
 from selenium.webdriver.common.by import By
 
-@pytest.fixture
 def test_create_new_item_folder(browser):
     browser.find_element(By.CLASS_NAME, 'task-link').click()
     browser.find_element(By.ID, 'name').send_keys("New item")
