@@ -40,7 +40,7 @@ def test_check_updated_theme_after_logout(browser):
     browser.get("http://localhost:8081/logout")
     login(browser)
 
-    theme = browser.find_element(By.TAG_NAME, "html").get_attribute("data-theme")
+    theme = browser.find_element(By.TAG_NAME,"html").get_attribute("data-theme")
     assert theme.lower() == "dark"
 
 
