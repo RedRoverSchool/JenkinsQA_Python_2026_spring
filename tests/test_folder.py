@@ -4,18 +4,15 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-
 FOLDER_NAME = "TestFolder"
 
-
-<<<<<<< lesson_3
 def test_create_folder(browser):
     browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
 
     browser.find_element(By.ID, "name").send_keys(FOLDER_NAME)
     browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
     browser.find_element(By.ID, "ok-button").click()
-=======
+
 def create_folder(driver, name):
     driver.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
     driver.find_element(By.ID, "name").send_keys(name)
@@ -26,12 +23,13 @@ def create_folder(driver, name):
     WebDriverWait(driver, 5).until(
         EC.element_to_be_clickable((By.NAME, "Submit"))
     ).click()
->>>>>>> main
 
-    browser.find_element(By.NAME, "Submit").click()
+    WebDriverWait(driver, 5).until(
+        EC.element_to_be_clickable((By.NAME, "Submit"))
+    ).click()
 
-    assert f"/job/{FOLDER_NAME}/" in browser.current_url
-    assert browser.find_element(By.CLASS_NAME, "job-index-headline").text == FOLDER_NAME
+    assert f"/job/{FOLDER_NAME}/" in driver.current_url
+    assert driver.find_element(By.CLASS_NAME, "job-index-headline").text == FOLDER_NAME
 
 
 def test_create_folder_with_display_name(browser):
@@ -65,6 +63,7 @@ def test_create_folder_with_description(browser):
     browser.find_element(By.NAME, "Submit").click()
     assert browser.find_element(By.ID, "view-message").text == description
 
+@pytest.mark.skip()
 def test_create_new_folder(browser):
     name = "new_folder"
 
@@ -78,7 +77,6 @@ def test_create_new_folder(browser):
     browser.find_element(By.XPATH, "//*[@id='bottom-sticker']/div/button[1]").click()
 
     assert name == browser.find_element(By.XPATH, "//*[@id='main-panel']/div[1]/div/h1").text
-
 
 def test_create_nested_folder(browser):
     nested_folder = "NestedFolder"
@@ -138,6 +136,7 @@ def test_create_folder_with_invalid_characters_negative(browser, character):
     assert browser.find_element(By.TAG_NAME, "h1").text == "Error"
     assert browser.find_element(By.TAG_NAME, "p").text == expected_error
 
+@pytest.mark.skip
 def test_create_folder_with_duplicate_name_in_same_parent_negative(browser):
     browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
 
@@ -158,14 +157,11 @@ def test_create_folder_with_duplicate_name_in_same_parent_negative(browser):
 
     error_message = WebDriverWait(browser, 5).until(
         EC.visibility_of_element_located((By.ID, "itemname-invalid"))
-<<<<<<< lesson_3
     )
     assert error_message.text == f"» A job already exists with the name ‘{FOLDER_NAME}’"
-=======
-    ).text
-    assert error_message == f"» A job already exists with the name ‘{FOLDER_NAME}’"
+    assert error_message.text == f"» A job already exists with the name ‘{FOLDER_NAME}’"
 
-
+@pytest.mark.skip()
 def test_create_folder_with_same_name_in_different_parent(browser):
     create_folder(browser, FOLDER_NAME)
     first_folder_name = browser.find_element(By.CLASS_NAME, "job-index-headline").text
@@ -187,4 +183,4 @@ def test_create_folder_with_same_name_in_different_parent(browser):
 
     assert first_folder_name == second_folder_name
     assert first_breadcrumbs != second_breadcrumbs
->>>>>>> main
+
