@@ -36,18 +36,3 @@ def test_new_item_(browser):
 
     result = browser.find_element(By.XPATH, "//a[.//span[normalize-space()='Test Pipeline']]").text
     assert result == "Test Pipeline"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
