@@ -15,5 +15,6 @@ def test_jenkins_ns(browser):
     browser.find_element(By.XPATH, "//*[@class='app-jenkins-logo']").click()
     time.sleep(2)
 
+
     label=browser.find_element(By.XPATH, "//*[@href='job/test_1/']")
     assert label.text == "test_1"
