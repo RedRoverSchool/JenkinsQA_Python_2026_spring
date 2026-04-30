@@ -38,7 +38,16 @@ def test_check_updated_theme_after_logout(browser):
     browser.find_element(By.XPATH, "//*[contains(text(), 'Dark') or contains (text(), 'dark')]").click()
 
     browser.get("http://localhost:8080/logout")
-    login(browser)
+
+    username_fields = browser.find_element(By.NAME, "j_username")
+    password_fields = browser.find_element(By.NAME,"j_password")
+
+    if username_fields and password_fields:
+        username_fields.send_keys("Admin")
+        password_fields.send_keys("Victoria33#")
+
+        browser.find_element(By.NAME,"Submit").click()
+
 
     theme = browser.find_element(By.TAG_NAME, "html").get_attribute("data-theme")
     assert theme.lower() == "dark"
