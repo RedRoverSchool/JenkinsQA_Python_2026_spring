@@ -6,8 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 def test_verify_navigation_to_manage_page(browser):
     wait = WebDriverWait(browser, 10)
 
-    manage_jenkins = wait.until(EC.element_to_be_clickable((By.ID, "root-action-ManageJenkinsAction")))
-    manage_jenkins.click()
+    wait.until(EC.element_to_be_clickable((By.ID, "root-action-ManageJenkinsAction"))).click()
 
     wait.until(EC.url_contains("/manage"))
 
