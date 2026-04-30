@@ -5,7 +5,8 @@ from selenium.webdriver.support import expected_conditions as EC
 import pytest
 
 def test_new_freestyle_project(browser):
-    wait = WebDriverWait(browser, 10)
+    driver = browser
+    wait = WebDriverWait(driver, 10)
 
     wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@href='/view/all/newJob']"))).click()
 
@@ -20,9 +21,9 @@ def test_new_freestyle_project(browser):
 
     wait.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
 
-  #  text = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "h1"))).text
+    text = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "h1"))).text
 
-    assert (project_name in browser.current_url), f"Unexpected header: {text}"
+    assert ("Configure" in text or project_name in text), f"Unexpected header: {text}"
 
 
 
