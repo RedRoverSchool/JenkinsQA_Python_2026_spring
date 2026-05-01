@@ -6,16 +6,18 @@ from selenium.webdriver.support import expected_conditions as EC
 FOLDER_NAME = "TestFolder"
 
 
-def create_folder(driver, name):
+def create_folder(driver, name, full_creation=True):
     driver.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
     driver.find_element(By.ID, "name").send_keys(name)
     driver.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
     WebDriverWait(driver, 5).until(
         EC.element_to_be_clickable((By.ID, "ok-button"))
     ).click()
-    WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.NAME, "Submit"))
-    ).click()
+    if full_creation:
+        WebDriverWait(driver, 5).until(
+            EC.element_to_be_clickable((By.NAME, "Submit"))
+        ).click()
+
 
 def test_create_folder(browser):
     create_folder(browser, FOLDER_NAME)
@@ -27,11 +29,12 @@ def test_create_folder(browser):
 def test_create_folder_with_display_name(browser):
     display_name = "Display Folder"
 
-    create_folder(browser, FOLDER_NAME)
-    browser.find_element(By.XPATH, "//a[contains(@href, '/configure')]").click()
+    create_folder(browser, FOLDER_NAME, full_creation=False)
 
     browser.find_element(By.NAME, "_.displayNameOrNull").send_keys(display_name)
-    browser.find_element(By.NAME, "Submit").click()
+    WebDriverWait(browser, 5).until(
+        EC.element_to_be_clickable((By.NAME, "Submit"))
+    ).click()
 
     assert browser.find_element(By.CLASS_NAME, "job-index-headline").text == display_name
     folder_name_line = \
@@ -43,11 +46,13 @@ def test_create_folder_with_display_name(browser):
 def test_create_folder_with_description(browser):
     description = "Description"
 
-    create_folder(browser, FOLDER_NAME)
-    browser.find_element(By.XPATH, "//a[contains(@href, '/configure')]").click()
+    create_folder(browser, FOLDER_NAME, full_creation=False)
 
     browser.find_element(By.NAME, "_.description").send_keys(description)
-    browser.find_element(By.NAME, "Submit").click()
+    WebDriverWait(browser, 5).until(
+        EC.element_to_be_clickable((By.NAME, "Submit"))
+    ).click()
+
     assert browser.find_element(By.ID, "view-message").text == description
 
 
