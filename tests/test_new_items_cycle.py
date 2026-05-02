@@ -1,7 +1,5 @@
 import time
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
-from yt_dlp.utils import find_element
 
 items = ["Pipeline", "Freestyle project", "Multi-configuration project", "Folder",
          "Multibranch Pipeline", "Organization Folder"]
