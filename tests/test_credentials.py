@@ -1,3 +1,5 @@
+import pytest
+from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 
 USERNAME = "Name"
@@ -25,6 +27,13 @@ def create_credential(driver, username, password, description, credential_id, tr
 
     driver.find_element(By.ID, "cr-dialog-submit").click()
 
+def navigate_to_credential_form(driver):
+    driver.find_element(By.XPATH, "//*[@href = '/manage']").click()
+    driver.find_element(By.XPATH, "//*[@href ='credentials']").click()
+    driver.find_element(By.XPATH, "//button[contains(text(), 'Add Credentials')]").click()
+    driver.find_element(By.XPATH, "//div[text() = 'Username with password']").click()
+    driver.find_element(By.ID, "cr-dialog-next").click()
+
 
 def find_credential_card(driver, username=None, description=None, credential_id=None, treat_as_secret=False):
     if treat_as_secret:
@@ -38,6 +47,7 @@ def find_credential_card(driver, username=None, description=None, credential_id=
         )
         return driver.find_element(By.XPATH, card_found_by_username_and_description)
 
+@pytest.mark.dependency()
 def test_create(browser):
     create_credential(browser, USERNAME, PASSWORD, DESCRIPTION, CREDENTIAL_ID, treat_as_secret=False)
 
@@ -50,3 +60,20 @@ def test_create(browser):
     )
 
     assert credential_card.is_displayed(), "Credential card was not found or not visible"
+
+@pytest.mark.dependency(depends=["test_create"])
+def test_create_duplicate_id(browser):
+    expected_error = "This ID is already in use"
+    expected_notification_bar_message = "Credentials with specified ID already exist"
+
+    navigate_to_credential_form(browser)
+
+    browser.find_element(By.NAME, "_.id").send_keys(CREDENTIAL_ID + Keys.TAB)
+    actual_error = browser.find_element(By.XPATH, "//div[@class = 'error']").text
+
+    browser.find_element(By.ID, "cr-dialog-submit").click()
+    actual_notification_bar_message = browser.find_element(By.ID, "notification-bar").text
+
+    assert actual_error == expected_error, f"Error message mismatch: expected '{expected_error}', actual '{actual_error}'"
+    assert actual_notification_bar_message == expected_notification_bar_message,\
+        f"Notification mismatch: expected '{expected_notification_bar_message}', actual '{actual_notification_bar_message}'"
