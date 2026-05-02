@@ -34,5 +34,3 @@ def test_new_items(browser):
         # elements = browser.find_elements(By.XPATH, f"//*[@id='job_{item_name}1']")
         #
         # assert len(elements) == 0, f"Ошибка: {item_name}1 всё еще существует!"
-
-
