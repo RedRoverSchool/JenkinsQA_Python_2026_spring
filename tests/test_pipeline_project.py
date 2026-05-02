@@ -10,18 +10,20 @@ def create_pipeline_project(browser, name):
     browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
     browser.find_element(By.ID, "name").send_keys(name)
     browser.find_element(By.CLASS_NAME, "org_jenkinsci_plugins_workflow_job_WorkflowJob").click()
-
     browser.find_element(By.ID, "ok-button").click()
 
     browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
     WebDriverWait(browser, 5).until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
 
-    WebDriverWait(browser, 5).until(EC.visibility_of_element_located((By.XPATH, "//*[@class='app-jenkins-logo']"))).click()
+    browser.execute_script("""
+                var logo = document.querySelector('.jenkins-mobile-hide');
+                if (logo) logo.click();
+            """)
 
-@pytest.mark.skip
 def test_create_project(browser):
     create_pipeline_project(browser, pipeline_name)
-    created_pipeline = browser.find_element(By.XPATH, f"(//a[@href='job/{pipeline_name}/'])[1]").text
+    created_pipeline = browser.find_element(By.CSS_SELECTOR, ".jenkins-table__link >span:first-child").text
 
     assert created_pipeline == pipeline_name
 
@@ -31,7 +33,6 @@ def test_create_project(browser):
     "PipelineName3"
 ])
 
-@pytest.mark.skip
 def test_check_several_tests(browser, job_name):
     create_pipeline_project(browser, job_name)
     created_pipeline = browser.find_element(By.CSS_SELECTOR, ".jenkins-table__link >span:first-child").text
