@@ -11,7 +11,7 @@ def test_new_items(browser):
         browser.find_element(By.XPATH, f"//span[text()='{item_name}']").click()
         browser.find_element(By.XPATH, "//button[@id='ok-button']").click()
         time.sleep(1)
-        browser.get("http://localhost:8081/")
+        browser.find_element(By.ID, "jenkins-head-icon").click()
         time.sleep(1)
         elements = browser.find_elements(By.ID, f"job_{item_name}_1")
 
