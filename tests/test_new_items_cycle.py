@@ -19,6 +19,7 @@ def test_new_items(browser):
 
         assert len(elements) > 0, f"'job_{item_name}_1' не найден!"
 
+
 #удаление[работает в цикле создал-нашел-удалил]
         # item_url = item_name.replace(" ", "%20")
         # actions = ActionChains(browser)
