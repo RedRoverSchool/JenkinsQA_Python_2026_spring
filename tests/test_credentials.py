@@ -75,11 +75,11 @@ def test_create_duplicate_id_error_validation(browser):
     id_field.send_keys(CREDENTIAL_ID)
     browser.execute_script("arguments[0].blur();", id_field)
 
-    browser.find_element(By.NAME, "_.id").send_keys(CREDENTIAL_ID + Keys.TAB)
-    actual_error = browser.find_element(By.XPATH, "//div[@class = 'error']").text
+    actual_error = WebDriverWait(browser, 10).until(
+        lambda d: d.find_element(By.XPATH, "//div[@class='error']").text
+    )
 
-    assert actual_error == expected_error, \
-        f"Error message mismatch. Expected: '{expected_error}', Actual: '{actual_error}'"
+    assert actual_error == expected_error
 
 
 @pytest.mark.dependency(depends=["test_create"])
@@ -91,8 +91,12 @@ def test_create_duplicate_id_notification(browser):
     browser.find_element(By.NAME, "_.id").send_keys(CREDENTIAL_ID)
     browser.find_element(By.ID, "cr-dialog-submit").click()
 
-    time.sleep(5)
-    actual_notification = browser.find_element(By.ID, "notification-bar").text
+    actual_notification = WebDriverWait(browser, 15).until(
+        lambda d: d.execute_script("""
+                var el = document.getElementById('notification-bar');
+                return el ? el.innerText : '';
+            """)
+    )
 
     assert actual_notification == expected_notification, \
         f"Notification message mismatch. Expected: '{expected_notification}', Actual: '{actual_notification}'"
