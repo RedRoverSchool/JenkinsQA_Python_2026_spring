@@ -1,7 +1,9 @@
+import time
+
 import pytest
+from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 USERNAME = "Name"
 PASSWORD = "Password"
@@ -73,9 +75,8 @@ def test_create_duplicate_id_error_validation(browser):
     id_field.send_keys(CREDENTIAL_ID)
     browser.execute_script("arguments[0].blur();", id_field)
 
-    actual_error = WebDriverWait(browser, 10).until(
-        lambda d: d.find_element(By.XPATH, "//div[@class='error']").text
-    )
+    browser.find_element(By.NAME, "_.id").send_keys(CREDENTIAL_ID + Keys.TAB)
+    actual_error = browser.find_element(By.XPATH, "//div[@class = 'error']").text
 
     assert actual_error == expected_error, \
         f"Error message mismatch. Expected: '{expected_error}', Actual: '{actual_error}'"
@@ -90,9 +91,8 @@ def test_create_duplicate_id_notification(browser):
     browser.find_element(By.NAME, "_.id").send_keys(CREDENTIAL_ID)
     browser.find_element(By.ID, "cr-dialog-submit").click()
 
-    actual_notification = WebDriverWait(browser, 15).until(
-        lambda d: d.find_element(By.ID, "notification-bar").text
-    )
+    time.sleep(5)
+    actual_notification = browser.find_element(By.ID, "notification-bar").text
 
     assert actual_notification == expected_notification, \
         f"Notification message mismatch. Expected: '{expected_notification}', Actual: '{actual_notification}'"
