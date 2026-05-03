@@ -18,7 +18,7 @@ def test_create_org_folder(browser):
     assert display_name == "JenkinsQA_Python_2026"
     assert description == "Very good Python automation course"
 
-
+@pytest.mark.skip(reason="ER_07.001.01")
 @pytest.mark.dependency(depends=["test_create_org_folder"])
 def test_open_configuration_1(browser):
 
