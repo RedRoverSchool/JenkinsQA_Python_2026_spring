@@ -114,10 +114,10 @@ def test_delete(browser):
 
     browser.find_element(By.XPATH, "//button[@data-id = 'cancel']").click()
     browser.find_element(By.XPATH, "//*[@title = 'More actions']").click()
-    browser.find_element(By.XPATH, "//div[@class = 'jenkins-dropdown']").click()
+    browser.find_element(By.XPATH, "//a[contains(text(), 'Delete credential')]").click()
 
     WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[text() = 'Yes']"))
+        EC.element_to_be_clickable((By.XPATH, "//button[@data-id = 'ok']"))
     ).click()
 
     empty_message = browser.find_element(By.XPATH, "//div[contains(text(), 'This credentials domain is empty')]")
