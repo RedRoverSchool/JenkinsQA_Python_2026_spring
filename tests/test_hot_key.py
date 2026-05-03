@@ -1,7 +1,6 @@
 import pytest
 from selenium.webdriver import Keys
 
-from tests.test_automationexercise import sign_in
 from selenium.webdriver.common.by import By
 
 
