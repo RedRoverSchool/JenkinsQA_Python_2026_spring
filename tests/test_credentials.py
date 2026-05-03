@@ -64,9 +64,8 @@ def test_create(browser):
 
 
 @pytest.mark.dependency(depends=["test_create"])
-def test_create_duplicate_id(browser):
+def test_create_duplicate_id_error_validation(browser):
     expected_error = "This ID is already in use"
-    expected_notification_bar_message = "Credentials with specified ID already exist"
 
     navigate_to_credential_form(browser)
 
@@ -74,17 +73,26 @@ def test_create_duplicate_id(browser):
     id_field.send_keys(CREDENTIAL_ID)
     browser.execute_script("arguments[0].blur();", id_field)
 
-    WebDriverWait(browser, 10).until(
-        EC.text_to_be_present_in_element((By.XPATH, "//div[@class='error']"), expected_error)
+    actual_error = WebDriverWait(browser, 10).until(
+        lambda d: d.find_element(By.XPATH, "//div[@class='error']").text
     )
-    actual_error = browser.find_element(By.XPATH, "//div[@class='error']").text
 
+    assert actual_error == expected_error, \
+        f"Error message mismatch. Expected: '{expected_error}', Actual: '{actual_error}'"
+
+
+@pytest.mark.dependency(depends=["test_create"])
+def test_create_duplicate_id_notification(browser):
+    expected_notification = "Credentials with specified ID already exist"
+
+    navigate_to_credential_form(browser)
+
+    browser.find_element(By.NAME, "_.id").send_keys(CREDENTIAL_ID)
     browser.find_element(By.ID, "cr-dialog-submit").click()
 
-    WebDriverWait(browser, 10).until(
-        EC.text_to_be_present_in_element((By.ID, "notification-bar"), expected_notification_bar_message)
+    actual_notification = WebDriverWait(browser, 15).until(
+        lambda d: d.find_element(By.ID, "notification-bar").text
     )
-    actual_notification_bar_message = browser.find_element(By.ID, "notification-bar").text
 
-    assert actual_error == expected_error
-    assert actual_notification_bar_message == expected_notification_bar_message
+    assert actual_notification == expected_notification, \
+        f"Notification message mismatch. Expected: '{expected_notification}', Actual: '{actual_notification}'"
