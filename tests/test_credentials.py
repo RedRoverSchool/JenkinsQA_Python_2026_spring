@@ -79,3 +79,22 @@ def test_create_duplicate_id_error_validation(browser):
     )
 
     assert actual_error == expected_error
+
+
+@pytest.mark.parametrize("special_characters ",[
+    "!", "%", "&", "#", "@", "*"
+])
+def test_create_id_with_special_characters(browser, special_characters):
+    expected_error = "Unacceptable characters"
+
+    navigate_to_credential_form(browser)
+
+    id_field = browser.find_element(By.NAME, "_.id")
+    id_field.send_keys(special_characters)
+    browser.execute_script("arguments[0].blur();", id_field)
+
+    actual_error = WebDriverWait(browser, 10).until(
+        lambda d: d.find_element(By.XPATH, "//div[@class='error']").text
+    )
+
+    assert actual_error == expected_error
