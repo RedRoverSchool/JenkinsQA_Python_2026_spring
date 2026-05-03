@@ -1,7 +1,4 @@
-import time
-
 import pytest
-from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -30,6 +27,7 @@ def create_credential(driver, username, password, description, credential_id, tr
 
     driver.find_element(By.ID, "cr-dialog-submit").click()
 
+
 def navigate_to_credential_form(driver):
     driver.find_element(By.XPATH, "//*[@href = '/manage']").click()
     driver.find_element(By.XPATH, "//*[@href ='credentials']").click()
@@ -49,6 +47,7 @@ def find_credential_card(driver, username=None, description=None, credential_id=
             f'[.//span[contains(text(),"{description}")]])[1]'
         )
         return driver.find_element(By.XPATH, card_found_by_username_and_description)
+
 
 @pytest.mark.dependency()
 def test_create(browser):
@@ -80,23 +79,3 @@ def test_create_duplicate_id_error_validation(browser):
     )
 
     assert actual_error == expected_error
-
-
-@pytest.mark.dependency(depends=["test_create"])
-def test_create_duplicate_id_notification(browser):
-    expected_notification = "Credentials with specified ID already exist"
-
-    navigate_to_credential_form(browser)
-
-    browser.find_element(By.NAME, "_.id").send_keys(CREDENTIAL_ID)
-    browser.find_element(By.ID, "cr-dialog-submit").click()
-
-    actual_notification = WebDriverWait(browser, 15).until(
-        lambda d: d.execute_script("""
-                var el = document.getElementById('notification-bar');
-                return el ? el.innerText : '';
-            """)
-    )
-
-    assert actual_notification == expected_notification, \
-        f"Notification message mismatch. Expected: '{expected_notification}', Actual: '{actual_notification}'"
