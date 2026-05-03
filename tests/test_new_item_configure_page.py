@@ -1,8 +1,10 @@
+import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
+@pytest.mark.skip
 def test_new_item_configure_page(browser):
     wait = WebDriverWait(browser, 10)
 

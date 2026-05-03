@@ -2,7 +2,7 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import pytest
+
 
 def test_new_freestyle_project(browser):
     driver = browser
@@ -20,11 +20,6 @@ def test_new_freestyle_project(browser):
     wait.until(EC.presence_of_element_located((By.NAME, "Submit")))
 
     wait.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
-
-    wait.until(EC.any_of(
-        EC.url_contains("configure"),
-        EC.presence_of_element_located((By.TAG_NAME, "h1"))
-    ))
 
     text = wait.until(EC.visibility_of_element_located((By.TAG_NAME, "h1"))).text
 
