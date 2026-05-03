@@ -1,7 +1,7 @@
 import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
-
+from selenium.webdriver.support import expected_conditions as EC
 
 USERNAME = "Name"
 PASSWORD = "Password"
@@ -66,7 +66,7 @@ def test_create(browser):
 @pytest.mark.dependency(depends=["test_create"])
 def test_create_duplicate_id(browser):
     expected_error = "This ID is already in use"
-    expected_notification = "Credentials with specified ID already exist"
+    expected_notification_bar_message = "Credentials with specified ID already exist"
 
     navigate_to_credential_form(browser)
 
@@ -74,15 +74,17 @@ def test_create_duplicate_id(browser):
     id_field.send_keys(CREDENTIAL_ID)
     browser.execute_script("arguments[0].blur();", id_field)
 
-    actual_error = WebDriverWait(browser, 10).until(
-        lambda d: d.find_element(By.XPATH, "//div[@class='error']").text
+    WebDriverWait(browser, 10).until(
+        EC.text_to_be_present_in_element((By.XPATH, "//div[@class='error']"), expected_error)
     )
+    actual_error = browser.find_element(By.XPATH, "//div[@class='error']").text
 
     browser.find_element(By.ID, "cr-dialog-submit").click()
 
-    actual_notification = WebDriverWait(browser, 10).until(
-        lambda d: d.find_element(By.ID, "notification-bar").text
+    WebDriverWait(browser, 10).until(
+        EC.text_to_be_present_in_element((By.ID, "notification-bar"), expected_notification_bar_message)
     )
+    actual_notification_bar_message = browser.find_element(By.ID, "notification-bar").text
 
     assert actual_error == expected_error
-    assert actual_notification == expected_notification
+    assert actual_notification_bar_message == expected_notification_bar_message
