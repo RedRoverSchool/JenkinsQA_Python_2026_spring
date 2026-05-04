@@ -91,7 +91,7 @@ def test_edit_enable_checkbox(browser):
     username_before = tags_element.text
 
     update_button = WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[@tooltip = 'Update credential']"))
+        EC.element_to_be_clickable((By.XPATH, "//*[@title = 'Update credential']"))
     )
     update_button.click()
 
