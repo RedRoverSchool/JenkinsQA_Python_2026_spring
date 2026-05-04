@@ -88,3 +88,4 @@ def test_message_job_already_exists(browser, wait):
     )
 
     assert message.text == "» A job already exists with the name ‘Test Pipeline’"
+    
