@@ -117,3 +117,22 @@ def test_delete(browser):
 
     assert empty_message.is_displayed(), "Empty domain message not displayed after deletion"
     assert not is_credential_present(browser, USERNAME, DESCRIPTION, CREDENTIAL_ID), "Credential still exists after deletion"
+
+
+@pytest.mark.parametrize("special_characters ",[
+    "!", "%", "&", "#", "@", "*"
+])
+def test_create_id_with_special_characters(browser, special_characters):
+    expected_error = "Unacceptable characters"
+
+    navigate_to_credential_form(browser)
+
+    id_field = browser.find_element(By.NAME, "_.id")
+    id_field.send_keys(special_characters)
+    browser.execute_script("arguments[0].blur();", id_field)
+
+    actual_error = WebDriverWait(browser, 10).until(
+        lambda d: d.find_element(By.XPATH, "//div[@class='error']").text
+    )
+
+    assert actual_error == expected_error
