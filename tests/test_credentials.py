@@ -1,6 +1,7 @@
 import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 USERNAME = "Name"
 PASSWORD = "Password"
@@ -79,3 +80,26 @@ def test_create_duplicate_id_error_validation(browser):
     )
 
     assert actual_error == expected_error
+
+
+@pytest.mark.dependency(depends=["test_create"])
+def test_edit_enable_checkbox(browser):
+    browser.find_element(By.XPATH, "//*[@href = '/manage']").click()
+    browser.find_element(By.XPATH, "//*[@href ='credentials']").click()
+
+    tags_element = browser.find_element(By.XPATH, "//span[@class='credentials-card__tags']")
+    username_before = tags_element.text
+
+    browser.find_element(By.XPATH, "//button[@data-type = 'credentials-update']").click()
+
+    browser.find_element(By.XPATH, "//label[text()='Treat username as secret']").click()
+
+    browser.find_element(By.ID, "cr-dialog-submit").click()
+
+    WebDriverWait(browser, 10).until(
+        EC.invisibility_of_element_located((By.ID, "jenkins-dialog"))
+    )
+
+    assert USERNAME in username_before, "Username should be visible before enabling checkbox"
+    assert not browser.find_elements(By.XPATH, "//span[@class='credentials-card__tags']"),\
+        "Tags element should not be visible when checkbox is enabled"
