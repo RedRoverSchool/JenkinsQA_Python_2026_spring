@@ -90,7 +90,10 @@ def test_edit_enable_checkbox(browser):
     tags_element = browser.find_element(By.XPATH, "//span[@class='credentials-card__tags']")
     username_before = tags_element.text
 
-    browser.find_element(By.XPATH, "//button[@data-type = 'credentials-update']").click()
+    update_button = WebDriverWait(browser, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//button[@data-type='credentials-update']"))
+    )
+    update_button.click()
 
     browser.find_element(By.XPATH, "//label[text()='Treat username as secret']").click()
 
