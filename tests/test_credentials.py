@@ -9,7 +9,6 @@ PASSWORD = "Password"
 DESCRIPTION = "Description: credential type is 'Username with password'"
 CREDENTIAL_ID = "1"
 
-
 def create_credential(driver, username, password, description, credential_id, treat_as_secret=False):
     driver.find_element(By.XPATH, "//*[@href = '/manage']").click()
     driver.find_element(By.XPATH, "//*[@href ='credentials']").click()
@@ -104,13 +103,14 @@ def test_edit_enable_checkbox(browser):
     browser.find_element(By.XPATH, "//*[@href = '/manage']").click()
     browser.find_element(By.XPATH, "//*[@href ='credentials']").click()
 
-    tags_element = browser.find_element(By.XPATH, "//span[@class='credentials-card__tags']")
+    tags_element = WebDriverWait(browser, 10).until(
+    EC.visibility_of_element_located(
+        (By.XPATH, "//span[@class='credentials-card__tags']"))
+    )
+
     username_before = tags_element.text
 
-    update_button = WebDriverWait(browser, 10).until(
-        EC.visibility_of_element_located((By.XPATH, "//*[@title = 'Update credential']"))
-    )
-    update_button.click()
+    browser.find_element(By.XPATH, "//*[@title='Update credential']").click()
 
     browser.find_element(By.XPATH, "//label[text()='Treat username as secret']").click()
 
