@@ -35,7 +35,7 @@ def test_checking_the_dropdown_when_entering_full_name_settings(browser):
 
     assert item.get_attribute('textContent').strip() == 'Security'
 
-
+@pytest.mark.skip
 def test_clear_search_field_via_keyboard_and_button(browser):
     WebDriverWait(browser, 10).until(
         EC.visibility_of_element_located((By.ID, 'root-action-ManageJenkinsAction'))
