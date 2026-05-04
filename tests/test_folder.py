@@ -2,10 +2,10 @@ import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 
 FOLDER_NAME = "TestFolder"
 SECOND_FOLDER_NAME = "SecondFolder"
-
 
 def create_folder(driver, name, full_creation=True):
     driver.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
@@ -18,6 +18,7 @@ def create_folder(driver, name, full_creation=True):
         WebDriverWait(driver, 5).until(
             EC.element_to_be_clickable((By.NAME, "Submit"))
         ).click()
+
 
 @pytest.mark.dependency()
 def test_create_folder(browser):
@@ -71,6 +72,7 @@ def test_create_new_folder(browser):
 
     assert name == browser.find_element(By.XPATH, "//*[@id='main-panel']/div[1]/div/h1").text
 
+
 @pytest.mark.dependency(depends=["test_create_folder"])
 def test_create_nested_folder(browser):
     browser.find_element(By.XPATH, f"//a[contains(@href, '/{FOLDER_NAME}')]").click()
@@ -120,6 +122,7 @@ def test_create_folder_with_invalid_characters_negative(browser, character):
     assert browser.find_element(By.TAG_NAME, "h1").text == "Error"
     assert browser.find_element(By.TAG_NAME, "p").text == expected_error
 
+
 @pytest.mark.dependency(depends=["test_create_folder"])
 def test_create_folder_with_duplicate_name_in_same_parent_negative(browser):
     browser.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
@@ -132,8 +135,42 @@ def test_create_folder_with_duplicate_name_in_same_parent_negative(browser):
     ).text
     assert error_message == f"» A job already exists with the name ‘{FOLDER_NAME}’"
 
+
 @pytest.mark.dependency(depends=["test_create_nested_folder"])
 def test_create_folder_with_same_name_in_different_parent(browser):
     create_folder(browser, SECOND_FOLDER_NAME)
 
     assert browser.find_element(By.CLASS_NAME, "job-index-headline").text == SECOND_FOLDER_NAME
+
+
+@pytest.mark.dependency(depends=['test_create_folder'])
+def test_create_folder_from_copy(browser):
+    wait = WebDriverWait(browser, 5)
+
+    wait.until(
+        EC.element_to_be_clickable((By.LINK_TEXT, "New Item"))).click()
+
+    wait.until(
+        EC.visibility_of_element_located((By.ID, 'name'))).send_keys('Folder from copy')
+
+    wait.until(
+        EC.element_to_be_clickable((By.ID, 'from'))).send_keys('TestFolder')
+
+    wait.until(
+        EC.element_to_be_clickable((By.ID, 'from'))).send_keys(Keys.ENTER)
+
+    wait.until(
+        EC.element_to_be_clickable((By.XPATH, '//button[@value="Save"]'))).click()
+
+    wait.until(
+        EC.visibility_of_element_located((By.XPATH, '//h1[text()="Folder from copy"]')))
+
+    wait.until(
+        EC.presence_of_element_located((By.ID, 'jenkins-head-icon')))
+
+    wait.until(
+        EC.element_to_be_clickable((By.ID, 'jenkins-head-icon'))).click()
+
+    new_folder = wait.until(
+        EC.visibility_of_element_located((By.LINK_TEXT, 'Folder from copy')))
+    assert new_folder.text == 'Folder from copy'

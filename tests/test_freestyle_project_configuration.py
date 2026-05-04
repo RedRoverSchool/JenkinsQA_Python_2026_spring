@@ -59,7 +59,7 @@ def test_access_scm_title(browser):
 
     assert scm_title_text == SCM_TITLE_EXPECTED
 
-
+@pytest.mark.skip(reason="ER_TC_02.002.03")
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
 def test_add_description_to_existing_freestyle_project(browser):
     wait = WebDriverWait(browser, 10)
