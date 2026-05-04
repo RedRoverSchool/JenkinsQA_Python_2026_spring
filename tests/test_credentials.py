@@ -1,5 +1,6 @@
 import pytest
 from selenium.common import NoSuchElementException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -110,7 +111,17 @@ def test_edit_enable_checkbox(browser):
 
     username_before = tags_element.text
 
-    browser.find_element(By.XPATH, "//*[@title='Update credential']").click()
+    update_button = WebDriverWait(browser, 10).until(
+        EC.presence_of_element_located(
+            (By.XPATH, ".//div[@class='credentials-card__controls']//button[@title='Update credential']")
+        )
+    )
+
+    ActionChains(browser) \
+        .move_to_element(update_button) \
+        .pause(0.2) \
+        .click() \
+        .perform()
 
     browser.find_element(By.XPATH, "//label[text()='Treat username as secret']").click()
 
