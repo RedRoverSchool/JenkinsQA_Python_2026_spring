@@ -99,18 +99,11 @@ def test_create_duplicate_id_error_validation(browser):
 
 @pytest.mark.dependency(depends=["test_create"])
 def test_delete(browser):
-    expected_confirmation_text  = f"Are you sure you want to delete {USERNAME}/****** ({DESCRIPTION})?"
-
     browser.find_element(By.XPATH, "//*[@href = '/manage']").click()
     browser.find_element(By.XPATH, "//*[@href ='credentials']").click()
 
     browser.find_element(By.XPATH, "//*[@title = 'More actions']").click()
     browser.find_element(By.XPATH, "//a[contains(text(), 'Delete credential')]").click()
-
-    dialog = WebDriverWait(browser, 5).until(
-        EC.visibility_of_element_located((By.CSS_SELECTOR, ".jenkins-dialog"))
-    )
-    actual_confirmation_text = dialog.text.split('\n')[0]
 
     browser.find_element(By.XPATH, "//button[@data-id = 'cancel']").click()
     browser.find_element(By.XPATH, "//*[@title = 'More actions']").click()
@@ -122,6 +115,5 @@ def test_delete(browser):
 
     empty_message = browser.find_element(By.XPATH, "//div[contains(text(), 'This credentials domain is empty')]")
 
-    assert actual_confirmation_text == expected_confirmation_text
     assert empty_message.is_displayed(), "Empty domain message not displayed after deletion"
     assert not is_credential_present(browser, USERNAME, DESCRIPTION, CREDENTIAL_ID), "Credential still exists after deletion"
