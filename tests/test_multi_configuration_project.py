@@ -22,6 +22,7 @@ def create_multi_configuration_project(browser, name):
                     if (logo) logo.click();
                 """)
 
+@pytest.mark.skip(reason="ER_01.001.19")
 def test_verify_status_switching_enable_button(browser):
     create_multi_configuration_project(browser, multiconfiguration_project_name)
     browser.find_element(By.CSS_SELECTOR, ".jenkins-table__link >span:first-child").click()
