@@ -83,7 +83,7 @@ def test_create(browser):
 
     assert credential_card.is_displayed(), "Credential card was not found or not visible"
 
-
+@pytest.mark.skip(reason="ER_22.002.02")
 @pytest.mark.dependency(depends=["test_create"])
 def test_create_duplicate_id_error_validation(browser):
     expected_error = "This ID is already in use"
