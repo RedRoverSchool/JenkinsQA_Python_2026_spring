@@ -84,8 +84,6 @@ def test_create_duplicate_id_error_validation(browser):
 @pytest.mark.parametrize("special_characters ",[
     "!", "%", "&", "#", "@", "*"
 ])
-
-@pytest.mark.skip
 def test_create_id_with_special_characters(browser, special_characters):
     expected_error = "Unacceptable characters"
 
