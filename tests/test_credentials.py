@@ -2,6 +2,7 @@ import time
 
 import pytest
 from selenium.common import NoSuchElementException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -113,9 +114,15 @@ def test_edit_enable_checkbox(browser):
     username_before = tags_element.text
 
     button = WebDriverWait(browser, 15).until(
-                EC.element_to_be_clickable((By.XPATH, "//div[@class='credentials-card__controls']//button[1]"))
+        EC.element_to_be_clickable((By.XPATH, "//div[@class='credentials-card__controls']//button[1]"))
     )
-    button.click()
+
+    (ActionChains(browser)
+     .move_to_element(button)
+     .click()
+     .perform())
+
+    time.sleep(5)
 
     locators = [
         "//dialog[@class='jenkins-dialog']",
