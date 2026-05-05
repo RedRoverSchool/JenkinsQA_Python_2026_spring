@@ -5,7 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from conftest import browser
-import time
+
 
 FREESTYLE_PROJECT_NAME = "Freestyle Project"
 SCM_TITLE_EXPECTED = "Source Code Management"
@@ -106,7 +106,7 @@ def test_build_steps_configure_shell_option(browser):
     editor = browser.find_element(By.CSS_SELECTOR, ".CodeMirror")
     ActionChains(browser).move_to_element(editor).click().send_keys(script_for_linux).perform()
     browser.find_element(By.XPATH, '//*[@id="bottom-sticker"]/div/button[1]').click()
-    time.sleep(2)
+
     header = browser.find_element(By.TAG_NAME, "h1").text
 
     assert header == JOB_NAME
