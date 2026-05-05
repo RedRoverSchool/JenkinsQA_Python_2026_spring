@@ -3,11 +3,12 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from selenium.webdriver.common.action_chains import ActionChains
 from conftest import browser
 
 FREESTYLE_PROJECT_NAME = "Freestyle Project"
 SCM_TITLE_EXPECTED = "Source Code Management"
+JOB_NAME = 'Test'
 
 
 def wait_until_clickable(browser: WebDriver, locator: tuple[str, str], timeout=10):
@@ -15,13 +16,15 @@ def wait_until_clickable(browser: WebDriver, locator: tuple[str, str], timeout=1
         EC.element_to_be_clickable(locator)
     )
 
+
 @pytest.mark.dependency()
 def test_create_freestyle_project(browser):
     browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
-    browser.find_element(By.ID, "name").send_keys('Test')
+    browser.find_element(By.ID, "name").send_keys(JOB_NAME)
     browser.find_element(By.CSS_SELECTOR, "li.hudson_model_FreeStyleProject").click()
     browser.find_element(By.XPATH, '//*[@id="ok-button"]').click()
     browser.find_element(By.NAME, "Submit").click()
+
 
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
 def test_disable_active_project(browser):
@@ -69,3 +72,51 @@ def test_add_description_to_existing_freestyle_project(browser):
     browser.find_element(By.NAME, "Submit").click()
 
     assert wait.until(EC.text_to_be_present_in_element((By.ID, "description"), "Test description"))
+
+
+def test_build_steps_field_is_available(browser):
+    browser.find_element(By.XPATH, '//*[@id="tasks"]//a').click()
+    input_name = browser.find_element(By.ID, "name")
+    input_name.send_keys(JOB_NAME)
+    browser.find_element(By.CLASS_NAME, 'hudson_model_FreeStyleProject').click()
+    browser.find_element(By.XPATH, '//*[@id="ok-button"]').click()
+    field = WebDriverWait(browser, 10).until(
+        EC.presence_of_element_located((By.ID, "build-steps"))
+    )
+
+    assert field is not None
+
+
+@pytest.mark.dependency(depends=["test_create_freestyle_project"])
+def test_build_steps_execute_shell_option(browser):
+    script_for_linux = '''echo "Starting process..."
+    echo "Hostname: $(hostname)"
+    echo "Current User: $(whoami)" 
+    echo "Uptime: $(uptime -p)"
+    sleep 1
+    echo "1 seconds have passed. Continuing..." '''
+
+    xpath1 = f"//*[@id='job_{JOB_NAME}']/td[3]/a"
+    xpath2 = f"//a[@href='/job/{JOB_NAME}/1/console']"
+
+    browser.find_element(By.XPATH, xpath1).click()
+    browser.find_element(By.XPATH, "//a[contains(., 'Configure')]").click()
+
+    add_button = WebDriverWait(browser, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//button[@suffix='builder']"))
+    )
+    browser.execute_script("arguments[0].scrollIntoView({block: 'center'});", add_button)
+    add_button.click()
+
+    browser.find_element(By.XPATH, "//button[normalize-space()='Execute shell']").click()
+
+    editor = browser.find_element(By.CSS_SELECTOR, ".CodeMirror")
+    ActionChains(browser).move_to_element(editor).click().send_keys(script_for_linux).perform()
+
+    browser.find_element(By.XPATH, '//*[@id="bottom-sticker"]/div/button[1]').click()
+    browser.find_element(By.XPATH, "//a[.//span[normalize-space()='Build Now']]").click()
+    browser.find_element(By.XPATH, xpath2).click()
+
+    log = browser.find_element(By.ID, "out").text
+
+    assert "Finished: SUCCESS" in log
