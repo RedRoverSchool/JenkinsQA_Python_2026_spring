@@ -112,30 +112,14 @@ def test_edit_enable_checkbox(browser):
 
     username_before = tags_element.text
 
-    locators = [
-        "//*[@title='Update credential']",
-        "//button[@tooltip='Update credential']",
-        "//button[@title='Update credential']",
-        "//button[@data-type='credentials-update']",
-        "//button[contains(@data-url, 'updateDialog')]",
-        "//div[@class='credentials-card__controls']//button[1]"
-    ]
-
-    button = None
-    for locator in locators:
-        try:
-            button = WebDriverWait(browser, 15).until(
-                EC.element_to_be_clickable((By.XPATH, locator))
-            )
-            print(f"Found button with locator: {locator}")
-            break
-        except:
-            continue
-
-    if button is None:
-        pytest.fail("Update credential button not found with any locator")
-
+    button = WebDriverWait(browser, 15).until(
+                EC.element_to_be_clickable((By.XPATH, "//div[@class='credentials-card__controls']//button[1]"))
+    )
     button.click()
+
+    WebDriverWait(browser, 15).until(
+        EC.visibility_of_element_located((By.ID, "jenkins-dialog"))
+    )
 
     checkbox = WebDriverWait(browser, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//label[text()='Treat username as secret']"))
