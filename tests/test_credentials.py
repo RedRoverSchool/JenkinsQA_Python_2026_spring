@@ -112,8 +112,6 @@ def test_edit_enable_checkbox(browser):
 
     username_before = tags_element.text
 
-    time.sleep(2)
-
     locators = [
         "//*[@title='Update credential']",
         "//button[@tooltip='Update credential']",
@@ -129,6 +127,7 @@ def test_edit_enable_checkbox(browser):
             button = WebDriverWait(browser, 15).until(
                 EC.element_to_be_clickable((By.XPATH, locator))
             )
+            print(f"Found button with locator: {locator}")
             break
         except:
             continue
@@ -138,7 +137,10 @@ def test_edit_enable_checkbox(browser):
 
     button.click()
 
-    browser.find_element(By.XPATH, "//label[text()='Treat username as secret']").click()
+    checkbox = WebDriverWait(browser, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//label[text()='Treat username as secret']"))
+    )
+    checkbox.click()
 
     browser.find_element(By.ID, "cr-dialog-submit").click()
 
