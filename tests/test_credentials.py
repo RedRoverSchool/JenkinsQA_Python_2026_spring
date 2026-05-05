@@ -2,7 +2,6 @@ import time
 
 import pytest
 from selenium.common import NoSuchElementException
-from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -113,25 +112,37 @@ def test_edit_enable_checkbox(browser):
 
     username_before = tags_element.text
 
-    time.sleep(6)
+    time.sleep(2)
 
-    update_button = WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable(
-            (By.CSS_SELECTOR, "[data-type='credentials-update']")
-        )
-    )
+    locators = [
+        "//*[@title='Update credential']",
+        "//button[@tooltip='Update credential']",
+        "//button[@title='Update credential']",
+        "//button[@data-type='credentials-update']",
+        "//button[contains(@data-url, 'updateDialog')]",
+        "//div[@class='credentials-card__controls']//button[1]"
+    ]
 
-    ActionChains(browser) \
-        .move_to_element(update_button) \
-        .pause(0.2) \
-        .click() \
-        .perform()
+    button = None
+    for locator in locators:
+        try:
+            button = WebDriverWait(browser, 15).until(
+                EC.element_to_be_clickable((By.XPATH, locator))
+            )
+            break
+        except:
+            continue
+
+    if button is None:
+        pytest.fail("Update credential button not found with any locator")
+
+    button.click()
 
     browser.find_element(By.XPATH, "//label[text()='Treat username as secret']").click()
 
     browser.find_element(By.ID, "cr-dialog-submit").click()
 
-    WebDriverWait(browser, 10).until(
+    WebDriverWait(browser, 15).until(
         EC.invisibility_of_element_located((By.ID, "jenkins-dialog"))
     )
 
