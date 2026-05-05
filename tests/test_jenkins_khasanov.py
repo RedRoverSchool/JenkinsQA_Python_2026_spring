@@ -38,4 +38,4 @@ def test_create_new_item(browser):
     time.sleep(2)
     item_name_fild = browser.find_element(By.XPATH,"//input[@id='name']")
     item_name_fild.send_keys('London')
-    assert item_name_fild.get_attribute('value') == 'London'
+    assert item_name_fild.get_attribute('value') == 'Londonn'
