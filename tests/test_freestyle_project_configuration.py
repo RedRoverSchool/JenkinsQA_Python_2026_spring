@@ -102,9 +102,8 @@ def test_build_steps_execute_shell_option(browser):
     browser.find_element(By.XPATH, xpath1).click()
     browser.find_element(By.XPATH, "//a[contains(., 'Configure')]").click()
 
-    add_button = WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[@suffix='builder']"))
-    )
+    add_button = wait_until_clickable(browser, (By.XPATH, "//button[@suffix='builder']"))
+
     browser.execute_script("arguments[0].scrollIntoView({block: 'center'});", add_button)
     add_button.click()
 
@@ -114,7 +113,9 @@ def test_build_steps_execute_shell_option(browser):
     ActionChains(browser).move_to_element(editor).click().send_keys(script_for_linux).perform()
 
     browser.find_element(By.XPATH, '//*[@id="bottom-sticker"]/div/button[1]').click()
-    browser.find_element(By.XPATH, "//a[.//span[normalize-space()='Build Now']]").click()
+
+    wait_until_clickable(browser, (By.XPATH, "//a[.//span[normalize-space()='Build Now']]")).click()
+
     browser.find_element(By.XPATH, xpath2).click()
 
     log = browser.find_element(By.ID, "out").text

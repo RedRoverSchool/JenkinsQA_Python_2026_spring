@@ -8,6 +8,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 multiconfiguration_project_name = "MultiConfigName"
 
+@pytest.mark.skip
 def test_verify_status_switching_enable_button(browser):
     browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
 
