@@ -118,7 +118,8 @@ def test_edit_enable_checkbox(browser):
     button.click()
 
     WebDriverWait(browser, 15).until(
-        EC.visibility_of_element_located((By.ID, "jenkins-dialog"))
+        EC.visibility_of_element_located(
+            (By.XPATH, "//div[@class='jenkins-dialog__title'][contains(text(), 'Update credential')]"))
     )
 
     checkbox = WebDriverWait(browser, 10).until(
@@ -129,7 +130,7 @@ def test_edit_enable_checkbox(browser):
     browser.find_element(By.ID, "cr-dialog-submit").click()
 
     WebDriverWait(browser, 15).until(
-        EC.invisibility_of_element_located((By.ID, "jenkins-dialog"))
+        EC.invisibility_of_element_located((By.XPATH, "//div[@class='jenkins-dialog__title'][contains(text(), 'Update credential')]"))
     )
 
     assert USERNAME in username_before, "Username should be visible before enabling checkbox"
@@ -170,6 +171,9 @@ def test_create_id_with_special_characters(browser, special_characters):
     id_field = browser.find_element(By.NAME, "_.id")
     id_field.send_keys(special_characters)
     browser.execute_script("arguments[0].blur();", id_field)
+
+    #Дополнительный триггер для ошибки, в надежде, что он повысит стабильность теста
+    browser.find_element(By.NAME, "_.description").click()
 
     actual_error = WebDriverWait(browser, 15).until(
         lambda d: d.find_element(By.XPATH, "//div[@class='error']").text
