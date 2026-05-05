@@ -92,9 +92,7 @@ def test_build_steps_execute_shell_option(browser):
     script_for_linux = '''echo "Starting process..."
     echo "Hostname: $(hostname)"
     echo "Current User: $(whoami)" 
-    echo "Uptime: $(uptime -p)"
-    sleep 1
-    echo "1 seconds have passed. Continuing..." '''
+    echo "Uptime: $(uptime -p)" '''
 
     xpath1 = f"//*[@id='job_{JOB_NAME}']/td[3]/a"
     xpath2 = f"//a[@href='/job/{JOB_NAME}/1/console']"
