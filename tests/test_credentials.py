@@ -113,7 +113,7 @@ def test_edit_enable_checkbox(browser):
 
     update_button = WebDriverWait(browser, 10).until(
         EC.presence_of_element_located(
-            (By.XPATH, ".//div[@class='credentials-card__controls']//button[@title='Update credential']")
+            (By.CSS_SELECTOR, "[data-type='credentials-update']")
         )
     )
 
@@ -157,7 +157,7 @@ def test_delete(browser):
     assert empty_message.is_displayed(), "Empty domain message not displayed after deletion"
     assert not is_credential_present(browser, USERNAME, DESCRIPTION, CREDENTIAL_ID), "Credential still exists after deletion"
 
-@pytest.mark.skip(reason="ER_22.002.04")
+
 @pytest.mark.parametrize("special_characters ",[
     "!", "%", "&", "#", "@", "*"
 ])
@@ -170,7 +170,7 @@ def test_create_id_with_special_characters(browser, special_characters):
     id_field.send_keys(special_characters)
     browser.execute_script("arguments[0].blur();", id_field)
 
-    actual_error = WebDriverWait(browser, 10).until(
+    actual_error = WebDriverWait(browser, 15).until(
         lambda d: d.find_element(By.XPATH, "//div[@class='error']").text
     )
 
