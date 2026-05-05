@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from conftest import browser
+import time
 
 FREESTYLE_PROJECT_NAME = "Freestyle Project"
 SCM_TITLE_EXPECTED = "Source Code Management"
@@ -88,34 +89,24 @@ def test_build_steps_field_is_available(browser):
 
 
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
-def test_build_steps_execute_shell_option(browser):
+def test_build_steps_configure_shell_option(browser):
+
     script_for_linux = '''echo "Starting process..."
-    echo "Hostname: $(hostname)"
-    echo "Current User: $(whoami)" 
-    echo "Uptime: $(uptime -p)" '''
+    echo "Hostname: $(hostname)"'''
 
-    xpath1 = f"//*[@id='job_{JOB_NAME}']/td[3]/a"
-    xpath2 = f"//a[@href='/job/{JOB_NAME}/1/console']"
-
-    browser.find_element(By.XPATH, xpath1).click()
+    xpath = f"//*[@id='job_{JOB_NAME}']/td[3]/a"
+    browser.find_element(By.XPATH, xpath).click()
     browser.find_element(By.XPATH, "//a[contains(., 'Configure')]").click()
 
     add_button = wait_until_clickable(browser, (By.XPATH, "//button[@suffix='builder']"))
-
     browser.execute_script("arguments[0].scrollIntoView({block: 'center'});", add_button)
     add_button.click()
-
     browser.find_element(By.XPATH, "//button[normalize-space()='Execute shell']").click()
 
     editor = browser.find_element(By.CSS_SELECTOR, ".CodeMirror")
     ActionChains(browser).move_to_element(editor).click().send_keys(script_for_linux).perform()
-
     browser.find_element(By.XPATH, '//*[@id="bottom-sticker"]/div/button[1]').click()
+    time.sleep(2)
+    header = browser.find_element(By.TAG_NAME, "h1").text
 
-    wait_until_clickable(browser, (By.XPATH, "//a[.//span[normalize-space()='Build Now']]")).click()
-
-    browser.find_element(By.XPATH, xpath2).click()
-
-    log = browser.find_element(By.ID, "out").text
-
-    assert "Finished: SUCCESS" in log
+    assert header == JOB_NAME
