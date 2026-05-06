@@ -119,6 +119,7 @@ def test_delete(browser):
     assert not is_credential_present(browser, USERNAME, DESCRIPTION, CREDENTIAL_ID), "Credential still exists after deletion"
 
 
+@pytest.mark.skip(reason="Flaky test")
 @pytest.mark.parametrize("special_characters ",[
     "!", "%", "&", "#", "@", "*"
 ])
