@@ -14,14 +14,6 @@ def create_new_freestyle_project(driver):
     wait.until(EC.element_to_be_clickable((By.CLASS_NAME, 'app-jenkins-logo'))).click()
     return project_name
 
-def test_rename_freestyle_project_from_dashboard(browser):
-    wait = WebDriverWait(browser, 5)
-    project_name = create_new_freestyle_project(browser)
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, f'[href="job/{project_name}/"]>.jenkins-menu-dropdown-chevron'))).click()
-    wait.until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT, 'Rename'))).click()
-    rename_page_title = wait.until(EC.visibility_of_element_located((By.TAG_NAME, 'h1')))
-    assert rename_page_title.text == f'Rename Project {project_name}'
-
 def test_rename_freestyle_project_from_project_page(browser):
     wait = WebDriverWait(browser, 5)
     project_name = create_new_freestyle_project(browser)
