@@ -1,13 +1,12 @@
 import pytest
 from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 
 JOB_NAME = "Test_project"
 
-def wait_until_clickable(browser: WebDriver, locator: tuple[str, str], timeout=10):
+def wait_until_clickable(browser, locator, timeout=10):
     return WebDriverWait(browser, timeout).until(
         EC.element_to_be_clickable(locator)
     )
@@ -45,6 +44,8 @@ def test_build_steps_configure_shell_option(browser):
     ActionChains(browser).move_to_element(editor).click().send_keys(script_for_linux).perform()
     browser.find_element(By.XPATH, '//*[@id="bottom-sticker"]/div/button[1]').click()
 
-    header = browser.find_element(By.TAG_NAME, "h1").text
+    header = WebDriverWait(browser, 10).until(
+        EC.presence_of_element_located((By.TAG_NAME, "h1"))
+    ).text
 
     assert header == JOB_NAME
