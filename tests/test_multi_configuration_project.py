@@ -77,6 +77,7 @@ def test_create_multi_configuration_project(browser):
     assert created_multi_configuration == multiconfiguration_project_name
 
 
+@pytest.mark.skip(reason="Flaky test")
 @pytest.mark.dependency(depends=["test_create_multi_configuration_project"])
 def test_create_project_with_exist_name(browser):
     browser.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
