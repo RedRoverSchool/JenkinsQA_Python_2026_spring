@@ -1,12 +1,13 @@
 import pytest
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.devtools.v147.debugger import pause
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 
 FOLDER_NAME = "TestFolder"
 SECOND_FOLDER_NAME = "SecondFolder"
-
+FOLDER_DESCRIPTION = "Folder description"
 def create_folder(driver, name, full_creation=True):
     driver.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
     driver.find_element(By.ID, "name").send_keys(name)
@@ -174,3 +175,11 @@ def test_create_folder_from_copy(browser):
     new_folder = wait.until(
         EC.visibility_of_element_located((By.LINK_TEXT, 'Folder from copy')))
     assert new_folder.text == 'Folder from copy'
+
+def test_add_description_after_creation(browser):
+    create_folder(browser, FOLDER_NAME)
+    browser.find_element(By.ID,"description-link").click()
+    browser.find_element(By.NAME,"description").send_keys(FOLDER_DESCRIPTION)
+    browser.find_element(By.NAME, "Submit").click()
+
+    assert browser.find_element(By.ID,"description-content").text == FOLDER_DESCRIPTION
