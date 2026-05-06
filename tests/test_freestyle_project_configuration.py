@@ -59,7 +59,7 @@ def test_access_scm_title(browser):
 
     assert scm_title_text == SCM_TITLE_EXPECTED
 
-@pytest.mark.skip(reason="ER_TC_02.002.03")
+
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
 def test_add_description_to_existing_freestyle_project(browser):
     wait = WebDriverWait(browser, 10)
@@ -68,4 +68,8 @@ def test_add_description_to_existing_freestyle_project(browser):
     browser.find_element(By.NAME, "description").send_keys("Test description")
     browser.find_element(By.NAME, "Submit").click()
 
-    assert wait.until(EC.text_to_be_present_in_element((By.ID, "description"), "Test description"))
+    assert wait.until(
+    EC.visibility_of_element_located(
+        (By.XPATH, "//*[@id='description-content' and contains(., 'Test description')]")
+    )
+)
