@@ -1,5 +1,3 @@
-import time
-
 import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -40,12 +38,7 @@ def test_open_configuration_2(browser):
 
     browser.find_element(By.CLASS_NAME, "jenkins-mobile-hide").click()
     browser.find_element(By.XPATH, "//button[contains(concat(' ', @data-href, ' '), 'http://localhost:8080/job/Red%20Rover/')]").click()
-    # configure = WebDriverWait(browser, 5).until(EC.visibility_of_element_located((By.XPATH, "//*[@class='jenkins-menu-dropdown-chevron']")))
-    # configure.click()
-
     browser.find_element(By.XPATH, "//*[@class='icon-gear icon-md']").click()
-
     conf_page_title = browser.find_element(By.ID, "general").text
-
 
     assert conf_page_title == "General"
