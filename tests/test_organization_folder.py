@@ -1,5 +1,7 @@
 import pytest
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 @pytest.mark.dependency()
@@ -24,7 +26,8 @@ def test_open_configuration_1(browser):
 
     browser.find_element(By.CLASS_NAME, "jenkins-mobile-hide").click()
     browser.find_element(By.CLASS_NAME, "jenkins-menu-dropdown-chevron").click()
-    browser.find_element(By.XPATH, "//*[@class='jenkins-dropdown__item '][1]").click()
-    confi_page_title = browser.find_element(By.ID, "general").text
+    configure = WebDriverWait(browser, 5).until(EC.visibility_of_element_located((By.XPATH, "//*[@class='jenkins-dropdown__item '][1]")))
+    configure.click()
+    conf_page_title = browser.find_element(By.ID, "general").text
 
-    assert confi_page_title == "General"
+    assert conf_page_title == "General"
