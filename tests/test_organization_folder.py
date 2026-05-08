@@ -31,3 +31,13 @@ def test_open_configuration_1(browser):
     conf_page_title = browser.find_element(By.ID, "general").text
 
     assert conf_page_title == "General"
+
+
+@pytest.mark.dependency(depends=["test_create_org_folder"])
+def test_open_configuration_2(browser):
+    browser.find_element(By.CLASS_NAME, "jenkins-mobile-hide").click()
+    browser.find_element(By.XPATH, "//button[contains(concat(' ', @data-href, ' '), 'http://localhost:8080/job/Red%20Rover/')]").click()
+    browser.find_element(By.XPATH, "//*[@class='icon-gear icon-md']").click()
+    conf_page_title = browser.find_element(By.ID, "general").text
+
+    assert conf_page_title == "General"
