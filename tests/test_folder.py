@@ -180,6 +180,9 @@ def test_add_description_after_creation(browser):
     create_folder(browser, FOLDER_NAME)
     browser.find_element(By.ID,"description-link").click()
     browser.find_element(By.NAME,"description").send_keys(FOLDER_DESCRIPTION)
-    browser.find_element(By.NAME, "Submit").click()
+    WebDriverWait(browser, 5).until(
+        EC.element_to_be_clickable((By.NAME, "Submit"))
+    ).click()
 
     assert browser.find_element(By.ID,"description-content").text == FOLDER_DESCRIPTION
+
