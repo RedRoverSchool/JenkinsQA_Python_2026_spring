@@ -177,12 +177,12 @@ def test_create_folder_from_copy(browser):
     assert new_folder.text == 'Folder from copy'
 
 def test_add_description_after_creation(browser):
+    wait = WebDriverWait(browser, 5)
     create_folder(browser, FOLDER_NAME)
     browser.find_element(By.ID,"description-link").click()
     browser.find_element(By.NAME,"description").send_keys(FOLDER_DESCRIPTION)
-    WebDriverWait(browser, 5).until(
-        EC.element_to_be_clickable((By.NAME, "Submit"))
-    ).click()
+    wait.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
 
+    wait.until(EC.visibility_of_element_located((By.ID,"description-content")))
     assert browser.find_element(By.ID,"description-content").text == FOLDER_DESCRIPTION
 
