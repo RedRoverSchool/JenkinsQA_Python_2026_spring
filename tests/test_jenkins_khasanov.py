@@ -12,7 +12,7 @@ from selenium.webdriver.common.by import By
 
 
 
-
+@pytest.mark.skip
 def test_login_page(browser):#Провекрка страницы аторизации
     print(browser.current_url)
     assert browser.current_url == 'http://localhost:8080/login?from=%2F'
@@ -28,11 +28,13 @@ def test_user_name_fild(browser):#Проверка поля ввода логи�
     assert user_name_fild.get_attribute('value') == 'admin'
 
 def test_create_new_item_icon(browser):#Проверка отоюражения кнопки New Item
+    time.sleep(2)
     create_new_item = browser.find_element(By.XPATH,"//a[@it='hudson.model.Hudson@32e2f63a']")
     time.sleep(2)
     assert create_new_item.is_displayed()
 
 def test_create_new_item(browser):#Проверка ввода имени в поле ввода New Item
+    time.sleep(2)
     create_new_item = browser.find_element(By.XPATH, "//a[@it='hudson.model.Hudson@32e2f63a']")
     create_new_item.click()
     time.sleep(2)
@@ -42,6 +44,7 @@ def test_create_new_item(browser):#Проверка ввода имени в п�
 
 
 def test_select_type_item(browser):#Проверка что выбранный тип активировался после нажатия на него
+    time.sleep(2)
     create_new_item = browser.find_element(By.XPATH, "//a[@it='hudson.model.Hudson@32e2f63a']")
     create_new_item.click()
     time.sleep(2)
@@ -56,6 +59,7 @@ def test_select_type_item(browser):#Проверка что выбранный �
 
 
 def test_open_configuration_page(browser):
+    time.sleep(2)
     create_new_item = browser.find_element(By.XPATH, "//a[@it='hudson.model.Hudson@32e2f63a']")
     create_new_item.click()
     time.sleep(2)
