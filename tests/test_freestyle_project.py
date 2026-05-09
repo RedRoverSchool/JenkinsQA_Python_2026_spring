@@ -1,19 +1,13 @@
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import pytest
 
-FREESTYLE_PROJECT_NAME = "Freestyle Project"
+FREESTYLE_PROJECT_NAME = "freestyle_project"
 description = "Description Freestyle Project"
-SCM_TITLE_EXPECTED = "Source Code Management"
 
 
-def wait_until_clickable(browser, locator: tuple, timeout=10):
-    """Ожидает кликабельности элемента и возвращает его."""
-    return WebDriverWait(browser, timeout).until(
-        EC.element_to_be_clickable(locator)
-    )
-
-
+@pytest.mark.dependency()
 def test_create_freestyle_project(browser):
     browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
     browser.find_element(By.ID, "name").send_keys(FREESTYLE_PROJECT_NAME)
@@ -26,13 +20,36 @@ def test_create_freestyle_project(browser):
     assert browser.find_element(By.CSS_SELECTOR, ".job-index-headline.page-headline").text == FREESTYLE_PROJECT_NAME
 
 
-def test_access_scm_title(browser):
-    browser.find_element(By.XPATH, "//a[@href='newJob']").click()
+@pytest.mark.dependency(depends=["test_create_freestyle_project"])
+def test_rename_freestyle_project_page_from_dashboard(browser):
+    wait = WebDriverWait(browser, 5)
+    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, f'[href="job/{FREESTYLE_PROJECT_NAME}/"]>.jenkins-menu-dropdown-chevron'))).click()
+    wait.until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT, 'Rename'))).click()
 
-    browser.find_element(By.ID, "name").send_keys(FREESTYLE_PROJECT_NAME)
-    browser.find_element(By.CLASS_NAME, "hudson_model_FreeStyleProject").click()
-    wait_until_clickable(browser, (By.ID, "ok-button")).click()
+    rename_page_title = wait.until(EC.visibility_of_element_located((By.TAG_NAME, 'h1'))).text
+    assert rename_page_title == f'Rename Project {FREESTYLE_PROJECT_NAME}'
 
-    scm_title_text = wait_until_clickable(browser, (By.ID, "source-code-management")).text
 
-    assert scm_title_text == SCM_TITLE_EXPECTED
+@pytest.mark.dependency(depends=["test_create_freestyle_project"])
+def test_rename_freestyle_project_page_from_project_page(browser):
+    wait = WebDriverWait(browser, 5)
+    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, f'[href="job/{FREESTYLE_PROJECT_NAME}/"]'))).click()
+    wait.until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT, 'Rename'))).click()
+
+    rename_page_title = browser.find_element(By.TAG_NAME, 'h1').text
+    assert rename_page_title == f'Rename Project {FREESTYLE_PROJECT_NAME}'
+
+
+@pytest.mark.dependency(depends=["test_create_freestyle_project"])
+@pytest.mark.parametrize("special_character", ['?', '*', '/', '!'])
+def test_special_characters_in_rename_field(browser, special_character):
+    wait = WebDriverWait(browser, 10)
+    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, f'[href="job/{FREESTYLE_PROJECT_NAME}/"]'))).click()
+    wait.until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT, 'Rename'))).click()
+
+    wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[checkdependson="newName"]'))).clear()
+    browser.find_element(By.CSS_SELECTOR, '[checkdependson="newName"]').send_keys(special_character)
+    browser.find_element(By.ID, 'main-panel').click()
+
+    error = wait.until(EC.visibility_of_element_located((By.XPATH, f'//div[@class="error"][contains(text(), "{special_character}")]'))).text
+    assert error == f"‘{special_character}’ is an unsafe character"

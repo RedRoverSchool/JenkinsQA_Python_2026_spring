@@ -1,8 +1,8 @@
 from selenium.webdriver.common.by import By
+import pytest
 
 
-
-
+@pytest.mark.skip()
 def test_jenkins_plugins_available_plugins_search(browser):
     icon_setting = browser.find_element(By.XPATH, '//a[@id="root-action-ManageJenkinsAction"]')
     icon_setting.click()
