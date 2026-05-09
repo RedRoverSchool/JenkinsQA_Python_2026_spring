@@ -54,3 +54,18 @@ def test_select_type_item(browser):#Проверка что выбранный �
     activ_type = browser.find_element(By.XPATH,"//li[@class='com_cloudbees_hudson_plugins_folder_Folder active']")
     assert activ_type.get_attribute('class') == 'com_cloudbees_hudson_plugins_folder_Folder active'
 
+
+def test_open_configuration_page(browser):
+    create_new_item = browser.find_element(By.XPATH, "//a[@it='hudson.model.Hudson@32e2f63a']")
+    create_new_item.click()
+    time.sleep(2)
+    item_name_fild = browser.find_element(By.XPATH, "//input[@id='name']")
+    item_name_fild.send_keys('London')
+    n = item_name_fild.get_attribute('value')
+    folder_type = browser.find_element(By.XPATH, "//span[text()='Folder']")
+    folder_type.click()
+    time.sleep(2)
+    button_OK = browser.find_element(By.XPATH,"//button[@id='ok-button']")
+    button_OK.click()
+    assert browser.current_url == f'http://localhost:8080/job/{n}/configure'
+
