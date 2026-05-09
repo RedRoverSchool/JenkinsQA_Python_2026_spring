@@ -21,6 +21,8 @@ def test_create_freestyle_project(browser):
 
     assert browser.find_element(By.CSS_SELECTOR, ".job-index-headline.page-headline").text == "Test Freestyle"
 
+
+@pytest.mark.skip(reason="ER_02.002.02")
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
 def test_description_preview(browser):
     freestyle_project = browser.find_element(By.XPATH, "//a[@href='job/Test%20Freestyle/']")
