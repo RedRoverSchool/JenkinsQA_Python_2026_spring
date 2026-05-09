@@ -18,7 +18,7 @@ def test_login_page(browser):#Провекрка страницы аториза
     assert browser.current_url == 'http://localhost:8080/login?from=%2F'
 
 @pytest.mark.skip
-def test_user_name_fild(browser):
+def test_user_name_fild(browser):#Проверка поля ввода логина
     print(browser.current_url)
     user_name_fild = browser.find_element(By.XPATH,"//input[@id='j_username']")
     user_name_fild.clear()
