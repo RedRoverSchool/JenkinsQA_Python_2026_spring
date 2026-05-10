@@ -1,3 +1,5 @@
+import pytest
+import pytest_dependency
 import selenium.webdriver.chrome.webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -61,6 +63,7 @@ def test_build_queue_visibility(browser):
     assert all(item in list_items for item in target_item)
 
 
+@pytest.mark.dependency()
 def test_build_history_display_status(browser: selenium.webdriver.chrome.webdriver.WebDriver):
     name_jobs = ['job4', 'job5', 'job6']
 
@@ -72,6 +75,15 @@ def test_build_history_display_status(browser: selenium.webdriver.chrome.webdriv
     job = browser.find_elements(By.XPATH, "//tbody/tr/td[contains(@class, 'jenkins-table__icon')]/div")[0].get_attribute('innerHTML')
 
     assert 'id="blue"' in job or 'id="red"' in job
+
+
+@pytest.mark.dependency(depends=["test_build_history_display_status"])
+def test_build_history_console_output(browser: selenium.webdriver.chrome.webdriver.WebDriver):
+    browser.find_element(By.XPATH, "//a[@href='/view/all/builds']").click()
+    browser.find_element(By.XPATH, "//tbody/tr/td[@class='jenkins-table__cell--tight']").click()
+    h1 = browser.find_element(By.XPATH, "//h1").text
+    print(f"{h1=}")
+    assert "Console" in h1
 
 
 def create_freestyle_project_with_timer(browser, name_project: str, command_shell: str):
