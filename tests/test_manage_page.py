@@ -72,9 +72,15 @@ def test_build_history_display_status(browser: selenium.webdriver.chrome.webdriv
         browser.find_element(By.XPATH, f"//tr/td[7]//a[@tooltip='Schedule a Build for {name}']").click()
 
     browser.find_element(By.XPATH, "//a[@href='/view/all/builds']").click()
-    job = browser.find_elements(By.XPATH, "//tbody/tr/td[contains(@class, 'jenkins-table__icon')]/div")[0].get_attribute('innerHTML')
+    job_color_status = browser.find_elements(By.XPATH, "//tbody/tr/td[contains(@class, 'jenkins-table__icon')]/div")[0].get_attribute('innerHTML')
+    name_job = browser.find_element(By.XPATH, "//tbody/tr/td/a[@class='jenkins-table__link model-link']").get_attribute("href")
+    timer_job = browser.find_elements(By.XPATH, "//tbody/tr/td[@data]")
+    status_job = browser.find_elements(By.XPATH, "//tbody/tr/td[4]")
 
-    assert 'id="blue"' in job or 'id="red"' in job
+    assert 'id="blue"' in job_color_status or 'id="red"' in job_color_status, "нет джобы с успешным статусом выполнения"
+    assert any(job in name_job for job in name_jobs), "ни одна тестовая джоба не была запущена на выполнение"
+    assert any("sec" in timer.text for timer in timer_job), "ни у одной джобы нет прошедшего времени выполнения"
+    assert any("stable" in status.text for status in status_job), "нет джобы с успешным статусом выполнения"
 
 
 @pytest.mark.dependency(depends=["test_build_history_display_status"])
