@@ -12,7 +12,7 @@ from selenium.webdriver.common.by import By
 
 
 
-@pytest.mark.skip
+
 def test_login_page(browser):#Провекрка страницы аторизации
     print(browser.current_url)
     assert browser.current_url == 'http://localhost:8080/login?from=%2F'
@@ -72,4 +72,29 @@ def test_open_configuration_page(browser):
     button_OK = browser.find_element(By.XPATH,"//button[@id='ok-button']")
     button_OK.click()
     assert browser.current_url == f'http://localhost:8080/job/{n}/configure'
+
+def test_input_configuration_page(browser):
+    time.sleep(2)
+    create_new_item = browser.find_element(By.XPATH, "//a[@it='hudson.model.Hudson@32e2f63a']")
+    create_new_item.click()
+    time.sleep(2)
+    item_name_fild = browser.find_element(By.XPATH, "//input[@id='name']")
+    item_name_fild.send_keys('London')
+    n = item_name_fild.get_attribute('value')
+    folder_type = browser.find_element(By.XPATH, "//span[text()='Folder']")
+    folder_type.click()
+    time.sleep(2)
+    button_OK = browser.find_element(By.XPATH, "//button[@id='ok-button']")
+    button_OK.click()
+    inp_disp_name = browser.find_element(By.XPATH,"//input[@type='text']")
+    inp_disp_name.send_keys('Display name')
+    assert inp_disp_name.get_attribute('value') == 'Display name'
+    descrip_text = browser.find_element(By.XPATH,"//textarea[@name='_.description']")
+    descrip_text.send_keys('Description huyuuv bvtvvryvyrv yvyt7vvh')
+    assert descrip_text.get_attribute('value') == 'Description huyuuv bvtvvryvyrv yvyt7vvh'
+    btn_save = browser.find_element(By.XPATH,"//button[@name='Submit']")
+    btn_save.click()
+    time.sleep(3)
+    assert browser.current_url == f'http://localhost:8080/job/{n}/'
+
 
