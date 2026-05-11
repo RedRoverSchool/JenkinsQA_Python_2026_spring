@@ -1,9 +1,12 @@
 import pytest
+from pages.home_page import HomePage
+from pages.new_item_page import NewItemPage
+from pages.freestyle_config_page import FreestyleConfigPage
+from pages.project_page import ProjectPage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.devtools.v147.debugger import pause
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
 
 FOLDER_NAME = "TestFolder"
 SECOND_FOLDER_NAME = "SecondFolder"
@@ -146,35 +149,21 @@ def test_create_folder_with_same_name_in_different_parent(browser):
 
 @pytest.mark.dependency(depends=['test_create_folder'])
 def test_create_folder_from_copy(browser):
-    wait = WebDriverWait(browser, 5)
+    home_page = HomePage(browser)
+    new_item_page = NewItemPage(browser)
 
-    wait.until(
-        EC.element_to_be_clickable((By.LINK_TEXT, "New Item"))).click()
-
-    wait.until(
-        EC.visibility_of_element_located((By.ID, 'name'))).send_keys('Folder from copy')
-
-    wait.until(
-        EC.element_to_be_clickable((By.ID, 'from'))).send_keys('TestFolder')
-
-    wait.until(
-        EC.element_to_be_clickable((By.ID, 'from'))).send_keys(Keys.ENTER)
-
-    wait.until(
-        EC.element_to_be_clickable((By.XPATH, '//button[@value="Save"]'))).click()
-
-    wait.until(
+    home_page.new_item_click()
+    new_item_page.set_project_name('Folder from copy')
+    new_item_page.enter_copy_from('TestFolder')
+    new_item_page.click_ok()
+    new_item_page.save()
+    new_item_page.wait10.until(
         EC.visibility_of_element_located((By.XPATH, '//h1[text()="Folder from copy"]')))
-
-    wait.until(
-        EC.presence_of_element_located((By.ID, 'jenkins-head-icon')))
-
-    wait.until(
-        EC.element_to_be_clickable((By.ID, 'jenkins-head-icon'))).click()
-
-    new_folder = wait.until(
+    home_page.click_jenkins()
+    new_folder = home_page.wait10.until(
         EC.visibility_of_element_located((By.LINK_TEXT, 'Folder from copy')))
     assert new_folder.text == 'Folder from copy'
+
 
 def test_add_description_after_creation(browser):
     wait = WebDriverWait(browser, 5)
@@ -185,4 +174,3 @@ def test_add_description_after_creation(browser):
 
     wait.until(EC.visibility_of_element_located((By.ID,"description-content")))
     assert browser.find_element(By.ID,"description-content").text == FOLDER_DESCRIPTION
-

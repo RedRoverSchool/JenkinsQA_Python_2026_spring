@@ -12,3 +12,8 @@ class HomePage(BasePage):
         ).click()
 
         return NewItemPage(self.driver)
+
+    def click_jenkins(self):
+        self.wait10.until(EC.element_to_be_clickable((By.ID, 'jenkins-head-icon'))).click()
+
+        return self
