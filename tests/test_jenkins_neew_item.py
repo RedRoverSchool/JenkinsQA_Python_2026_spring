@@ -94,7 +94,7 @@ def test_input_configuration_page(browser):
     assert descrip_text.get_attribute('value') == 'Description huyuuv bvtvvryvyrv yvyt7vvh'
     btn_save = browser.find_element(By.XPATH,"//button[@name='Submit']")
     btn_save.click()
-    time.sleep(3)
+    time.sleep(4)
     assert browser.current_url == f'http://localhost:8080/job/{n}/'
 
 
