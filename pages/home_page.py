@@ -28,3 +28,8 @@ class HomePage(BasePage):
         list_elements = self.driver.find_elements(By.XPATH,
                                                   f" //div[@class='pane-content']//tr/td/a[@class='model-link inside tl-tr']")
         return [name_job.text for name_job in list_elements]
+
+    def is_project_visible(self, project_name):
+        return self.wait10.until(
+            EC.visibility_of_element_located((By.LINK_TEXT, project_name))
+        ).text == project_name

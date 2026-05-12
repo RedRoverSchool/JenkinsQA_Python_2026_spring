@@ -141,35 +141,19 @@ def test_create_folder_with_same_name_in_different_parent(browser):
 
 @pytest.mark.dependency(depends=['test_create_folder'])
 def test_create_folder_from_copy(browser):
-    wait = WebDriverWait(browser, 5)
+    copy_name = 'Folder from copy'
 
-    wait.until(
-        EC.element_to_be_clickable((By.LINK_TEXT, "New Item"))).click()
-
-    wait.until(
-        EC.visibility_of_element_located((By.ID, 'name'))).send_keys('Folder from copy')
-
-    wait.until(
-        EC.element_to_be_clickable((By.ID, 'from'))).send_keys('TestFolder')
-
-    wait.until(
-        EC.element_to_be_clickable((By.ID, 'from'))).send_keys(Keys.ENTER)
-
-    wait.until(
-        EC.element_to_be_clickable((By.XPATH, '//button[@value="Save"]'))).click()
-
-    wait.until(
-        EC.visibility_of_element_located((By.XPATH, '//h1[text()="Folder from copy"]')))
-
-    wait.until(
-        EC.presence_of_element_located((By.ID, 'jenkins-head-icon')))
-
-    wait.until(
-        EC.element_to_be_clickable((By.ID, 'jenkins-head-icon'))).click()
-
-    new_folder = wait.until(
-        EC.visibility_of_element_located((By.LINK_TEXT, 'Folder from copy')))
-    assert new_folder.text == 'Folder from copy'
+    project_page = (
+        HomePage(browser)
+        .new_item_click()
+        .set_project_name(copy_name)
+        .enter_copy_from('TestFolder')
+        .button_ok_click()
+        .button_save_click()
+        .wait_project_loaded(copy_name)
+        .go_home_page()
+    )
+    assert project_page.is_project_visible(copy_name)
 
 
 def test_add_description_after_creation(browser):

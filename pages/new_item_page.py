@@ -23,3 +23,12 @@ class NewItemPage(BasePage):
         self.driver.find_element(By.ID, "ok-button").click()
 
         return FolderConfigPage(self.driver)
+
+    def enter_copy_from(self, name):
+        self.wait10.until(EC.element_to_be_clickable((By.ID, 'from'))).send_keys(name)
+
+        return self
+
+    def button_ok_click(self):
+        self.wait10.until(EC.element_to_be_clickable((By.ID, 'ok-button'))).click()
+        return FreestyleConfigPage(self.driver)

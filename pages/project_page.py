@@ -12,3 +12,9 @@ class ProjectPage(BasePage):
         return self.wait10.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, ".job-index-headline.page-headline"))
         ).text
+
+    def wait_project_loaded(self, project_name):
+        self.wait10.until(
+            EC.visibility_of_element_located((By.XPATH, f'//h1[text()="{project_name}"]'))
+        )
+        return self

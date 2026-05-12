@@ -38,3 +38,7 @@ class FreestyleConfigPage(BasePage):
          .click().send_keys(command_shell).perform())
 
         return self
+
+    def wait_project_loaded(self, project_name):
+        self.wait10.until(
+            EC.visibility_of_element_located((By.XPATH, f'//h1[text()="{project_name}"]')))
