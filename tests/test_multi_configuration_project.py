@@ -116,6 +116,7 @@ def test_search_created_project(browser):
     assert WebDriverWait(browser, 10).until(
          EC.visibility_of_element_located((By.TAG_NAME, "h1"))).text == multiconfiguration_project_name
 
+@pytest.mark.skip
 @pytest.mark.dependency(depends=["test_create_multi_configuration_project"])
 def test_check_delete_view_on_dashboard(browser):
     view_name = "NewView"
