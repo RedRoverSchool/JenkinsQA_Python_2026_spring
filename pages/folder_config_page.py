@@ -19,6 +19,6 @@ class FolderConfigPage(BasePage):
         field.clear()
         field.send_keys(display_name)
         field.send_keys(Keys.TAB)
-        time.sleep(1)
+        time.sleep(2)
 
         return self
