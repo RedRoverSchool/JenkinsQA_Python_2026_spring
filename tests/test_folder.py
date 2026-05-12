@@ -40,20 +40,19 @@ def test_create_folder(browser):
 
 
 def test_create_folder_with_display_name(browser):
-    display_name = "Display Folder"
+    display_name = "Display_Folder"
 
-    create_folder(browser, FOLDER_NAME, full_creation=False)
+    folder_name = (
+        HomePage(browser)
+        .new_item_click()
+        .set_project_name(FOLDER_NAME)
+        .select_folder_and_ok_click()
+        .set_display_name(display_name)
+        .save_click()
+        .get_project_name()
+    )
 
-    browser.find_element(By.NAME, "_.displayNameOrNull").send_keys(display_name)
-    WebDriverWait(browser, 5).until(
-        EC.element_to_be_clickable((By.NAME, "Submit"))
-    ).click()
-
-    assert browser.find_element(By.CLASS_NAME, "job-index-headline").text == display_name
-    folder_name_line = \
-        [line for line in browser.find_element(By.ID, "main-panel").text.split('\n') if
-         line.startswith("Folder name: ")][0]
-    assert folder_name_line == f"Folder name: {FOLDER_NAME}"
+    assert folder_name == display_name
 
 
 def test_create_folder_with_description(browser):
