@@ -13,5 +13,6 @@ class FolderConfigPage(BasePage):
 
     def set_display_name(self, display_name):
         self.driver.find_element(By.NAME, "_.displayNameOrNull").send_keys(display_name)
+        self.driver.find_element(By.XPATH, "//a[@aria-label='Help for feature: Display Name']").click()
 
         return self
