@@ -58,7 +58,7 @@ def test_appearance_show_pipeline_stages(browser):
     browser.execute_script("arguments[0].scrollIntoView(true);", checkbox_stages_1)
     checkbox_stages_1.click()
 
-    browser.get("http://localhost:8080/")
+    browser.find_element(By.XPATH, "//img[@id='jenkins-head-icon']").click()
     job_link = browser.find_element(By.XPATH, '//a[@href="job/test_1/"]')
     browser.execute_script("arguments[0].click();", job_link)
     stages_loc = browser.find_element(By.XPATH, "//a[@href='multi-pipeline-graph']")
