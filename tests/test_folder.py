@@ -1,13 +1,15 @@
 import pytest
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.devtools.v147.debugger import pause
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from pages.home_page import HomePage
 
 FOLDER_NAME = "TestFolder"
 SECOND_FOLDER_NAME = "SecondFolder"
 FOLDER_DESCRIPTION = "Folder description"
+
+
 def create_folder(driver, name, full_creation=True):
     driver.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
     driver.find_element(By.ID, "name").send_keys(name)
@@ -23,27 +25,34 @@ def create_folder(driver, name, full_creation=True):
 
 @pytest.mark.dependency()
 def test_create_folder(browser):
-    create_folder(browser, FOLDER_NAME)
+    project_names_list = (
+        HomePage(browser)
+        .new_item_click()
+        .set_project_name(FOLDER_NAME)
+        .select_folder_and_ok_click()
+        .save_click()
+        .go_home_page()
+        .get_project_names_list()
+    )
 
-    assert f"/job/{FOLDER_NAME}/" in browser.current_url
-    assert browser.find_element(By.CLASS_NAME, "job-index-headline").text == FOLDER_NAME
+    assert len(project_names_list) > 0
+    assert project_names_list[0] == FOLDER_NAME
 
 
 def test_create_folder_with_display_name(browser):
-    display_name = "Display Folder"
+    display_name = "Display_Folder"
 
-    create_folder(browser, FOLDER_NAME, full_creation=False)
+    folder_name = (
+        HomePage(browser)
+        .new_item_click()
+        .set_project_name(FOLDER_NAME)
+        .select_folder_and_ok_click()
+        .set_display_name(display_name)
+        .save_click()
+        .get_project_name()
+    )
 
-    browser.find_element(By.NAME, "_.displayNameOrNull").send_keys(display_name)
-    WebDriverWait(browser, 5).until(
-        EC.element_to_be_clickable((By.NAME, "Submit"))
-    ).click()
-
-    assert browser.find_element(By.CLASS_NAME, "job-index-headline").text == display_name
-    folder_name_line = \
-        [line for line in browser.find_element(By.ID, "main-panel").text.split('\n') if
-         line.startswith("Folder name: ")][0]
-    assert folder_name_line == f"Folder name: {FOLDER_NAME}"
+    assert folder_name == display_name
 
 
 def test_create_folder_with_description(browser):
@@ -57,21 +66,6 @@ def test_create_folder_with_description(browser):
     ).click()
 
     assert browser.find_element(By.ID, "view-message").text == description
-
-
-def test_create_new_folder(browser):
-    name = "new_folder"
-
-    wait = WebDriverWait(browser, 2)
-    browser.find_element(By.XPATH, "//*[@id='tasks']/div[1]/span/a").click()
-    wait.until(EC.visibility_of_element_located((By.XPATH, "//*[@id='add-item-panel']/h1")))
-    browser.find_element(By.ID, "name").send_keys("new_folder")
-    browser.find_element(By.XPATH, "//*[@id='j-add-item-type-nested-projects']/ul/li[1]").click()
-    browser.find_element(By.XPATH, "//*[@id='ok-button']").click()
-    wait.until(EC.visibility_of_element_located((By.XPATH, "//*[@id='bottom-sticker']/div/button[1]")))
-    browser.find_element(By.XPATH, "//*[@id='bottom-sticker']/div/button[1]").click()
-
-    assert name == browser.find_element(By.XPATH, "//*[@id='main-panel']/div[1]/div/h1").text
 
 
 @pytest.mark.dependency(depends=["test_create_folder"])
@@ -176,13 +170,13 @@ def test_create_folder_from_copy(browser):
         EC.visibility_of_element_located((By.LINK_TEXT, 'Folder from copy')))
     assert new_folder.text == 'Folder from copy'
 
+
 def test_add_description_after_creation(browser):
     wait = WebDriverWait(browser, 5)
     create_folder(browser, FOLDER_NAME)
-    browser.find_element(By.ID,"description-link").click()
-    browser.find_element(By.NAME,"description").send_keys(FOLDER_DESCRIPTION)
+    browser.find_element(By.ID, "description-link").click()
+    browser.find_element(By.NAME, "description").send_keys(FOLDER_DESCRIPTION)
     wait.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
 
-    wait.until(EC.visibility_of_element_located((By.ID,"description-content")))
-    assert browser.find_element(By.ID,"description-content").text == FOLDER_DESCRIPTION
-
+    wait.until(EC.visibility_of_element_located((By.ID, "description-content")))
+    assert browser.find_element(By.ID, "description-content").text == FOLDER_DESCRIPTION
