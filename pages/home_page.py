@@ -3,6 +3,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from pages.base_page import BasePage
 from pages.new_item_page import NewItemPage
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 class HomePage(BasePage):
@@ -28,3 +29,21 @@ class HomePage(BasePage):
         list_elements = self.driver.find_elements(By.XPATH,
                                                   f" //div[@class='pane-content']//tr/td/a[@class='model-link inside tl-tr']")
         return [name_job.text for name_job in list_elements]
+
+    def sign_out(self):
+        user_icon = self.wait10.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#root-action-UserAction")))
+        actions = ActionChains(self.driver)
+        actions.move_to_element(user_icon).perform()
+
+        sign_out_button = self.wait10.until(EC.element_to_be_clickable((By.XPATH, "//a[contains(@href, '/logout')]")))
+        try:
+            sign_out_button.click()
+        except StaleElementReferenceException:
+            sign_out_button = self.wait10.until(
+                EC.element_to_be_clickable((By.XPATH, "//a[contains(@href, '/logout')]"))).click()
+
+        from pages.login_page import LoginPage
+        return LoginPage(self.driver)
+
+    def is_jenkins_icon_visible(self):
+        return self.wait10.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#jenkins-head-icon"))).is_displayed()
