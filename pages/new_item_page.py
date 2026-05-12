@@ -1,8 +1,8 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-
 from pages.base_page import BasePage
 from pages.freestyle_config_page import FreestyleConfigPage
+from pages.project_page import ProjectPage
 
 
 class NewItemPage(BasePage):
@@ -29,10 +29,8 @@ class NewItemPage(BasePage):
 
     def click_ok(self):
         self.wait10.until(EC.element_to_be_clickable((By.ID, 'ok-button'))).click()
+        return self  # или FreestyleConfigPage(self.driver), если страница конфигурации отдельно
 
-        return self
-
-    def save(self):
+    def click_save(self):
         self.wait10.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
-
-        return self
+        return ProjectPage(self.driver)

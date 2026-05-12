@@ -3,6 +3,7 @@ from pages.home_page import HomePage
 from pages.new_item_page import NewItemPage
 from pages.freestyle_config_page import FreestyleConfigPage
 from pages.project_page import ProjectPage
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.devtools.v147.debugger import pause
 from selenium.webdriver.support.wait import WebDriverWait
@@ -149,20 +150,16 @@ def test_create_folder_with_same_name_in_different_parent(browser):
 
 @pytest.mark.dependency(depends=['test_create_folder'])
 def test_create_folder_from_copy(browser):
-    home_page = HomePage(browser)
-    new_item_page = NewItemPage(browser)
-
-    home_page.new_item_click()
-    new_item_page.set_project_name('Folder from copy')
-    new_item_page.enter_copy_from('TestFolder')
-    new_item_page.click_ok()
-    new_item_page.save()
-    new_item_page.wait10.until(
-        EC.visibility_of_element_located((By.XPATH, '//h1[text()="Folder from copy"]')))
-    home_page.click_jenkins()
-    new_folder = home_page.wait10.until(
-        EC.visibility_of_element_located((By.LINK_TEXT, 'Folder from copy')))
-    assert new_folder.text == 'Folder from copy'
+    (HomePage(browser)
+        .new_item_click()
+        .set_project_name('Folder from copy')
+        .enter_copy_from('TestFolder')
+        .click_ok()
+        .click_save()
+        .wait_project_loaded('Folder from copy')
+        .click_jenkins()
+        .assert_project_exists('Folder from copy')
+    )
 
 
 def test_add_description_after_creation(browser):

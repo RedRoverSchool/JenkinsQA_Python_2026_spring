@@ -12,3 +12,14 @@ class ProjectPage(BasePage):
         return self.wait10.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, ".job-index-headline.page-headline"))
         ).text
+
+    def wait_project_loaded(self, project_name):
+        self.wait10.until(
+            EC.visibility_of_element_located((By.XPATH, f'//h1[text()="{project_name}"]')))
+
+        return self
+
+    def click_jenkins(self):
+        self.wait10.until(EC.element_to_be_clickable((By.ID, 'jenkins-head-icon'))).click()
+        from pages.home_page import HomePage
+        return HomePage(self.driver)

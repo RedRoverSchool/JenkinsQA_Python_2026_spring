@@ -13,7 +13,9 @@ class HomePage(BasePage):
 
         return NewItemPage(self.driver)
 
-    def click_jenkins(self):
-        self.wait10.until(EC.element_to_be_clickable((By.ID, 'jenkins-head-icon'))).click()
+
+    def assert_project_exists(self, project_name):
+        self.wait10.until(
+            EC.visibility_of_element_located((By.LINK_TEXT, project_name)))
 
         return self
