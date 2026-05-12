@@ -42,19 +42,17 @@ def test_create_folder(browser):
 def test_create_folder_with_display_name(browser):
     display_name = "Display_Folder"
 
-    project_names_list = (
+    folder_name = (
         HomePage(browser)
         .new_item_click()
         .set_project_name(FOLDER_NAME)
         .select_folder_and_ok_click()
         .set_display_name(display_name)
         .save_click()
-        .go_home_page()
-        .get_project_names_list()
+        .get_project_name()
     )
 
-    assert len(project_names_list) > 0
-    assert project_names_list[0] == display_name
+    assert folder_name == display_name
 
 
 def test_create_folder_with_description(browser):
