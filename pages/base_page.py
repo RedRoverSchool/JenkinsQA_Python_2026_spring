@@ -6,5 +6,11 @@ class BasePage:
         self.driver = driver
         self.wait10 = WebDriverWait(driver, timeout)
 
-    def get_current_url(self):
-        return self.driver.current_url
+    def go_home_page(self):
+        from pages.home_page import HomePage
+
+        self.driver.execute_script("""
+            var logo = document.querySelector('.jenkins-mobile-hide');
+            if (logo) logo.click();
+        """)
+        return HomePage(self.driver)

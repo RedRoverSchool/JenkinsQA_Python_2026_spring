@@ -25,16 +25,18 @@ def create_folder(driver, name, full_creation=True):
 
 @pytest.mark.dependency()
 def test_create_folder(browser):
-    folder_page = (
+    projects_names_list = (
         HomePage(browser)
         .new_item_click()
         .set_project_name(FOLDER_NAME)
         .select_folder_and_ok_click()
         .save_click()
+        .go_home_page()
+        .get_projects_names_list()
     )
 
-    assert f"/job/{FOLDER_NAME}/" in folder_page.get_current_url()
-    assert folder_page.get_project_name() == FOLDER_NAME
+    assert len(projects_names_list) > 0
+    assert projects_names_list[0] == FOLDER_NAME
 
 
 def test_create_folder_with_display_name(browser):
