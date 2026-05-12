@@ -30,7 +30,7 @@ def test_create_folder(browser):
         .new_item_click()
         .set_project_name(FOLDER_NAME)
         .select_folder_and_ok_click()
-        .save()
+        .save_click()
     )
 
     assert f"/job/{FOLDER_NAME}/" in folder_page.get_current_url()
