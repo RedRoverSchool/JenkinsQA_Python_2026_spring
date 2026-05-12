@@ -18,6 +18,6 @@ class FolderConfigPage(BasePage):
         field = self.driver.find_element(By.NAME, "_.displayNameOrNull")
         field.send_keys(display_name)
         field.send_keys(Keys.TAB)
-        time.sleep(2)
+        time.sleep(5)
 
         return self
