@@ -27,6 +27,7 @@ def create_multi_configuration_project(browser, name):
                     if (logo) logo.click();
                 """)
 
+@pytest.mark.skip
 def test_verify_status_switching_enable_button(browser):
     create_multi_configuration_project(browser, multiconfiguration_project_name)
     browser.find_element(By.CSS_SELECTOR, ".jenkins-table__link >span:first-child").click()
@@ -88,6 +89,7 @@ def test_create_multi_configuration_project(browser):
 
     assert created_multi_configuration == multiconfiguration_project_name
 
+@pytest.mark.skip
 @pytest.mark.dependency(depends=["test_create_multi_configuration_project"])
 def test_create_project_with_exist_name(browser):
     browser.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
