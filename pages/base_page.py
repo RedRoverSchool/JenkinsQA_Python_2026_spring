@@ -13,4 +13,5 @@ class BasePage:
             var logo = document.querySelector('.jenkins-mobile-hide');
             if (logo) logo.click();
         """)
+
         return HomePage(self.driver)
