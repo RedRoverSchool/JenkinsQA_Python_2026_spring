@@ -2,7 +2,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 from pages.base_page import BasePage
-from pages.home_page import HomePage
 
 class LoginPage(BasePage):
 
@@ -15,6 +14,7 @@ class LoginPage(BasePage):
         self.driver.find_element(*self.PASSWORD_FIELD).send_keys(password)
         self.wait10.until(EC.element_to_be_clickable(self.SIGN_IN_BUTTON)).click()
 
+        from pages.home_page import HomePage
         return HomePage(self.driver)
 
     def get_username_field_value(self):
