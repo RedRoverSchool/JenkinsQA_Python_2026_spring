@@ -153,7 +153,8 @@ def test_create_folder_with_same_name_in_different_parent(browser):
 
 @pytest.mark.dependency(depends=['test_create_folder'])
 def test_create_folder_from_copy(browser):
-    (HomePage(browser)
+    project_page = (
+        HomePage(browser)
         .new_item_click()
         .set_project_name('Folder from copy')
         .enter_copy_from('TestFolder')
@@ -161,8 +162,8 @@ def test_create_folder_from_copy(browser):
         .click_save()
         .wait_project_loaded('Folder from copy')
         .click_jenkins()
-        .assert_project_exists('Folder from copy')
     )
+    project_page.assert_project_exists('Folder from copy')
 
 def test_add_description_after_creation(browser):
     wait = WebDriverWait(browser, 5)
