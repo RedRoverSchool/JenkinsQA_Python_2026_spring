@@ -1,27 +1,24 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
 from os import getenv
 from common.jenkins_utils import logout
+from pages.home_page import HomePage
+
+LOGIN_PAGE_TITLE = "Sign in - Jenkins"
 
 
 def test_sign_out(browser):
-    wait = WebDriverWait(browser, 5)
+    login_page = (
+        HomePage(browser)
+        .show_dropdown_menu_from_profile_icon()
+        .dropdown_menu_sign_out_click()
+    )
 
-    ActionChains(browser).move_to_element(
-        browser.find_element(By.ID, "root-action-UserAction")
-    ).perform()
-    wait.until(
-        EC.element_to_be_clickable(
-            (By.XPATH, '//div[@class="jenkins-dropdown"]//a[@href="/logout"]')
-        )
-    ).click()
+    assert login_page.get_title() == LOGIN_PAGE_TITLE
 
-    assert browser.title == "Sign in - Jenkins"
-
-    assert browser.find_element(By.ID, "j_username").get_attribute("value") == ""
-    assert browser.find_element(By.ID, "j_password").get_attribute("value") == ""
+    assert login_page.get_username_field() == ""
+    assert login_page.get_password_field() == ""
 
 
 def test_sign_in_with_valid_username_and_password(browser):
