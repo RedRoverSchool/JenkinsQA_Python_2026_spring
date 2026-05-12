@@ -1,7 +1,9 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+
 from pages.base_page import BasePage
 from pages.freestyle_config_page import FreestyleConfigPage
+from pages.folder_config_page import FolderConfigPage
 from pages.project_page import ProjectPage
 
 
@@ -34,3 +36,9 @@ class NewItemPage(BasePage):
     def click_save(self):
         self.wait10.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
         return ProjectPage(self.driver)
+
+    def select_folder_and_ok_click(self):
+        self.driver.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
+        self.driver.find_element(By.ID, "ok-button").click()
+
+        return FolderConfigPage(self.driver)

@@ -19,3 +19,9 @@ class HomePage(BasePage):
             EC.visibility_of_element_located((By.LINK_TEXT, project_name)))
 
         return self
+
+    def get_project_names_list(self):
+        project_elements = self.driver.find_elements(By.CLASS_NAME, "jenkins-table__link")
+        project_names = [element.text for element in project_elements]
+
+        return project_names
