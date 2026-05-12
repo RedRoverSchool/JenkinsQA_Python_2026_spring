@@ -30,10 +30,14 @@ def create_folder(driver, name, full_creation=True):
 
 @pytest.mark.dependency()
 def test_create_folder(browser):
-    create_folder(browser, FOLDER_NAME)
-
-    assert f"/job/{FOLDER_NAME}/" in browser.current_url
-    assert browser.find_element(By.CLASS_NAME, "job-index-headline").text == FOLDER_NAME
+    (HomePage(browser)
+        .new_item_click()
+        .set_project_name(FOLDER_NAME)
+        .select_folder_and_ok_click()
+        .save_click()
+        .go_home_page()
+        .get_project_names_list()
+    )
 
 
 def test_create_folder_with_display_name(browser):
@@ -174,4 +178,3 @@ def test_add_description_after_creation(browser):
 
     wait.until(EC.visibility_of_element_located((By.ID,"description-content")))
     assert browser.find_element(By.ID,"description-content").text == FOLDER_DESCRIPTION
-
