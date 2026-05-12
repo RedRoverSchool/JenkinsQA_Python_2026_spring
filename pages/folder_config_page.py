@@ -1,5 +1,6 @@
 import time
 
+from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -14,7 +15,10 @@ class FolderConfigPage(BasePage):
         return ProjectPage(self.driver)
 
     def set_display_name(self, display_name):
-        self.driver.find_element(By.NAME, "_.displayNameOrNull").send_keys(display_name)
+        field = self.driver.find_element(By.NAME, "_.displayNameOrNull").send_keys(display_name)
+        field.clear()
+        field.send_keys(display_name)
+        field.send_keys(Keys.TAB)
         time.sleep(1)
 
         return self
