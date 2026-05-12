@@ -40,7 +40,7 @@ def test_create_folder(browser):
 
 
 def test_create_folder_with_display_name(browser):
-    display_name = "Display Folder"
+    display_name = "Display_Folder"
 
     project_names_list = (
         HomePage(browser)
