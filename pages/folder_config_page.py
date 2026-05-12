@@ -16,7 +16,6 @@ class FolderConfigPage(BasePage):
 
     def set_display_name(self, display_name):
         field = self.driver.find_element(By.NAME, "_.displayNameOrNull")
-        field.clear()
         field.send_keys(display_name)
         field.send_keys(Keys.TAB)
         time.sleep(2)
