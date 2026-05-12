@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 from pages.base_page import BasePage
+from pages.manage_page import ManagePage
 from pages.new_item_page import NewItemPage
 
 
@@ -12,3 +13,10 @@ class HomePage(BasePage):
         ).click()
 
         return NewItemPage(self.driver)
+
+    def manage_gear_click(self):
+        self.wait10.until(
+            EC.element_to_be_clickable((By.XPATH, "//*[@href = '/manage']"))
+        ).click()
+
+        return ManagePage(self.driver)
