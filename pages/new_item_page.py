@@ -31,4 +31,4 @@ class NewItemPage(BasePage):
 
     def button_ok_click(self):
         self.wait10.until(EC.element_to_be_clickable((By.ID, 'ok-button'))).click()
-        return FreestyleConfigPage(self.driver)
+        return FolderConfigPage(self.driver)

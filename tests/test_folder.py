@@ -141,7 +141,7 @@ def test_create_folder_with_same_name_in_different_parent(browser):
 
 @pytest.mark.dependency(depends=['test_create_folder'])
 def test_create_folder_from_copy(browser):
-    copy_name = 'Folder from copy'
+    copy_name = 'Folder_from_copy'
 
     project_page = (
         HomePage(browser)
