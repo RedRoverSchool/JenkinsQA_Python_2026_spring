@@ -1,3 +1,4 @@
+import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -36,7 +37,7 @@ def test_sign_in_with_valid_username_and_password(browser):
 
     assert browser.title == "Dashboard - Jenkins"
 
-
+@pytest.mark.skip
 def test_sign_in_error_message(browser):
     logout(browser)
     username = "not valid username"

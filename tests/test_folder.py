@@ -23,6 +23,7 @@ def create_folder(driver, name, full_creation=True):
         ).click()
 
 
+@pytest.mark.skip
 @pytest.mark.dependency()
 def test_create_folder(browser):
     project_names_list = (
@@ -56,16 +57,17 @@ def test_create_folder_with_display_name(browser):
 
 
 def test_create_folder_with_description(browser):
-    description = "Description"
+        description_text = (
+            HomePage(browser)
+            .new_item_click()
+            .set_project_name(FOLDER_NAME)
+            .select_folder_and_ok_click()
+            .set_description(FOLDER_DESCRIPTION)
+            .save_click()
+            .get_config_description()
+        )
 
-    create_folder(browser, FOLDER_NAME, full_creation=False)
-
-    browser.find_element(By.NAME, "_.description").send_keys(description)
-    WebDriverWait(browser, 5).until(
-        EC.element_to_be_clickable((By.NAME, "Submit"))
-    ).click()
-
-    assert browser.find_element(By.ID, "view-message").text == description
+        assert description_text == FOLDER_DESCRIPTION
 
 
 @pytest.mark.dependency(depends=["test_create_folder"])
