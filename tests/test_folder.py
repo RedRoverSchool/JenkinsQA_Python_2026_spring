@@ -24,7 +24,7 @@ def create_folder(driver, name, full_creation=True):
 
 
 @pytest.mark.dependency()
-def test_create_folder(browser, ):
+def test_create_folder(browser):
     project_names_list = (
         HomePage(browser)
         .new_item_click()
