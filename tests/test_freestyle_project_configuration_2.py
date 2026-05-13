@@ -6,7 +6,6 @@ from pages.home_page import HomePage
 random_name = "item" + ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
 
 def test_freestyle_project_configuration(browser):
-    
     project_page = (
       HomePage(browser)
      .new_item_click()
@@ -16,5 +15,5 @@ def test_freestyle_project_configuration(browser):
      .button_save_click_2()
     )
 
-    assert "This project is currently disabled" in project_page.get_warning_message()
+    assert "This project is currently disabled" in project_page.get_warning_message(random_name)
     assert project_page.get_status_button().is_displayed()
