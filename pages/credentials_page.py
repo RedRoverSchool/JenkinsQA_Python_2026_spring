@@ -57,7 +57,7 @@ class CredentialsPage(BasePage):
 
     def is_empty_message_visible(self):
         return self.wait10.until(
-            EC.element_to_be_clickable((By.XPATH,"//div[contains(text(), 'This credentials domain is empty')]")
+            EC.visibility_of_element_located((By.XPATH,"//div[contains(text(), 'This credentials domain is empty')]")
         )).is_displayed()
 
 
