@@ -1,5 +1,6 @@
 import pytest
 from selenium import webdriver
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -13,10 +14,8 @@ def test_build_queue_visibility(browser):
     wait = WebDriverWait(browser, 10)
 
     wait.until(
-    EC.text_to_be_present_in_element(
-    (By.XPATH, "//td[@class='pane']"),
-    "No builds in the queue."))
+        EC.text_to_be_present_in_element(
+            (By.XPATH, "//td[@class='pane']"), "No builds in the queue."))
 
-    text_element = browser.find_element(By.XPATH, "//td[@class='pane']")
+    text_element: WebElement = browser.find_element(By.XPATH, "//td[@class='pane']")
     assert text_element.text == "No builds in the queue."
-
