@@ -12,3 +12,10 @@ class ProjectPage(BasePage):
         return self.wait10.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, ".job-index-headline.page-headline"))
         ).text
+
+    def project_configure_click(self):
+        from pages.freestyle_config_page import FreestyleConfigPage
+        # Импорт внутри метода чтобы избежать ошибки ImportError due to a circular import
+        self.driver.find_element(By.XPATH, "//a[contains(., 'Configure')]").click()
+
+        return FreestyleConfigPage(self.driver)

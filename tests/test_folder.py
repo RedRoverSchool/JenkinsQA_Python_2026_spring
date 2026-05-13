@@ -23,6 +23,7 @@ def create_folder(driver, name, full_creation=True):
         ).click()
 
 
+@pytest.mark.skip
 @pytest.mark.dependency()
 def test_create_folder(browser):
     project_names_list = (

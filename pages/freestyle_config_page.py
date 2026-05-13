@@ -27,7 +27,7 @@ class FreestyleConfigPage(BasePage):
 
         return self
 
-    def select_option_execute_shell_in_add_build_step_click(self):
+    def select_execute_shell_option(self):
         self.driver.find_element(By.XPATH, "//button[normalize-space()='Execute shell']").click()
 
         return self
