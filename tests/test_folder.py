@@ -71,20 +71,16 @@ def test_create_folder_with_description(browser):
 
 @pytest.mark.dependency(depends=["test_create_folder"])
 def test_create_nested_folder(browser):
-    browser.find_element(By.XPATH, f"//a[contains(@href, '/{FOLDER_NAME}')]").click()
+    nested_folder_page = (
+        HomePage(browser)
+        .project_name_click(FOLDER_NAME, job_type="folder")
+        .new_item_click()
+        .set_project_name(SECOND_FOLDER_NAME)
+        .select_folder_and_ok_click()
+        .save_click())
 
-    create_folder(browser, SECOND_FOLDER_NAME)
-
-    assert f"/job/{FOLDER_NAME}/job/{SECOND_FOLDER_NAME}/" in browser.current_url
-    assert browser.find_element(By.CLASS_NAME, "job-index-headline").text == SECOND_FOLDER_NAME
-    full_folder_name_line = \
-        [line for line in browser.find_element(By.ID, "main-panel").text.split('\n') if
-         line.startswith("Full folder name: ")][0]
-    assert full_folder_name_line == f"Full folder name: {FOLDER_NAME}/{SECOND_FOLDER_NAME}"
-    breadcrumb_texts = [
-        crumb.text for crumb in browser.find_elements(By.CSS_SELECTOR, ".jenkins-breadcrumbs__list-item")
-    ]
-    assert breadcrumb_texts == [FOLDER_NAME, SECOND_FOLDER_NAME]
+    assert nested_folder_page.get_full_folder_name() == f"Full folder name: {FOLDER_NAME}/{SECOND_FOLDER_NAME}"
+    assert nested_folder_page.get_breadcrumb_texts_list() == [FOLDER_NAME, SECOND_FOLDER_NAME]
 
 
 def test_create_folder_with_empty_name_negative(browser):

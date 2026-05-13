@@ -4,6 +4,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import StaleElementReferenceException
 
 from pages.base_page import BasePage
+from pages.folder_page import FolderPage
 from pages.manage_page import ManagePage
 from pages.multibranch_pipeline_page import MultiBranchPipelinePage
 from pages.new_item_page import NewItemPage
@@ -79,7 +80,14 @@ class HomePage(BasePage):
 
         return MultiBranchPipelinePage(self.driver)
 
-    def project_name_click(self, job_name: str):
+    def project_name_click(self, job_name: str, job_type="project"):
         self.driver.find_element(By.XPATH, f"//*[@id='job_{job_name}']/td[3]/a").click()
-
-        return ProjectPage(self.driver)
+        if job_type == "project":
+            return ProjectPage(self.driver)
+        elif job_type == "pipeline":
+            return PipelineProjectPage(self.driver)
+        elif job_type == "folder":
+            return FolderPage(self.driver)
+        elif job_type == "multibranch":
+            return MultiBranchPipelinePage(self.driver)
+        return None
