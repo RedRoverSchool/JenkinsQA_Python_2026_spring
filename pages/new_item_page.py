@@ -38,9 +38,9 @@ class NewItemPage(BasePage):
         return MultiBranchPipelineConfigPage(self.driver)
 
     def get_unsafe_character_error_message(self):
-        field = self.driver.find_element(By.ID, "itemname-invalid")
+        error_message = self.driver.find_element(By.ID, "itemname-invalid")
         self.wait10.until(
-            lambda driver: "input-message-disabled" not in field.get_attribute("class")
+            lambda driver: "input-message-disabled" not in error_message.get_attribute("class")
         )
 
-        return self.wait10.until(EC.visibility_of(field)).text
+        return self.wait10.until(EC.visibility_of(error_message)).text
