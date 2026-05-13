@@ -1,5 +1,4 @@
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 
 class BasePage:
@@ -11,8 +10,9 @@ class BasePage:
     def go_home_page(self):
         from pages.home_page import HomePage
 
-        self.wait10.until(
-            EC.element_to_be_clickable((By.CLASS_NAME, "jenkins-mobile-hide"))
-        ).click()
+        self.driver.execute_script("""
+            var logo = document.querySelector('.jenkins-mobile-hide');
+            if (logo) logo.click();
+        """)
 
         return HomePage(self.driver)
