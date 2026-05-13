@@ -36,3 +36,10 @@ class NewItemPage(BasePage):
         self.driver.find_element(By.ID, "ok-button").click()
 
         return MultiBranchPipelineConfigPage(self.driver)
+
+    def clear_input_field(self):
+        self.wait10.until(
+            EC.element_to_be_clickable((By.XPATH, "//input[@name='name']"))
+        ).clear()
+
+        return self
