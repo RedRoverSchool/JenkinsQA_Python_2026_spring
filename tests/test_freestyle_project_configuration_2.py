@@ -6,6 +6,7 @@ from pages.home_page import HomePage
 random_name = "item" + ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
 
 def test_freestyle_project_configuration(browser):
+    
     project_page = (
       HomePage(browser)
      .new_item_click()
