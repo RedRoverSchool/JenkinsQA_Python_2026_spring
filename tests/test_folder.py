@@ -104,6 +104,7 @@ def test_create_folder_with_invalid_characters_negative(browser, character):
         HomePage(browser)
         .new_item_click()
         .set_project_name(FOLDER_NAME+character)
+        .select_folder()
         .get_unsafe_character_error_message()
     )
 

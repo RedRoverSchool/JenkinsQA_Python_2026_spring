@@ -37,6 +37,11 @@ class NewItemPage(BasePage):
 
         return MultiBranchPipelineConfigPage(self.driver)
 
+    def select_folder(self):
+        self.driver.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
+
+        return self
+
     def get_unsafe_character_error_message(self):
         return self.wait10.until(EC.visibility_of_element_located((
             By.CSS_SELECTOR, "#itemname-invalid:not(.input-message-disabled)"))).text
