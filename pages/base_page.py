@@ -15,3 +15,6 @@ class BasePage:
         """)
 
         return HomePage(self.driver)
+
+    def get_title(self):
+        return self.driver.title

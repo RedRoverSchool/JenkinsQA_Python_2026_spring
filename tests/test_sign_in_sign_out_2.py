@@ -6,6 +6,9 @@ from common.jenkins_utils import logout
 from pages.home_page import HomePage
 
 LOGIN_PAGE_TITLE = "Sign in - Jenkins"
+HOME_PAGE_TITLE = "Dashboard - Jenkins"
+VALID_USERNAME = getenv("JENKINS_USERNAME")
+VALID_PASSWORD = getenv("JENKINS_PASSWORD")
 
 
 def test_sign_out(browser):
@@ -22,19 +25,16 @@ def test_sign_out(browser):
 
 
 def test_sign_in_with_valid_username_and_password(browser):
-    logout(browser)
-    username = getenv("JENKINS_USERNAME")
-    password = getenv("JENKINS_PASSWORD")
-    wait = WebDriverWait(browser, 5)
+    result_page = (
+        HomePage(browser)
+        .show_dropdown_menu_from_profile_icon()
+        .dropdown_menu_sign_out_click()
+        .set_username_field(VALID_USERNAME)
+        .set_password_field(VALID_PASSWORD)
+        .sign_in_with_valid_credentials_click()
+    )
 
-    browser.find_element(By.ID, "j_username").send_keys(username)
-    browser.find_element(By.ID, "j_password").send_keys(password)
-    wait.until(
-        EC.element_to_be_clickable((By.XPATH, '//button[@name="Submit"]'))
-    ).click()
-    wait.until_not(EC.url_contains("login"))
-
-    assert browser.title == "Dashboard - Jenkins"
+    assert result_page.get_title() == HOME_PAGE_TITLE
 
 
 def test_sign_in_error_message(browser):
