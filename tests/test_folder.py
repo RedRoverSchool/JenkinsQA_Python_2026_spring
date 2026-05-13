@@ -22,10 +22,9 @@ def create_folder(driver, name, full_creation=True):
             EC.element_to_be_clickable((By.NAME, "Submit"))
         ).click()
 
-
-@pytest.mark.skip
+@pytest.mark.parametrize('execution_number', range(10))
 @pytest.mark.dependency()
-def test_create_folder(browser):
+def test_create_folder(browser,execution_number):
     project_names_list = (
         HomePage(browser)
         .new_item_click()
