@@ -53,7 +53,7 @@ def test_build_queue_visibility(browser):
          .set_project_name(job_name)
          .select_freestyle_and_ok_click()
          .button_add_build_step_click()
-         .select_option_execute_shell_in_add_build_step_click()
+         .select_execute_shell_option()
          .set_shell_script("echo $EXECUTOR_NUMBER\npwd\nls -lsa /\nsleep 60")
          .button_save_click()
          .go_home_page()

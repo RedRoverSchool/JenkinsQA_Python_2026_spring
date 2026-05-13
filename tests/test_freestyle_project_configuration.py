@@ -3,8 +3,8 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
 from conftest import browser
+from pages.home_page import HomePage
 
 FREESTYLE_PROJECT_NAME = "Freestyle Project"
 SCM_TITLE_EXPECTED = "Source Code Management"
@@ -128,26 +128,16 @@ def test_build_steps_field_is_available(browser):
 
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
 def test_build_steps_configure_shell_option(browser):
+    command_shell = 'echo "Starting process...; echo "Hostname: $(hostname)"'
+    project_page = (
+    HomePage(browser)
+    .project_name_click(JOB_NAME)
+    .project_configure_click()
 
-    script_for_linux = '''echo "Starting process..."
-    echo "Hostname: $(hostname)"'''
-
-    xpath = f"//*[@id='job_{JOB_NAME}']/td[3]/a"
-    browser.find_element(By.XPATH, xpath).click()
-    browser.find_element(By.XPATH, "//a[contains(., 'Configure')]").click()
-
-    add_button = wait_until_clickable(browser, (By.XPATH, "//button[@suffix='builder']"))
-    browser.execute_script("arguments[0].scrollIntoView({block: 'center'});", add_button)
-    add_button.click()
-    browser.find_element(By.XPATH, "//button[normalize-space()='Execute shell']").click()
-
-    editor = browser.find_element(By.CSS_SELECTOR, ".CodeMirror")
-    ActionChains(browser).move_to_element(editor).click().send_keys(script_for_linux).perform()
-    browser.find_element(By.XPATH, '//*[@id="bottom-sticker"]/div/button[1]').click()
-
-    WebDriverWait(browser, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, '#jenkins-builds > div.jenkins-card__title'))
+    .button_add_build_step_click()
+    .select_execute_shell_option()
+    .set_shell_script(command_shell)
+    .button_save_click()
     )
-    header = browser.find_element(By.TAG_NAME, "h1").text
 
-    assert header == JOB_NAME
+    assert project_page.get_project_name() == JOB_NAME

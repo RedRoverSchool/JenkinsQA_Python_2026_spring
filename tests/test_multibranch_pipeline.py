@@ -1,62 +1,55 @@
 import pytest
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from test_delete_project import click, check_visibility, create_job, fill, generate_project_name
 
-MULTIBRANCH_PIPELINE_ITEM_TYPE = (By.XPATH, "//li[@class='org_jenkinsci_plugins_workflow_multibranch_WorkflowMultiBranchProject']")
-NEW_NAME_INPUT_FIELD = (By.XPATH, "//input[@class='jenkins-input validated  ']")
-JENKINS_LOGO = (By.XPATH, "//span[@class='jenkins-mobile-hide']")
+from pages.home_page import HomePage
 
-def create_multibranch_and_go__to_rename_page(browser, click, fill,check_visibility):
-    current_project_name = generate_project_name()
+old_name = "oldName"
+new_name = "newName"
 
-    create_job(click, fill, check_visibility, current_project_name, MULTIBRANCH_PIPELINE_ITEM_TYPE)
-    browser.get(browser.current_url + f"job/{current_project_name}/confirm-rename")
-    check_visibility(JENKINS_LOGO)
+@pytest.mark.dependency()
+def test_rename_by_valid_name(browser):
 
-    return current_project_name
+    res = (HomePage(browser)
+     .new_item_click()
+     .set_project_name(old_name)
+     .select_multibranch_and_ok_click()
+     .click_submit_button()
+     .click_rename_button()
+     .fill_rename_field(new_name)
+     .click_rename_submit_button()
+     .get_project_name())
 
-def test_rename_by_empty_string(browser, click, fill,check_visibility):
-    create_multibranch_and_go__to_rename_page(browser, click, fill, check_visibility)
+    assert res == new_name
 
-    browser.find_element(*NEW_NAME_INPUT_FIELD).clear()
-    click((By.XPATH, "//div[@id='main-panel']"))
-    check_visibility(NEW_NAME_INPUT_FIELD)
+@pytest.mark.dependency(depends=["test_rename_by_valid_name"])
+def test_rename_by_same_name(browser):
 
-    assert browser.find_element(By.XPATH, "//div[@class='error']").text == "No name is specified"
+    res = (HomePage(browser)
+           .click_multibranch_pipeline_job(new_name)
+           .click_rename_button()
+           .fill_rename_field(new_name)
+           .get_same_name_warning_message())
 
+    assert res == "The new name is the same as the current name."
+
+@pytest.mark.dependency(depends=["test_rename_by_same_name"])
+def test_rename_by_empty_string(browser):
+
+    res = (HomePage(browser)
+     .click_multibranch_pipeline_job(new_name)
+     .click_rename_button()
+     .fill_rename_field("")
+     .get_empty_name_warning_message())
+
+    assert res == "No name is specified"
+
+@pytest.mark.dependency(depends=["test_rename_by_empty_string"])
 @pytest.mark.parametrize("invalid_character", ["!", "/", "\\", "?", "%", "*", ":", "|", "<", ">", "#"])
-def test_rename_by_invalid_characters(browser, click, fill,check_visibility, invalid_character):
-    create_multibranch_and_go__to_rename_page(browser, click, fill, check_visibility)
+def test_rename_by_invalid_characters(browser, invalid_character):
 
-    browser.find_element(*NEW_NAME_INPUT_FIELD).clear()
-    fill(NEW_NAME_INPUT_FIELD, invalid_character)
-    click((By.XPATH, "//div[@id='main-panel']"))
-    wait10 = WebDriverWait(browser, 10)
-    res = wait10.until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='error']"), f"‘{invalid_character}’ is an unsafe character"))
+    res = (HomePage(browser)
+     .click_multibranch_pipeline_job(new_name)
+     .click_rename_button()
+     .fill_rename_field(new_name, invalid_character)
+     .get_warning_message(invalid_character))
 
-    assert res == True
-
-def test_rename_by_same_name(browser, click, fill, check_visibility):
-    current_project_name = create_multibranch_and_go__to_rename_page(browser, click, fill, check_visibility)
-
-    browser.find_element(*NEW_NAME_INPUT_FIELD).clear()
-    fill(NEW_NAME_INPUT_FIELD, current_project_name)
-    click((By.XPATH, "//div[@id='main-panel']"))
-    wait10 = WebDriverWait(browser, 10)
-    res = wait10.until(EC.text_to_be_present_in_element((By.XPATH, "//div[@class='warning']"), "The new name is the same as the current name."))
-
-    assert res == True
-
-def test_rename_by_valid_name(browser, click, fill, check_visibility):
-    create_multibranch_and_go__to_rename_page(browser, click, fill, check_visibility)
-    new_name = generate_project_name()
-
-    browser.find_element(*NEW_NAME_INPUT_FIELD).clear()
-    fill(NEW_NAME_INPUT_FIELD, new_name)
-    click((By.XPATH, "//button[@name='Submit']"))
-
-    check_visibility((By.XPATH, "//h1[@class='job-index-headline page-headline']"))
-
-    assert browser.find_element(By.XPATH, "//h1[@class='job-index-headline page-headline']").text == new_name
+    assert res == f"‘{invalid_character}’ is an unsafe character"
