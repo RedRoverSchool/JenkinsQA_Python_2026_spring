@@ -5,6 +5,7 @@ from pages.base_page import BasePage
 from pages.freestyle_config_page import FreestyleConfigPage
 from pages.folder_config_page import FolderConfigPage
 from pages.multibranch_pipeline_config_page import MultiBranchPipelineConfigPage
+from pages.multiconfiguration_project_config_page import MulticonfigurationProjectConfigPage
 from pages.pipeline_config_page import PipelineConfigPage
 
 class NewItemPage(BasePage):
@@ -36,6 +37,12 @@ class NewItemPage(BasePage):
         self.driver.find_element(By.ID, "ok-button").click()
 
         return MultiBranchPipelineConfigPage(self.driver)
+
+    def select_multiconfiguration_project_and_ok_click(self):
+        self.wait10.until(EC.element_to_be_clickable((By.CLASS_NAME, "hudson_matrix_MatrixProject"))).click()
+        self.driver.find_element(By.ID, "ok-button").click()
+
+        return MulticonfigurationProjectConfigPage(self.driver)
 
     def select_folder(self):
         self.driver.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()

@@ -91,3 +91,8 @@ class HomePage(BasePage):
         elif job_type == "multibranch":
             return MultiBranchPipelinePage(self.driver)
         return None
+
+    def get_project_name(self, job_name: str):
+        return self.wait10.until(
+            EC.visibility_of_element_located((By.XPATH, f"(//a[@href='job/{job_name}/'])[1]"))
+        ).text
