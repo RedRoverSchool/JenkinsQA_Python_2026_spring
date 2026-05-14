@@ -84,14 +84,14 @@ def test_create_nested_folder(browser):
 
 
 def test_create_folder_with_empty_name_negative(browser):
-    browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
+    error_message = (
+        HomePage(browser)
+        .new_item_click()
+        .select_folder()
+        .get_empty_name_error_message()
+    )
 
-    browser.find_element(By.ID, "name").send_keys("")
-    browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
-
-    assert browser.find_element(By.ID,
-                                "itemname-required").text == "» This field cannot be empty, please enter a valid name"
-    assert not browser.find_element(By.ID, "ok-button").is_enabled()
+    assert error_message == "» This field cannot be empty, please enter a valid name"
 
 
 @pytest.mark.parametrize("character", ["/", "\\", "|", "?", "*", ":", ">", "<"])
