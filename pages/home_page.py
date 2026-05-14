@@ -98,3 +98,14 @@ class HomePage(BasePage):
         return self.wait10.until(
             EC.visibility_of_element_located((By.XPATH, f"(//a[@href='job/{job_name}/'])[1]"))
         ).text
+
+    def click_add_new_view_tab(self):
+        self.wait10.until(
+            EC.element_to_be_clickable((By.XPATH, "//a[@href='/newView']"))
+        ).click()
+        from pages.new_view_page import NewViewPage
+        return NewViewPage(self.driver)
+
+    def get_view_tab_names(self):
+        tabs = self.driver.find_elements(By.CSS_SELECTOR, ".tabBar .tab a")
+        return [tab.text for tab in tabs if tab.text not in ["+", "All", ""]]
