@@ -161,11 +161,15 @@ def test_create_folder_from_copy(browser):
 
 
 def test_add_description_after_creation(browser):
-    wait = WebDriverWait(browser, 5)
-    create_folder(browser, FOLDER_NAME)
-    browser.find_element(By.ID, "description-link").click()
-    browser.find_element(By.NAME, "description").send_keys(FOLDER_DESCRIPTION)
-    wait.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
+    description_content = (
+            HomePage(browser)
+            .new_item_click()
+            .set_project_name(FOLDER_NAME)
+            .select_folder_and_ok_click()
+            .save_click()
+            .click_add_description_link()
+            .add_description(FOLDER_DESCRIPTION)
+            .get_description_content()
+    )
 
-    wait.until(EC.visibility_of_element_located((By.ID, "description-content")))
-    assert browser.find_element(By.ID, "description-content").text == FOLDER_DESCRIPTION
+    assert description_content == FOLDER_DESCRIPTION
