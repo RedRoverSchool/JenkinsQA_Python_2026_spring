@@ -8,7 +8,7 @@ from pages.folder_page import FolderPage
 from pages.manage_page import ManagePage
 from pages.multibranch_pipeline_page import MultiBranchPipelinePage
 from pages.new_item_page import NewItemPage
-
+from pages.rename_project_page import RanameProjectPage
 from pages.pipeline_project_page import PipelineProjectPage
 from pages.project_page import ProjectPage
 
@@ -96,3 +96,16 @@ class HomePage(BasePage):
         return self.wait10.until(
             EC.visibility_of_element_located((By.XPATH, f"(//a[@href='job/{job_name}/'])[1]"))
         ).text
+
+
+    def open_project_dropdown(self, job_name):
+        self.wait10.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, f'[href="job/{job_name}/"] .jenkins-menu-dropdown-chevron'))
+        ).click()
+
+        return self
+
+    def click_project_rename(self, job_name):
+        self.wait10.until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT, 'Rename'))).click()
+
+        return RanameProjectPage(self.driver)

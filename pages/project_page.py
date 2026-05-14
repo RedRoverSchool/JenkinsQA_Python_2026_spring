@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 from pages.base_page import BasePage
+from pages.rename_project_page import RanameProjectPage
 
 
 class ProjectPage(BasePage):
@@ -19,3 +20,8 @@ class ProjectPage(BasePage):
         self.driver.find_element(By.XPATH, "//a[contains(., 'Configure')]").click()
 
         return FreestyleConfigPage(self.driver)
+
+    def click_rename_project(self):
+        self.wait10.until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT, 'Rename'))).click()
+
+        return RanameProjectPage(self.driver)
