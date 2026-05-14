@@ -1,11 +1,10 @@
 import pytest
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
+from conftest import browser
 from pages.home_page import HomePage
 
 PIPELINE_NAME = "test_1"
+
 
 @pytest.mark.dependency()
 def test_create_pipeline_project(browser):
@@ -18,21 +17,32 @@ def test_create_pipeline_project(browser):
         .go_home_page()
         .get_project_name(PIPELINE_NAME)
     )
-
     assert created_pipeline_name == PIPELINE_NAME
 
-# @pytest.mark.dependency(depends=["test_create_pipeline_project"])
-# def test_add_description_pipeline(browser):
-#     text_description = "Description here"
+
+@pytest.mark.dependency(depends=["test_create_pipeline_project"])
+def test_add_description_pipeline(browser):
+    text_description = "Description here"
+
+    create_description = (
+        HomePage(browser)
+        .project_name_click(PIPELINE_NAME)
+        .project_configure_click()
+        .set_description(text_description)
+        .button_save_click()
+        .get_description()
+    )
+    assert create_description == text_description
+
+
+# browser.find_element(By.LINK_TEXT, PIPELINE_NAME).click()
+# WebDriverWait(browser, 7).until(
+# EC.element_to_be_clickable((By.XPATH, "//a[normalize-space()='Configure']"))).click()
+# browser.find_element(By.NAME, "description").send_keys(text_description)
+# browser.find_element(By.NAME, "Submit").click()
 #
-#     browser.find_element(By.LINK_TEXT, PIPELINE_NAME).click()
-#     WebDriverWait(browser, 7).until(
-#     EC.element_to_be_clickable((By.XPATH, "//a[normalize-space()='Configure']"))).click()
-#     browser.find_element(By.NAME, "description").send_keys(text_description)
-#     browser.find_element(By.NAME, "Submit").click()
-#
-#     assert browser.find_element(By.ID, "description-content").text == text_description
-#
+# assert browser.find_element(By.ID, "description-content").text == text_description
+
 # @pytest.mark.dependency(depends=["test_create_pipeline_project"])
 # def test_configure_display_name_by_advanced(browser):
 #     advanced_name = "Display Name"
