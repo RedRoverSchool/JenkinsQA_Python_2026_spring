@@ -38,11 +38,20 @@ class NewItemPage(BasePage):
 
         return MultiBranchPipelineConfigPage(self.driver)
 
+
+    def clear_input_field(self):
+        self.wait10.until(
+            EC.element_to_be_clickable((By.XPATH, "//input[@name='name']"))
+        ).clear()
+
+        return self
+
     def select_multiconfiguration_project_and_ok_click(self):
         self.wait10.until(EC.element_to_be_clickable((By.CLASS_NAME, "hudson_matrix_MatrixProject"))).click()
         self.driver.find_element(By.ID, "ok-button").click()
 
         return MulticonfigurationProjectConfigPage(self.driver)
+
 
     def select_folder(self):
         self.driver.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
