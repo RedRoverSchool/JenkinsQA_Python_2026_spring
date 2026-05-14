@@ -169,7 +169,7 @@ def test_add_description_after_creation(browser):
             .save_click()
             .click_add_description_link()
             .add_description(FOLDER_DESCRIPTION)
-            .get_description_content()
+            .get_description()
     )
 
     assert description_content == FOLDER_DESCRIPTION
