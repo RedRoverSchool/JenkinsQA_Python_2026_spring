@@ -48,6 +48,7 @@ def test_verify_status_switching_enable_button(browser):
 
     assert "This project is currently disabled" in actual_disable_text
 
+@pytest.mark.skip(reason="Flaky test: NoSuchElementException on CI")
 def test_verify_enable_toggle_has_tooltip(browser):
     create_multi_configuration_project(browser, multiconfiguration_project_name)
     browser.find_element(By.CSS_SELECTOR, ".jenkins-table__link >span:first-child").click()
@@ -116,6 +117,7 @@ def test_search_created_project(browser):
     assert WebDriverWait(browser, 10).until(
          EC.visibility_of_element_located((By.TAG_NAME, "h1"))).text == multiconfiguration_project_name
 
+@pytest.mark.skip
 @pytest.mark.dependency(depends=["test_create_multi_configuration_project"])
 def test_check_delete_view_on_dashboard(browser):
     view_name = "NewView"

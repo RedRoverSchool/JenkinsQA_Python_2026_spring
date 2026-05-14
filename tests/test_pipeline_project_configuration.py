@@ -34,3 +34,25 @@ def test_add_description_pipeline(browser):
     browser.find_element(By.NAME, "Submit").click()
 
     assert browser.find_element(By.ID, "description-content").text == text_description
+
+
+@pytest.mark.dependency(depends=["test_create_pipeline_project"])
+def test_disable_pipeline(browser):
+    wait = WebDriverWait(browser, 5)
+
+    project_link = wait.until(EC.element_to_be_clickable((By.XPATH, f"//a[@href='job/{PIPELINE_NAME}/']")))
+    project_link.click()
+
+    configure_link = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[normalize-space()='Configure']")))
+    configure_link.click()
+
+    toggle = wait.until(EC.element_to_be_clickable((By.ID, "toggle-switch-enable-disable-project")))
+    toggle.click()
+
+    browser.find_element(By.NAME, "Submit").click()
+
+    warning_message = wait.until(
+        EC.visibility_of_element_located((By.XPATH, "//*[contains(text(), 'This project is currently disabled')]"))
+)
+
+    assert warning_message.is_displayed(), "Сообщение об откл. не отображается"
