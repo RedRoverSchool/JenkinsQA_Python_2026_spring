@@ -43,6 +43,17 @@ def test_create_multi_configuration_project(browser):
 
     assert multi_configuration_project_name == MULTICONFIGURATION_PROJECT_NAME
 
+@pytest.mark.dependency(depends=["test_create_multi_configuration_project"])
+def test_create_project_with_exist_name(browser):
+    error_message_text = (
+        HomePage(browser)
+        .new_item_click()
+        .set_project_name(MULTICONFIGURATION_PROJECT_NAME)
+        .get_exist_name_error_message()
+    )
+
+    assert error_message_text == f"» A job already exists with the name ‘{MULTICONFIGURATION_PROJECT_NAME}’"
+
 @pytest.mark.skip
 def test_verify_status_switching_enable_button(browser):
     create_multi_configuration_project(browser, MULTICONFIGURATION_PROJECT_NAME)
@@ -97,17 +108,6 @@ def test_create_item_with_special_characters(browser, special_characters):
 
     browser.find_element(By.ID, "ok-button").click()
     assert browser.find_element(By.TAG_NAME, "p").text == expected_error_message
-
-@pytest.mark.skip
-@pytest.mark.dependency(depends=["test_create_multi_configuration_project"])
-def test_create_project_with_exist_name(browser):
-    browser.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
-    browser.find_element(By.ID, "name").send_keys(MULTICONFIGURATION_PROJECT_NAME)
-
-    error_message = WebDriverWait(browser, 5).until(
-         EC.visibility_of_element_located((By.ID, "itemname-invalid"))).text
-
-    assert error_message == f"» A job already exists with the name ‘{MULTICONFIGURATION_PROJECT_NAME}’"
 
 @pytest.mark.dependency(depends=["test_create_multi_configuration_project"])
 def test_search_created_project(browser):
