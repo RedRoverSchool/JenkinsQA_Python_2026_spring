@@ -1,4 +1,6 @@
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class BasePage:
@@ -16,3 +18,12 @@ class BasePage:
         """)
 
         return HomePage(self.driver)
+
+    def get_breadcrumb_texts_list(self):
+        try:
+            breadcrumb_elements = self.wait10.until(
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".jenkins-breadcrumbs__list-item"))
+            )
+            return [crumb.text for crumb in breadcrumb_elements if crumb.text.strip()]
+        except:
+            return []
