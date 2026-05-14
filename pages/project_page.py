@@ -25,3 +25,13 @@ class ProjectPage(BasePage):
         self.wait10.until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT, 'Rename'))).click()
 
         return RanameProjectPage(self.driver)
+    def click_add_description_link(self):
+        self.wait10.until(EC.visibility_of_element_located((By.ID, "description-link"))).click()
+
+        return self
+
+    def add_description(self, new_description):
+        self.wait10.until(EC.visibility_of_element_located((By.NAME, "description"))).send_keys(new_description)
+        self.wait10.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
+
+        return self

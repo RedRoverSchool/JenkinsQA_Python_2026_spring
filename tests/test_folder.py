@@ -84,14 +84,14 @@ def test_create_nested_folder(browser):
 
 
 def test_create_folder_with_empty_name_negative(browser):
-    browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
+    error_message = (
+        HomePage(browser)
+        .new_item_click()
+        .select_folder()
+        .get_empty_name_error_message()
+    )
 
-    browser.find_element(By.ID, "name").send_keys("")
-    browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
-
-    assert browser.find_element(By.ID,
-                                "itemname-required").text == "» This field cannot be empty, please enter a valid name"
-    assert not browser.find_element(By.ID, "ok-button").is_enabled()
+    assert error_message == "» This field cannot be empty, please enter a valid name"
 
 
 @pytest.mark.parametrize("character", ["/", "\\", "|", "?", "*", ":", ">", "<"])
@@ -161,11 +161,15 @@ def test_create_folder_from_copy(browser):
 
 
 def test_add_description_after_creation(browser):
-    wait = WebDriverWait(browser, 5)
-    create_folder(browser, FOLDER_NAME)
-    browser.find_element(By.ID, "description-link").click()
-    browser.find_element(By.NAME, "description").send_keys(FOLDER_DESCRIPTION)
-    wait.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
+    description_content = (
+            HomePage(browser)
+            .new_item_click()
+            .set_project_name(FOLDER_NAME)
+            .select_folder_and_ok_click()
+            .save_click()
+            .click_add_description_link()
+            .add_description(FOLDER_DESCRIPTION)
+            .get_description()
+    )
 
-    wait.until(EC.visibility_of_element_located((By.ID, "description-content")))
-    assert browser.find_element(By.ID, "description-content").text == FOLDER_DESCRIPTION
+    assert description_content == FOLDER_DESCRIPTION
