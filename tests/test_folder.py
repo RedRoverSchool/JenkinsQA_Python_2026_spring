@@ -10,19 +10,6 @@ SECOND_FOLDER_NAME = "SecondFolder"
 FOLDER_DESCRIPTION = "Folder description"
 
 
-def create_folder(driver, name, full_creation=True):
-    driver.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
-    driver.find_element(By.ID, "name").send_keys(name)
-    driver.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
-    WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.ID, "ok-button"))
-    ).click()
-    if full_creation:
-        WebDriverWait(driver, 5).until(
-            EC.element_to_be_clickable((By.NAME, "Submit"))
-        ).click()
-
-
 @pytest.mark.dependency()
 def test_create_folder(browser):
     project_names_list = (
@@ -99,7 +86,7 @@ def test_create_folder_with_invalid_characters_negative(browser, character):
     error_message = (
         HomePage(browser)
         .new_item_click()
-        .set_project_name(FOLDER_NAME+character)
+        .set_project_name(FOLDER_NAME + character)
         .select_folder()
         .get_unsafe_character_error_message()
     )
@@ -122,9 +109,18 @@ def test_create_folder_with_duplicate_name_in_same_parent_negative(browser):
 
 @pytest.mark.dependency(depends=["test_create_nested_folder"])
 def test_create_folder_with_same_name_in_different_parent(browser):
-    create_folder(browser, SECOND_FOLDER_NAME)
+    project_names_list = (
+        HomePage(browser)
+        .new_item_click()
+        .set_project_name(SECOND_FOLDER_NAME)
+        .select_folder_and_ok_click()
+        .save_click()
+        .go_home_page()
+        .get_project_names_list()
+    )
 
-    assert browser.find_element(By.CLASS_NAME, "job-index-headline").text == SECOND_FOLDER_NAME
+    assert len(project_names_list) > 0
+    assert SECOND_FOLDER_NAME in project_names_list
 
 
 @pytest.mark.dependency(depends=['test_create_folder'])
@@ -162,14 +158,14 @@ def test_create_folder_from_copy(browser):
 
 def test_add_description_after_creation(browser):
     description_content = (
-            HomePage(browser)
-            .new_item_click()
-            .set_project_name(FOLDER_NAME)
-            .select_folder_and_ok_click()
-            .save_click()
-            .click_add_description_link()
-            .add_description(FOLDER_DESCRIPTION)
-            .get_description()
+        HomePage(browser)
+        .new_item_click()
+        .set_project_name(FOLDER_NAME)
+        .select_folder_and_ok_click()
+        .save_click()
+        .click_add_description_link()
+        .add_description(FOLDER_DESCRIPTION)
+        .get_description()
     )
 
     assert description_content == FOLDER_DESCRIPTION
