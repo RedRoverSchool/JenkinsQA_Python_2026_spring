@@ -1,4 +1,7 @@
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 import pytest
+from selenium.webdriver.support.wait import WebDriverWait
 from conftest import browser
 from pages.home_page import HomePage
 
@@ -30,9 +33,6 @@ def test_add_description_pipeline(browser):
         .get_description()
     )
     assert added_description == text_description
-
-
-
 
 @pytest.mark.dependency(depends=["test_create_pipeline_project"])
 def test_configure_display_name_by_advanced(browser):
