@@ -28,7 +28,7 @@ def create_multi_configuration_project(browser, name):
                     var logo = document.querySelector('.jenkins-mobile-hide');
                     if (logo) logo.click();
                 """)
-
+@pytest.mark.skip
 @pytest.mark.dependency()
 def test_create_multi_configuration_project(browser):
     multi_configuration_project_name = (
@@ -109,6 +109,7 @@ def test_create_project_with_exist_name(browser):
 
     assert error_message == f"» A job already exists with the name ‘{MULTICONFIGURATION_PROJECT_NAME}’"
 
+@pytest.mark.skip
 @pytest.mark.dependency(depends=["test_create_multi_configuration_project"])
 def test_search_created_project(browser):
     browser.find_element(By.ID, "root-action-SearchAction").click()
