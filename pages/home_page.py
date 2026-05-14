@@ -86,4 +86,7 @@ class HomePage(BasePage):
         return ProjectPage(self.driver)
 
     def get_project_name(self, job_name: str):
-        return self.wait10.until(EC.visibility_of_element_located((By.XPATH, f"//*[@href='job/{job_name}/']"))).text
+      
+        return self.wait10.until(
+            EC.visibility_of_element_located((By.XPATH, f"(//a[@href='job/{job_name}/'])[1]"))
+        ).text

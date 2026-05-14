@@ -4,6 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from pages.base_page import BasePage
 from pages.project_page import ProjectPage
+from pages.freestyle_project_page import FreestyleProjectPage
 
 
 class FreestyleConfigPage(BasePage):
@@ -18,6 +19,13 @@ class FreestyleConfigPage(BasePage):
         self.wait10.until(EC.staleness_of(button))
 
         return ProjectPage(self.driver)
+
+    def button_save_click_2(self):
+        button = self.driver.find_element(By.NAME, "Submit")
+        button.click()
+        self.wait10.until(EC.staleness_of(button))
+
+        return FreestyleProjectPage(self.driver)
 
     def button_add_build_step_click(self):
         button_add_build_step = self.driver.find_element(By.XPATH, "//button[text()='Add build step']")
@@ -36,5 +44,11 @@ class FreestyleConfigPage(BasePage):
         (ActionChains(self.driver)
          .move_to_element(self.driver.find_element(By.XPATH, "//div[contains(@class, 'cm-s-default')]"))
          .click().send_keys(command_shell).perform())
+
+        return self
+
+
+    def click_enable_disable_button(self):
+        self.wait10.until(EC.element_to_be_clickable((By.XPATH, "//label[@data-title='Disabled']"))).click()
 
         return self

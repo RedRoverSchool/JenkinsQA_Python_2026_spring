@@ -23,7 +23,6 @@ def create_folder(driver, name, full_creation=True):
         ).click()
 
 
-@pytest.mark.skip
 @pytest.mark.dependency()
 def test_create_folder(browser):
     project_names_list = (
@@ -57,17 +56,17 @@ def test_create_folder_with_display_name(browser):
 
 
 def test_create_folder_with_description(browser):
-        description_text = (
-            HomePage(browser)
-            .new_item_click()
-            .set_project_name(FOLDER_NAME)
-            .select_folder_and_ok_click()
-            .set_description(FOLDER_DESCRIPTION)
-            .save_click()
-            .get_config_description()
-        )
+    description_text = (
+        HomePage(browser)
+        .new_item_click()
+        .set_project_name(FOLDER_NAME)
+        .select_folder_and_ok_click()
+        .set_description(FOLDER_DESCRIPTION)
+        .save_click()
+        .get_config_description()
+    )
 
-        assert description_text == FOLDER_DESCRIPTION
+    assert description_text == FOLDER_DESCRIPTION
 
 
 @pytest.mark.dependency(depends=["test_create_folder"])
@@ -101,23 +100,15 @@ def test_create_folder_with_empty_name_negative(browser):
 
 @pytest.mark.parametrize("character", ["/", "\\", "|", "?", "*", ":", ">", "<"])
 def test_create_folder_with_invalid_characters_negative(browser, character):
-    browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
+    error_message = (
+        HomePage(browser)
+        .new_item_click()
+        .set_project_name(FOLDER_NAME+character)
+        .select_folder()
+        .get_unsafe_character_error_message()
+    )
 
-    browser.find_element(By.ID, "name").send_keys(f"{FOLDER_NAME}{character}")
-    browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
-
-    expected_error = f"‘{character}’ is an unsafe character"
-    error_message = WebDriverWait(browser, 5).until(
-        EC.visibility_of_element_located((By.ID, "itemname-invalid"))
-    ).text
-
-    assert error_message == "» " + expected_error
-    # кнопка ниже по логике должна быть неактивна и тест бы закончился тут
-
-    browser.find_element(By.ID, "ok-button").click()
-    WebDriverWait(browser, 5).until_not(EC.title_contains("New Item"))
-    assert browser.find_element(By.TAG_NAME, "h1").text == "Error"
-    assert browser.find_element(By.TAG_NAME, "p").text == expected_error
+    assert error_message == f"» ‘{character}’ is an unsafe character"
 
 
 @pytest.mark.dependency(depends=["test_create_folder"])
