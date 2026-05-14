@@ -83,3 +83,8 @@ class HomePage(BasePage):
         self.driver.find_element(By.XPATH, f"//*[@id='job_{job_name}']/td[3]/a").click()
 
         return ProjectPage(self.driver)
+
+    def get_project_name(self, job_name: str):
+        return self.wait10.until(
+            EC.visibility_of_element_located((By.XPATH, f"(//a[@href='job/{job_name}/'])[1]"))
+        ).text
