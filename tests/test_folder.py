@@ -88,7 +88,7 @@ def test_create_folder_with_invalid_characters_negative(browser, character):
         .new_item_click()
         .set_project_name(FOLDER_NAME+character)
         .select_folder()
-        .get_unsafe_character_error_message()
+        .get_unsafe_character_and_existed_name_error_message()
     )
 
     assert error_message == f"» ‘{character}’ is an unsafe character"
@@ -96,14 +96,14 @@ def test_create_folder_with_invalid_characters_negative(browser, character):
 
 @pytest.mark.dependency(depends=["test_create_folder"])
 def test_create_folder_with_duplicate_name_in_same_parent_negative(browser):
-    browser.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
+    error_message = (
+        HomePage(browser)
+        .new_item_click()
+        .set_project_name(FOLDER_NAME)
+        .select_folder()
+        .get_unsafe_character_and_existed_name_error_message()
+    )
 
-    browser.find_element(By.ID, "name").send_keys(FOLDER_NAME)
-    browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
-
-    error_message = WebDriverWait(browser, 5).until(
-        EC.visibility_of_element_located((By.ID, "itemname-invalid"))
-    ).text
     assert error_message == f"» A job already exists with the name ‘{FOLDER_NAME}’"
 
 
