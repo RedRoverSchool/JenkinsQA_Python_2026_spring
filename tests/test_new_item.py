@@ -14,13 +14,13 @@ item_types = ["Pipeline", "Freestyle project", "Multi-configuration project", "F
 
 @pytest.mark.dependency()
 def test_open_new_item_page(browser):
-    HomePage(browser).new_item_click()
+    HomePage(browser).click_new_item()
     assert "New Item" in browser.title
 
 @pytest.mark.dependency(depends=["test_open_new_item_page"])
 @pytest.mark.parametrize("input_invalid_char", invalid_character)
 def test_validate_invalid_item_name(browser, input_invalid_char):
-    HomePage(browser).new_item_click()
+    HomePage(browser).click_new_item()
     (NewItemPage(browser)
         .clear_input_field()
         .set_project_name(input_invalid_char)
@@ -36,7 +36,7 @@ def test_validate_invalid_item_name(browser, input_invalid_char):
 @pytest.mark.dependency(depends=["test_open_new_item_page"])
 @pytest.mark.parametrize("input_empty_values", empty_values)
 def test_validate_empty_values(browser, input_empty_values):
-    HomePage(browser).new_item_click()
+    HomePage(browser).click_new_item()
     (NewItemPage(browser)
      .clear_input_field()
      .set_project_name(input_empty_values)
@@ -54,7 +54,7 @@ def test_validate_empty_values(browser, input_empty_values):
 @pytest.mark.parametrize("input_item_types", item_types)
 def test_create_new_item(browser, input_item_types):
     random_name = "item" + ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
-    HomePage(browser).new_item_click()
+    HomePage(browser).click_new_item()
     (NewItemPage(browser)
         .clear_input_field()
         .set_project_name(random_name)

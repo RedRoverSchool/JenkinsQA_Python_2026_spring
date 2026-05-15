@@ -9,7 +9,7 @@ DESCRIPTION = "Description Freestyle Project"
 def test_create_freestyle_project(browser):
     project_page = (
         HomePage(browser)
-        .new_item_click()
+        .click_new_item()
         .set_project_name(FREESTYLE_PROJECT_NAME)
         .select_freestyle_and_ok_click()
         .set_description(DESCRIPTION)
