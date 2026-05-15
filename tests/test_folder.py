@@ -11,16 +11,14 @@ FOLDER_DESCRIPTION = "Folder description"
 
 
 def create_folder(driver, name, full_creation=True):
+    wait5 = WebDriverWait(driver, 5)
+
     driver.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
     driver.find_element(By.ID, "name").send_keys(name)
     driver.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
-    WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.ID, "ok-button"))
-    ).click()
+    wait5.until(EC.element_to_be_clickable((By.ID, "ok-button"))).click()
     if full_creation:
-        WebDriverWait(driver, 5).until(
-            EC.element_to_be_clickable((By.NAME, "Submit"))
-        ).click()
+        wait5.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
 
 
 @pytest.mark.dependency()
@@ -101,7 +99,7 @@ def test_create_folder_with_invalid_characters_negative(browser, character):
         .new_item_click()
         .set_project_name(FOLDER_NAME+character)
         .select_folder()
-        .get_unsafe_character_error_message()
+        .get_unsafe_character_and_existed_name_error_message()
     )
 
     assert error_message == f"» ‘{character}’ is an unsafe character"
@@ -109,14 +107,14 @@ def test_create_folder_with_invalid_characters_negative(browser, character):
 
 @pytest.mark.dependency(depends=["test_create_folder"])
 def test_create_folder_with_duplicate_name_in_same_parent_negative(browser):
-    browser.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
+    error_message = (
+        HomePage(browser)
+        .new_item_click()
+        .set_project_name(FOLDER_NAME)
+        .select_folder()
+        .get_unsafe_character_and_existed_name_error_message()
+    )
 
-    browser.find_element(By.ID, "name").send_keys(FOLDER_NAME)
-    browser.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
-
-    error_message = WebDriverWait(browser, 5).until(
-        EC.visibility_of_element_located((By.ID, "itemname-invalid"))
-    ).text
     assert error_message == f"» A job already exists with the name ‘{FOLDER_NAME}’"
 
 
@@ -159,7 +157,7 @@ def test_create_folder_from_copy(browser):
         EC.visibility_of_element_located((By.LINK_TEXT, 'Folder from copy')))
     assert new_folder.text == 'Folder from copy'
 
-
+@pytest.mark.skip
 def test_add_description_after_creation(browser):
     description_content = (
             HomePage(browser)

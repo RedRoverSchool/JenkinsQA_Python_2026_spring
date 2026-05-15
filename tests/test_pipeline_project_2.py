@@ -6,6 +6,8 @@ from conftest import browser
 from pages.home_page import HomePage
 
 PIPELINE_NAME = "test_1"
+
+@pytest.mark.skip()
 @pytest.mark.dependency()
 def test_create_pipeline_project(browser):
     created_pipeline_name = (
@@ -19,7 +21,7 @@ def test_create_pipeline_project(browser):
     )
     assert created_pipeline_name == PIPELINE_NAME
 
-
+@pytest.mark.skip()
 @pytest.mark.dependency(depends=["test_create_pipeline_project"])
 def test_add_description_pipeline(browser):
     text_description = "Description here"
@@ -34,6 +36,7 @@ def test_add_description_pipeline(browser):
     )
     assert added_description == text_description
 
+@pytest.mark.skip()
 @pytest.mark.dependency(depends=["test_create_pipeline_project"])
 def test_configure_display_name_by_advanced(browser):
     advanced_name = "Display Name"

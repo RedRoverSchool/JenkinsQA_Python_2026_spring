@@ -110,3 +110,10 @@ class HomePage(BasePage):
         self.wait10.until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT, 'Rename'))).click()
 
         return RanameProjectPage(self.driver)
+      
+    def new_job_click(self):
+        self.wait10.until(
+            EC.element_to_be_clickable((By.XPATH, "//a[@href='newJob']"))
+        ).click()
+
+        return NewItemPage(self.driver)

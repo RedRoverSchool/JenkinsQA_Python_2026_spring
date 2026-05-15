@@ -22,3 +22,7 @@ class FolderPage(ProjectPage):
         self.wait10.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".job-index-headline.page-headline")))
         return [line for line in self.driver.find_element(By.ID, "main-panel").text.split('\n') if
                 line.startswith("Full folder name: ")][0]
+
+    def get_new_item_name(self):
+        return self.wait10.until(
+            EC.visibility_of_element_located((By.XPATH, "//*[@class='job-index-headline page-headline']"))).text
