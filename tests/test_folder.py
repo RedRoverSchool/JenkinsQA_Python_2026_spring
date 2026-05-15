@@ -14,13 +14,10 @@ def create_folder(driver, name, full_creation=True):
     driver.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
     driver.find_element(By.ID, "name").send_keys(name)
     driver.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
-    WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.ID, "ok-button"))
-    ).click()
+    wait5 = WebDriverWait(driver, 5)
+    wait5.until(EC.element_to_be_clickable((By.ID, "ok-button"))).click()
     if full_creation:
-        WebDriverWait(driver, 5).until(
-            EC.element_to_be_clickable((By.NAME, "Submit"))
-        ).click()
+        wait5.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
 
 
 @pytest.mark.dependency()
