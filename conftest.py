@@ -1,6 +1,7 @@
 import pytest
 from selenium import webdriver
 
+from common.filter_utils import filter_items_by_changed_files
 from common.jenkins_utils import login, logout, clear_data
 from common.order_utils import reorder_items_by_dependency
 from common.project_utils import get_browser, get_options, get_url
@@ -37,4 +38,5 @@ def browser(request):
 
 @pytest.hookimpl(trylast=True)
 def pytest_collection_modifyitems(session, config, items):
+    items[:] = filter_items_by_changed_files(items)
     reorder_items_by_dependency(items)
