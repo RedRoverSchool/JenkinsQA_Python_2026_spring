@@ -14,6 +14,10 @@ class UsersPage(BasePage):
 
         return CreateUserPage(self.driver)
 
+    def click_any_user(self):
+        self.wait10.until(EC.element_to_be_clickable(
+            (By.XPATH, "//table[@id='people']/tbody/tr[not(.//a[@href='user/admin/'])]//a[@class='jenkins-table__link model-link inside']"))).click()
+
     def is_find_user_name(self, user_name) -> bool:
         try:
             self.wait10.until(EC.visibility_of_element_located((By.XPATH,f"//table[@id='people']//a[text()='{user_name}']")))

@@ -31,6 +31,7 @@ def test_open_user_profile_page(browser):
     user = (HomePage(browser)
             .manage_gear_click()
             .click_users()
+            .click_any_user()
             )
 
     # assert user, f"Страница пользователя {user} не доступна"
