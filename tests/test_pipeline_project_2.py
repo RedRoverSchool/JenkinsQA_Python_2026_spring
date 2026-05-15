@@ -7,7 +7,6 @@ from pages.home_page import HomePage
 
 PIPELINE_NAME = "test_1"
 
-@pytest.mark.skip()
 @pytest.mark.dependency()
 def test_create_pipeline_project(browser):
     created_pipeline_name = (
