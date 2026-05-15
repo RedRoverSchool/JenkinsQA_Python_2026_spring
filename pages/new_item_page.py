@@ -58,7 +58,7 @@ class NewItemPage(BasePage):
 
         return self
 
-    def get_unsafe_character_error_message(self):
+    def get_unsafe_character_and_existed_name_error_message(self):
         return self.wait10.until(EC.visibility_of_element_located((By.ID, "itemname-invalid"))).text
 
     def get_empty_name_error_message(self):
