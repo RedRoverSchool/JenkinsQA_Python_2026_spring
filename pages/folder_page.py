@@ -24,4 +24,5 @@ class FolderPage(ProjectPage):
                 line.startswith("Full folder name: ")][0]
 
     def get_new_item_name(self):
-        return self.wait10.until(EC.visibility_of_element_located((By.XPATH, "//h1"))).text
+        return self.wait10.until(
+            EC.visibility_of_element_located((By.XPATH, "//*[@class='job-index-headline page-headline']"))).text
