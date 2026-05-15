@@ -107,5 +107,6 @@ class HomePage(BasePage):
         return NewViewPage(self.driver)
 
     def get_view_tab_names(self):
+        self.wait10.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".tabBar")))
         tabs = self.driver.find_elements(By.CSS_SELECTOR, ".tabBar .tab a")
         return [tab.text for tab in tabs if tab.text not in ["+", "All", ""]]
