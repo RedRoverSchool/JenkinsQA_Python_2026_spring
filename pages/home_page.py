@@ -70,6 +70,7 @@ class HomePage(BasePage):
         return self.wait10.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, "#jenkins-head-icon"))
         ).is_displayed()
+
     def click_pipeline_job(self, job_name: str):
         self.wait5.until(EC.element_to_be_clickable((By.XPATH, f"(//a[@href='job/{job_name}/'])[1]"))).click()
 
@@ -93,10 +94,10 @@ class HomePage(BasePage):
         return None
 
     def get_project_name(self, job_name: str):
+      
         return self.wait10.until(
             EC.visibility_of_element_located((By.XPATH, f"(//a[@href='job/{job_name}/'])[1]"))
         ).text
-
 
     def open_project_dropdown(self, job_name):
         self.wait10.until(
