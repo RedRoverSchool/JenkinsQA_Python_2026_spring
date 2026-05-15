@@ -12,7 +12,7 @@ def test_create_user(browser):
 
     user = (HomePage(browser)
         .manage_gear_click()
-        .users_click()
+        .click_users()
         .click_create_user()
         .set_input("username", USER_NAME)
         .set_input("password1", "123")
@@ -28,7 +28,12 @@ def test_create_user(browser):
 
 @pytest.mark.dependency(depends=["test_create_user"])
 def test_open_user_profile_page(browser):
-    pass
+    user = (HomePage(browser)
+            .manage_gear_click()
+            .click_users()
+            )
+
+    # assert user, f"Страница пользователя {user} не доступна"
 
 @pytest.mark.dependency(depends=["test_open_user_profile_page"])
 def test_delete_user(browser):
