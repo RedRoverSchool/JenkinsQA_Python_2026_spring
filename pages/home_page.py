@@ -80,7 +80,7 @@ class HomePage(BasePage):
 
         return MultiBranchPipelinePage(self.driver)
 
-    def project_name_click(self, job_name: str, job_type="project"):
+    def click_project_name(self, job_name: str, job_type="project"):
         self.driver.find_element(By.XPATH, f"//*[@id='job_{job_name}']/td[3]/a").click()
         if job_type == "project":
             return ProjectPage(self.driver)

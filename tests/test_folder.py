@@ -73,7 +73,7 @@ def test_create_folder_with_description(browser):
 def test_create_nested_folder(browser):
     nested_folder_page = (
         HomePage(browser)
-        .project_name_click(FOLDER_NAME, job_type="folder")
+        .click_project_name(FOLDER_NAME, job_type="folder")
         .new_item_click()
         .set_project_name(SECOND_FOLDER_NAME)
         .select_folder_and_ok_click()

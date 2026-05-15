@@ -37,7 +37,7 @@ def test_rename_freestyle_project_page_from_dashboard(browser):
 def test_rename_freestyle_project_page_from_project_page(browser):
     rename_project_page = (
         HomePage(browser)
-        .project_name_click(FREESTYLE_PROJECT_NAME)
+        .click_project_name(FREESTYLE_PROJECT_NAME)
         .click_rename_project()
     )
 
@@ -49,7 +49,7 @@ def test_rename_freestyle_project_page_from_project_page(browser):
 def test_special_characters_in_rename_field(browser, special_character):
     rename_project_page = (
         HomePage(browser)
-        .project_name_click(FREESTYLE_PROJECT_NAME)
+        .click_project_name(FREESTYLE_PROJECT_NAME)
         .click_rename_project()
         .clear_rename_field()
         .set_new_project_name(special_character)
@@ -63,7 +63,7 @@ def test_special_characters_in_rename_field(browser, special_character):
 def test_blank_rename_field(browser):
     rename_project_page = (
         HomePage(browser)
-        .project_name_click(FREESTYLE_PROJECT_NAME)
+        .click_project_name(FREESTYLE_PROJECT_NAME)
         .click_rename_project()
         .clear_rename_field()
         .click_main_panel()

@@ -131,7 +131,7 @@ def test_build_steps_configure_shell_option(browser):
     command_shell = 'echo "Starting process...; echo "Hostname: $(hostname)"'
     project_page = (
     HomePage(browser)
-    .project_name_click(JOB_NAME)
+    .click_project_name(JOB_NAME)
     .project_configure_click()
 
     .button_add_build_step_click()
