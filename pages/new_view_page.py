@@ -7,7 +7,7 @@ class NewViewPage(BasePage):
     LIST_VIEW_RADIO = (By.XPATH, "//label[contains(text(), 'List View')]")
     CREATE_BUTTON = (By.ID, "ok")
 
-    def enter_name(self, name: str):
+    def set_view_name(self, name: str):
         self.wait10.until(EC.visibility_of_element_located(self.NAME_INPUT)).send_keys(name)
         return self
 
@@ -19,7 +19,6 @@ class NewViewPage(BasePage):
         return self.driver.find_element(*self.CREATE_BUTTON).is_enabled()
 
     def click_create(self):
-        create_btn = self.wait10.until(EC.element_to_be_clickable(self.CREATE_BUTTON))
-        create_btn.click()
+        self.wait10.until(EC.element_to_be_clickable(self.CREATE_BUTTON)).click()
         self.wait10.until(EC.url_contains("configure"))
         return self
