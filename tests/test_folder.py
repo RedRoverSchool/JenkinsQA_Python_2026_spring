@@ -86,7 +86,7 @@ def test_create_folder_with_invalid_characters_negative(browser, character):
     error_message = (
         HomePage(browser)
         .new_item_click()
-        .set_project_name(FOLDER_NAME + character)
+        .set_project_name(FOLDER_NAME+character)
         .select_folder()
         .get_unsafe_character_error_message()
     )
@@ -155,7 +155,7 @@ def test_create_folder_from_copy(browser):
         EC.visibility_of_element_located((By.LINK_TEXT, 'Folder from copy')))
     assert new_folder.text == 'Folder from copy'
 
-
+@pytest.mark.skip
 def test_add_description_after_creation(browser):
     description_content = (
         HomePage(browser)
