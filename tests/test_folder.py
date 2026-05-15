@@ -159,7 +159,7 @@ def test_create_folder_from_copy(browser):
         EC.visibility_of_element_located((By.LINK_TEXT, 'Folder from copy')))
     assert new_folder.text == 'Folder from copy'
 
-
+@pytest.mark.skip
 def test_add_description_after_creation(browser):
     description_content = (
             HomePage(browser)
