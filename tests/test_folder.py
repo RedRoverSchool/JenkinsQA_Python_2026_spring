@@ -10,25 +10,14 @@ SECOND_FOLDER_NAME = "SecondFolder"
 FOLDER_DESCRIPTION = "Folder description"
 
 
-def create_folder(driver, name, full_creation=True):
-    wait5 = WebDriverWait(driver, 5)
-
-    driver.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
-    driver.find_element(By.ID, "name").send_keys(name)
-    driver.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
-    wait5.until(EC.element_to_be_clickable((By.ID, "ok-button"))).click()
-    if full_creation:
-        wait5.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
-
-
 @pytest.mark.dependency()
 def test_create_folder(browser):
     project_names_list = (
         HomePage(browser)
-        .new_item_click()
+        .click_new_item()
         .set_project_name(FOLDER_NAME)
         .select_folder_and_ok_click()
-        .save_click()
+        .click_save()
         .go_home_page()
         .get_project_names_list()
     )
@@ -42,11 +31,11 @@ def test_create_folder_with_display_name(browser):
 
     folder_name = (
         HomePage(browser)
-        .new_item_click()
+        .click_new_item()
         .set_project_name(FOLDER_NAME)
         .select_folder_and_ok_click()
         .set_display_name(display_name)
-        .save_click()
+        .click_save()
         .get_project_name()
     )
 
@@ -56,11 +45,11 @@ def test_create_folder_with_display_name(browser):
 def test_create_folder_with_description(browser):
     description_text = (
         HomePage(browser)
-        .new_item_click()
+        .click_new_item()
         .set_project_name(FOLDER_NAME)
         .select_folder_and_ok_click()
         .set_description(FOLDER_DESCRIPTION)
-        .save_click()
+        .click_save()
         .get_config_description()
     )
 
@@ -71,11 +60,11 @@ def test_create_folder_with_description(browser):
 def test_create_nested_folder(browser):
     nested_folder_page = (
         HomePage(browser)
-        .project_name_click(FOLDER_NAME, job_type="folder")
-        .new_item_click()
+        .click_project_name(FOLDER_NAME, job_type="folder")
+        .click_new_item()
         .set_project_name(SECOND_FOLDER_NAME)
         .select_folder_and_ok_click()
-        .save_click())
+        .click_save())
 
     assert nested_folder_page.get_full_folder_name() == f"Full folder name: {FOLDER_NAME}/{SECOND_FOLDER_NAME}"
     assert nested_folder_page.get_breadcrumb_texts_list() == [FOLDER_NAME, SECOND_FOLDER_NAME]
@@ -84,7 +73,7 @@ def test_create_nested_folder(browser):
 def test_create_folder_with_empty_name_negative(browser):
     error_message = (
         HomePage(browser)
-        .new_item_click()
+        .click_new_item()
         .select_folder()
         .get_empty_name_error_message()
     )
@@ -96,7 +85,7 @@ def test_create_folder_with_empty_name_negative(browser):
 def test_create_folder_with_invalid_characters_negative(browser, character):
     error_message = (
         HomePage(browser)
-        .new_item_click()
+        .click_new_item()
         .set_project_name(FOLDER_NAME+character)
         .select_folder()
         .get_unsafe_character_and_existed_name_error_message()
@@ -109,7 +98,7 @@ def test_create_folder_with_invalid_characters_negative(browser, character):
 def test_create_folder_with_duplicate_name_in_same_parent_negative(browser):
     error_message = (
         HomePage(browser)
-        .new_item_click()
+        .click_new_item()
         .set_project_name(FOLDER_NAME)
         .select_folder()
         .get_unsafe_character_and_existed_name_error_message()
@@ -120,9 +109,18 @@ def test_create_folder_with_duplicate_name_in_same_parent_negative(browser):
 
 @pytest.mark.dependency(depends=["test_create_nested_folder"])
 def test_create_folder_with_same_name_in_different_parent(browser):
-    create_folder(browser, SECOND_FOLDER_NAME)
+    project_names_list = (
+        HomePage(browser)
+        .click_new_item()
+        .set_project_name(SECOND_FOLDER_NAME)
+        .select_folder_and_ok_click()
+        .click_save()
+        .go_home_page()
+        .get_project_names_list()
+    )
 
-    assert browser.find_element(By.CLASS_NAME, "job-index-headline").text == SECOND_FOLDER_NAME
+    assert len(project_names_list) > 0
+    assert SECOND_FOLDER_NAME in project_names_list
 
 
 @pytest.mark.dependency(depends=['test_create_folder'])
@@ -160,14 +158,14 @@ def test_create_folder_from_copy(browser):
 @pytest.mark.skip
 def test_add_description_after_creation(browser):
     description_content = (
-            HomePage(browser)
-            .new_item_click()
-            .set_project_name(FOLDER_NAME)
-            .select_folder_and_ok_click()
-            .save_click()
-            .click_add_description_link()
-            .add_description(FOLDER_DESCRIPTION)
-            .get_description()
+        HomePage(browser)
+        .click_new_item()
+        .set_project_name(FOLDER_NAME)
+        .select_folder_and_ok_click()
+        .click_save()
+        .click_add_description_link()
+        .add_description(FOLDER_DESCRIPTION)
+        .get_description()
     )
 
     assert description_content == FOLDER_DESCRIPTION
