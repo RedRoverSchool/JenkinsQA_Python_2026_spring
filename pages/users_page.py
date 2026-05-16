@@ -31,8 +31,10 @@ class UsersPage(BasePage):
             return False
 
     def delete_user(self, user_id: str):
-            self.driver.find_element(
-                By.XPATH,f'//tr[td//*[contains(text(), "{user_id}")]]//a[contains(@class, "confirmation-link")]').click()
-            self.driver.find_element(By.XPATH,'//button[@data-id="ok"]').click()
+        self.driver.find_element(
+            By.XPATH,f'//tr[td//*[contains(text(), "{user_id}")]]//a[contains(@class, "confirmation-link")]').click()
+        button = self.driver.find_element(By.XPATH,'//button[@data-id="ok"]')
+        button.click()
+        self.wait10.until(EC.staleness_of(button))
 
-            return self
+        return self
