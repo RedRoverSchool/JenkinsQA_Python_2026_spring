@@ -47,7 +47,7 @@ def test_create_multi_configuration_project(browser):
 def test_create_project_with_exist_name(browser):
     error_message_text = (
         HomePage(browser)
-        .new_item_click()
+        .click_new_item()
         .set_project_name(MULTICONFIGURATION_PROJECT_NAME)
         .get_unsafe_character_and_existed_name_error_message()
     )
