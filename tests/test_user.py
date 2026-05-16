@@ -1,5 +1,5 @@
 import pytest
-
+import time
 from pages.home_page import HomePage
 
 
@@ -40,4 +40,10 @@ def test_open_user_profile_page(browser):
 
 @pytest.mark.dependency(depends=["test_open_user_profile_page"])
 def test_delete_user(browser):
-    pass
+    user = (HomePage(browser)
+            .manage_gear_click()
+            .click_users()
+            .delete_user(USER_NAME)
+            .is_find_user_name(USER_NAME))
+
+    assert user is False, "Пользователь не удалён"

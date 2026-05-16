@@ -1,4 +1,4 @@
-from selenium.common import NoSuchElementException
+from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -27,5 +27,12 @@ class UsersPage(BasePage):
         try:
             self.wait10.until(EC.visibility_of_element_located((By.XPATH,f"//table[@id='people']//a[text()='{user_name}']")))
             return True
-        except NoSuchElementException:
+        except TimeoutException:
             return False
+
+    def delete_user(self, user_id: str):
+            self.driver.find_element(
+                By.XPATH,f'//tr[td//*[contains(text(), "{user_id}")]]//a[contains(@class, "confirmation-link")]').click()
+            self.driver.find_element(By.XPATH,'//button[@data-id="ok"]').click()
+
+            return self
