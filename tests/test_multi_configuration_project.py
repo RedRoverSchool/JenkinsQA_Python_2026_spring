@@ -36,7 +36,7 @@ def test_create_multi_configuration_project(browser):
         .click_new_item()
         .set_project_name(MULTICONFIGURATION_PROJECT_NAME)
         .select_multiconfiguration_project_and_ok_click()
-        .save_button_click()
+        .click_save_button()
         .go_home_page()
         .get_project_name()
     )
@@ -55,40 +55,27 @@ def test_create_project_with_exist_name(browser):
 
     assert error_message_text == f"» A job already exists with the name ‘{MULTICONFIGURATION_PROJECT_NAME}’"
 
-@pytest.mark.skip
-def test_verify_status_switching_enable_button(browser):
-    create_multi_configuration_project(browser, MULTICONFIGURATION_PROJECT_NAME)
-    browser.find_element(By.CSS_SELECTOR, ".jenkins-table__link >span:first-child").click()
+def test_verify_status_switching_enable_toggle(browser):
+    disable_project_message = (
+        HomePage(browser)
+        .click_new_item()
+        .set_project_name(MULTICONFIGURATION_PROJECT_NAME)
+        .select_multiconfiguration_project_and_ok_click()
+        .click_enable_toggle()
+        .click_save_button()
+        .get_disable_project_message()
+    )
 
-    browser.find_element(By.XPATH, "//a[@href='/job/" + MULTICONFIGURATION_PROJECT_NAME + "/configure']").click()
-    browser.find_element(By.CSS_SELECTOR, "#toggle-switch-enable-disable-project > label").click()
+    assert "This project is currently disabled" in disable_project_message
 
-    browser.execute_script("""
-            window.scrollTo({
-                top: document.body.scrollHeight,
-                behavior: 'smooth'
-            });
-        """)
-    browser.find_element(By.NAME, "Submit").click()
-
-    actual_disable_text = WebDriverWait(browser, 10).until(
-        EC.visibility_of_element_located((By.ID, "enable-project"))).text
-
-    assert "This project is currently disabled" in actual_disable_text
-
-@pytest.mark.skip(reason="Flaky test: NoSuchElementException on CI")
 def test_verify_enable_toggle_has_tooltip(browser):
-    create_multi_configuration_project(browser, MULTICONFIGURATION_PROJECT_NAME)
-    browser.find_element(By.CSS_SELECTOR, ".jenkins-table__link >span:first-child").click()
-    browser.find_element(By.XPATH, "//a[@href='/job/" + MULTICONFIGURATION_PROJECT_NAME + "/configure']").click()
-
-    enabled_toogle = browser.find_element(By.ID, "toggle-switch-enable-disable-project")
-
-    actions = ActionChains(browser)
-    actions.move_to_element(enabled_toogle).perform()
-
-    toggle_tooltip = WebDriverWait(browser, 10).until(
-        EC.visibility_of_element_located((By.CLASS_NAME, "tippy-content"))).text
+    toggle_tooltip = (
+        HomePage(browser)
+        .click_new_item()
+        .set_project_name(MULTICONFIGURATION_PROJECT_NAME)
+        .select_multiconfiguration_project_and_ok_click()
+        .get_text_toggle_tooltip()
+    )
 
     assert toggle_tooltip == "Enable or disable the current project"
 
