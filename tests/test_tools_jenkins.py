@@ -7,7 +7,7 @@ def test_navigation_to_tools(browser):
     text = "Configure tools, their locations and automatic installers."
 
     description_on_the_page = (HomePage(browser)
-                               .manage_gear_click()
+                               .click_manage_gear()
                                .tools_click()
                                .get_page_description())
 
@@ -20,7 +20,7 @@ def test_configuration_sections(browser):
                                'ant installations', 'maven installations']
 
     actual_section_titles = (HomePage(browser)
-                             .manage_gear_click()
+                             .click_manage_gear()
                              .tools_click()
                              .get_section_titles())
 

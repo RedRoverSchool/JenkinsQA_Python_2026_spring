@@ -3,16 +3,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pytest
 
-from conftest import browser
+from pages.home_page import HomePage
 
 FREESTYLE_PROJECT_NAME = "freestyle_project"
-description = "Description Freestyle Project"
-
-
-def open_rename_page(driver):
-    wait = WebDriverWait(driver, 10)
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, f'[href="job/{FREESTYLE_PROJECT_NAME}/"]'))).click()
-    wait.until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT, 'Rename'))).click()
+DESCRIPTION = "Description Freestyle Project"
 
 
 @pytest.mark.dependency()
@@ -21,54 +15,63 @@ def test_create_freestyle_project(browser):
     browser.find_element(By.ID, "name").send_keys(FREESTYLE_PROJECT_NAME)
     browser.find_element(By.CLASS_NAME, "hudson_model_FreeStyleProject").click()
     browser.find_element(By.ID, "ok-button").click()
-    browser.find_element(By.XPATH, "//textarea[@name='description']").send_keys(description)
+    browser.find_element(By.XPATH, "//textarea[@name='description']").send_keys(DESCRIPTION)
     browser.find_element(By.NAME, "Submit").click()
-    assert browser.find_element(By.ID, "description-content").text == description
+    assert browser.find_element(By.ID, "description-content").text == DESCRIPTION
 
     assert browser.find_element(By.CSS_SELECTOR, ".job-index-headline.page-headline").text == FREESTYLE_PROJECT_NAME
 
 
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
 def test_rename_freestyle_project_page_from_dashboard(browser):
-    open_rename_page(browser)
-    wait = WebDriverWait(browser, 5)
+    rename_project_page = (
+        HomePage(browser)
+        .open_project_dropdown(FREESTYLE_PROJECT_NAME)
+        .click_project_rename(FREESTYLE_PROJECT_NAME)
+    )
 
-    rename_page_title = wait.until(EC.visibility_of_element_located((By.TAG_NAME, 'h1'))).text
-    assert rename_page_title == f'Rename Project {FREESTYLE_PROJECT_NAME}'
+    assert rename_project_page.get_rename_project_page_title() ==  f'Rename Project {FREESTYLE_PROJECT_NAME}'
 
 
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
 def test_rename_freestyle_project_page_from_project_page(browser):
-    wait = WebDriverWait(browser, 5)
-    wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, f'[href="job/{FREESTYLE_PROJECT_NAME}/"]'))).click()
-    wait.until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT, 'Rename'))).click()
+    rename_project_page = (
+        HomePage(browser)
+        .click_project_name(FREESTYLE_PROJECT_NAME)
+        .click_rename_project()
+    )
 
-    rename_page_title = browser.find_element(By.TAG_NAME, 'h1').text
-    assert rename_page_title == f'Rename Project {FREESTYLE_PROJECT_NAME}'
+    assert rename_project_page.get_rename_project_page_title() ==  f'Rename Project {FREESTYLE_PROJECT_NAME}'
 
 
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
 @pytest.mark.parametrize("special_character", ['?', '*', '/', '!'])
 def test_special_characters_in_rename_field(browser, special_character):
-    open_rename_page(browser)
-    wait = WebDriverWait(browser, 10)
-    wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[checkdependson="newName"]'))).clear()
-    browser.find_element(By.CSS_SELECTOR, '[checkdependson="newName"]').send_keys(special_character)
-    browser.find_element(By.ID, 'main-panel').click()
-
-    error = wait.until(EC.visibility_of_element_located((By.XPATH, f'//div[@class="error"][contains(text(), "{special_character}")]'))).text
-    assert error == f"‘{special_character}’ is an unsafe character"
+    rename_project_page = (
+        HomePage(browser)
+        .click_project_name(FREESTYLE_PROJECT_NAME)
+        .click_rename_project()
+        .clear_rename_field()
+        .set_new_project_name(special_character)
+        .click_main_panel()
+    )
+    error_message = f"‘{special_character}’ is an unsafe character"
+    assert rename_project_page.get_rename_project_error_message() == error_message
 
 
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
 def test_blank_rename_field(browser):
-    open_rename_page(browser)
-    wait = WebDriverWait(browser, 10)
-    wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[checkdependson="newName"]'))).clear()
-    browser.find_element(By.ID, 'main-panel').click()
+    rename_project_page = (
+        HomePage(browser)
+        .click_project_name(FREESTYLE_PROJECT_NAME)
+        .click_rename_project()
+        .clear_rename_field()
+        .click_main_panel()
+    )
 
-    error = wait.until(EC.visibility_of_element_located((By.CLASS_NAME, 'error'))).text
-    assert error == 'No name is specified'
+    error_message = 'No name is specified'
+    assert rename_project_page.get_rename_project_error_message() == error_message
+
 
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
 def test_enable_delete_workspace_before_build_starts(browser):
