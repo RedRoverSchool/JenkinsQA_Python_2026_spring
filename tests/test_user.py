@@ -13,7 +13,7 @@ EMAIL_USER = "user@test"
 def test_create_user(browser):
 
     user = (HomePage(browser)
-        .manage_gear_click()
+        .click_manage_gear()
         .click_users()
         .click_create_user()
         .set_input("username", USER_NAME)
@@ -30,7 +30,7 @@ def test_create_user(browser):
 @pytest.mark.dependency(depends=["test_create_user"])
 def test_open_user_profile_page(browser):
     user = (HomePage(browser)
-            .manage_gear_click()
+            .click_manage_gear()
             .click_users()
             .click_user_id(USER_NAME)
             .get_user_name()
@@ -41,7 +41,7 @@ def test_open_user_profile_page(browser):
 @pytest.mark.dependency(depends=["test_open_user_profile_page"])
 def test_delete_user(browser):
     user = (HomePage(browser)
-            .manage_gear_click()
+            .click_manage_gear()
             .click_users()
             .delete_user(USER_NAME)
             .is_find_user_name(USER_NAME))
