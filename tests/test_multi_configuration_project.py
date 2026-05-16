@@ -49,7 +49,7 @@ def test_create_project_with_exist_name(browser):
         HomePage(browser)
         .click_new_item()
         .set_project_name(MULTICONFIGURATION_PROJECT_NAME)
-        .select_multiconfiguration_project
+        .select_multiconfiguration_project()
         .get_unsafe_character_and_existed_name_error_message()
     )
 
