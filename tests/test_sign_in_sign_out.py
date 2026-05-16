@@ -12,7 +12,7 @@ NOT_VALID_USERNAME = "not valid user"
 NOT_VALID_PASSWORD = "any password"
 
 
-@pytest.mark.dependency(depends=["test_sign_in"])
+@pytest.mark.dependency()
 def test_sign_in(browser):
     HomePage(browser).sign_out()
 
