@@ -38,7 +38,7 @@ def test_create_multi_configuration_project(browser):
         .select_multiconfiguration_project_and_ok_click()
         .save_button_click()
         .go_home_page()
-        .get_project_name(MULTICONFIGURATION_PROJECT_NAME)
+        .get_project_name()
     )
 
     assert multi_configuration_project_name == MULTICONFIGURATION_PROJECT_NAME
