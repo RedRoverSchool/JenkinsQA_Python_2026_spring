@@ -14,7 +14,7 @@ class ProjectPage(BasePage):
             EC.visibility_of_element_located((By.CSS_SELECTOR, ".job-index-headline.page-headline"))
         ).text
 
-    def project_configure_click(self):
+    def click_project_configure(self):
         from pages.freestyle_config_page import FreestyleConfigPage
         # Импорт внутри метода чтобы избежать ошибки ImportError due to a circular import
         self.driver.find_element(By.XPATH, "//a[contains(., 'Configure')]").click()

@@ -16,7 +16,7 @@ CREDENTIAL_ID = "1"
 def test_create(browser):
     credentials_page = (
         HomePage(browser)
-        .manage_gear_click()
+        .click_manage_gear()
         .credentials_click()
         .add_credentials_button_click()
         .select_username_with_password_type()
@@ -40,7 +40,7 @@ def test_create(browser):
 def test_delete(browser):
     credentials_page = (
         HomePage(browser)
-        .manage_gear_click()
+        .click_manage_gear()
         .credentials_click()
         .open_actions_menu()
         .delete_click()
