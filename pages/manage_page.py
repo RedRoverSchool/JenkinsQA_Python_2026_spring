@@ -4,6 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import BasePage
 from pages.credentials_page import CredentialsPage
 from pages.users_page import UsersPage
+from pages.tools_page import ToolsPage
 
 
 class ManagePage(BasePage):
@@ -17,3 +18,13 @@ class ManagePage(BasePage):
         self.wait10.until(EC.element_to_be_clickable((By.XPATH, "//a[@href='securityRealm/']"))).click()
 
         return UsersPage(self.driver)
+
+    def tools_click(self):
+        self.wait10.until(
+            EC.element_to_be_clickable((
+                By.XPATH,
+                "//*[@href='configureTools']"
+            ))
+        ).click()
+
+        return ToolsPage(self.driver)
