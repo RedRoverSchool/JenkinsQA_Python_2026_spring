@@ -93,10 +93,10 @@ class HomePage(BasePage):
             return MultiBranchPipelinePage(self.driver)
         return None
 
-    def get_project_name(self, job_name: str):
+    def get_project_name(self):
       
-        return self.wait10.until(
-            EC.visibility_of_element_located((By.XPATH, f"(//a[@href='job/{job_name}/'])[1]"))
+        return self.wait5.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, ".jenkins-table__link >span:first-child"))
         ).text
 
     def new_job_click(self):

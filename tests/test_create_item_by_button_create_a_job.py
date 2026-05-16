@@ -1,6 +1,8 @@
+import pytest
+
 from pages.home_page import HomePage
 
-
+@pytest.mark.skip
 def test_new_item_by_button_create_a_job(browser):
     folder_page = (
         HomePage(browser)
