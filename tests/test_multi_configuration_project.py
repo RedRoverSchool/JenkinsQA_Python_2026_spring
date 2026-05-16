@@ -49,7 +49,7 @@ def test_create_project_with_exist_name(browser):
         HomePage(browser)
         .new_item_click()
         .set_project_name(MULTICONFIGURATION_PROJECT_NAME)
-        .get_exist_name_error_message()
+        .get_unsafe_character_and_existed_name_error_message()
     )
 
     assert error_message_text == f"» A job already exists with the name ‘{MULTICONFIGURATION_PROJECT_NAME}’"
