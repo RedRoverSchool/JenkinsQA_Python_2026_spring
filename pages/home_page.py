@@ -15,14 +15,14 @@ from pages.project_page import ProjectPage
 
 
 class HomePage(BasePage):
-    def new_item_click(self):
+    def click_new_item(self):
         self.wait10.until(
             EC.element_to_be_clickable((By.XPATH, "//a[@href='/view/all/newJob']"))
         ).click()
 
         return NewItemPage(self.driver)
 
-    def manage_gear_click(self):
+    def click_manage_gear(self):
         self.wait10.until(
             EC.element_to_be_clickable((By.XPATH, "//*[@href = '/manage']"))
         ).click()
@@ -35,7 +35,7 @@ class HomePage(BasePage):
 
         return project_names
 
-    def schedule_build_click(self, job_name: str):
+    def click_schedule_build(self, job_name: str):
         self.driver.find_element(By.XPATH, f"//tr/td[7]//a[@tooltip='Schedule a Build for {job_name}']").click()
 
         return self
@@ -51,7 +51,7 @@ class HomePage(BasePage):
 
         return self
 
-    def dropdown_menu_sign_out_click(self):
+    def click_dropdown_menu_sign_out(self):
         xpath_logout = "//a[contains(@href, '/logout')]"
         sign_out_button = self.wait10.until(EC.element_to_be_clickable((By.XPATH, xpath_logout)))
 
@@ -64,7 +64,7 @@ class HomePage(BasePage):
         return LoginPage(self.driver)
 
     def sign_out(self):
-        return self.show_dropdown_menu_from_profile_icon().dropdown_menu_sign_out_click()
+        return self.show_dropdown_menu_from_profile_icon().click_dropdown_menu_sign_out()
 
     def is_jenkins_icon_visible(self):
         return self.wait10.until(
@@ -81,7 +81,7 @@ class HomePage(BasePage):
 
         return MultiBranchPipelinePage(self.driver)
 
-    def project_name_click(self, job_name: str, job_type="project"):
+    def click_project_name(self, job_name: str, job_type="project"):
         self.driver.find_element(By.XPATH, f"//*[@id='job_{job_name}']/td[3]/a").click()
         if job_type == "project":
             return ProjectPage(self.driver)
@@ -98,3 +98,10 @@ class HomePage(BasePage):
         return self.wait10.until(
             EC.visibility_of_element_located((By.XPATH, f"(//a[@href='job/{job_name}/'])[1]"))
         ).text
+
+    def new_job_click(self):
+        self.wait10.until(
+            EC.element_to_be_clickable((By.XPATH, "//a[@href='newJob']"))
+        ).click()
+
+        return NewItemPage(self.driver)

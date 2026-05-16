@@ -9,7 +9,7 @@ new_name = "newName"
 def test_rename_by_valid_name(browser):
 
     res = (HomePage(browser)
-     .new_item_click()
+     .click_new_item()
      .set_project_name(old_name)
      .select_multibranch_and_ok_click()
      .click_submit_button()

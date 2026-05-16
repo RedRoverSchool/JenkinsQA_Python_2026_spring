@@ -33,7 +33,7 @@ def create_multi_configuration_project(browser, name):
 def test_create_multi_configuration_project(browser):
     multi_configuration_project_name = (
         HomePage(browser)
-        .new_item_click()
+        .click_new_item()
         .set_project_name(MULTICONFIGURATION_PROJECT_NAME)
         .select_multiconfiguration_project_and_ok_click()
         .save_button_click()

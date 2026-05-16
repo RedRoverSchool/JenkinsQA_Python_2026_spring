@@ -7,7 +7,7 @@ from pages.project_page import ProjectPage
 
 
 class FolderConfigPage(BasePage):
-    def save_click(self):
+    def click_save(self):
         self.wait10.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
 
         return FolderPage(self.driver)

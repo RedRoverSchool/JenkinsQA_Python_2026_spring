@@ -16,7 +16,7 @@ current_project_name = generate_project_name()
 def test_cancel_delete_job(browser):
 
     result_project_name = (HomePage(browser)
-     .new_item_click()
+     .click_new_item()
      .set_project_name(current_project_name)
      .select_pipeline_and_ok_click()
      .click_submit_button()
