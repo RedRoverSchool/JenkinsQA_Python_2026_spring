@@ -6,11 +6,14 @@ from selenium.webdriver.common.by import By
 
 class CreateUserPage(BasePage):
 
+
     def set_input(self, element_key: str, value: str):
         """
-        :param element_key: username, password1, password2, fullname, email.
-        :param value:
-        :return:
+        :param element_key: name поля в которое нужно вставить текст.
+                            На странице имеются поля:
+                            username, password1, password2, fullname, email.
+        :param value: Текст вставляемый в поле.
+        :return: CreateUserPage
         """
         self.driver.find_element(By.XPATH, f"//input[@name='{element_key}']").send_keys(value)
 
