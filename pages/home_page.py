@@ -95,7 +95,7 @@ class HomePage(BasePage):
 
     def get_project_name(self, job_name: str):
       
-        return self.wait10.until(
+        return self.wait5.until(
             EC.visibility_of_element_located((By.XPATH, f"(//a[@href='job/{job_name}/'])[1]"))
         ).text
 
