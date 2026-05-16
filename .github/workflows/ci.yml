@@ -22,6 +22,9 @@ jobs:
           python-version: '3.12'
           cache: 'pip'
 
+      - name: Get list of changed files
+        run: echo "LIST_OF_CHANGED_FILES=$(git diff --name-status $(git merge-base origin/$GITHUB_HEAD_REF origin/main) origin/$GITHUB_HEAD_REF | tr '\n' ';' | tr '\t' '=')" >> $GITHUB_ENV
+
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
