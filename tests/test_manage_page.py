@@ -1,10 +1,11 @@
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 
-# TC_10.001.01 | Manage Jenkins > Visibility and clickability > Verify navigation to manage Jenkins page
+from pages.home_page import HomePage
+
+
 def test_verify_navigation_to_manage_page(browser):
     wait = WebDriverWait(browser, 10)
 
@@ -15,14 +16,12 @@ def test_verify_navigation_to_manage_page(browser):
     assert "/manage" in browser.current_url
 
 
-# TC_10.001.02 | Manage Jenkins > Visibility and clickability > Verify "Manage Jenkins" option is visible on Dashboard
 def test_verify_icon_is_visible(browser):
     wait = WebDriverWait(browser, 10)
 
     assert wait.until(EC.visibility_of_element_located((By.ID, "root-action-ManageJenkinsAction"))).is_displayed()
 
 
-# TC_10.001.03 | Manage Jenkins > Visibility and clickability > Verify "Manage Jenkins" icon tooltip and clickability on hover
 def test_verify_tooltip_and_clickable(browser):
     wait = WebDriverWait(browser, 10)
     actions = ActionChains(browser)
@@ -44,4 +43,22 @@ def test_verify_tooltip_and_clickable(browser):
     assert cursor == "pointer"
 
 
+def test_build_queue_visibility(browser):
 
+    item_name = ["job1", "job2", "job3"]
+
+    for job_name in item_name:
+        (HomePage(browser)
+         .click_new_item()
+         .set_project_name(job_name)
+         .select_freestyle_and_ok_click()
+         .button_add_build_step_click()
+         .select_execute_shell_option()
+         .set_shell_script("echo $EXECUTOR_NUMBER\npwd\nls -lsa /\nsleep 60")
+         .button_save_click()
+         .go_home_page()
+         .click_schedule_build(job_name))
+
+    list_jobs_name = HomePage(browser).get_names_jobs_list_build_queue()
+
+    assert any(job_name in item_name for job_name in list_jobs_name)
