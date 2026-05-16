@@ -29,13 +29,13 @@ def test_user_name_fild(browser):#Проверка поля ввода логи�
 
 def test_create_new_item_icon(browser):#Проверка отоюражения кнопки New Item
     time.sleep(2)
-    create_new_item = browser.find_element(By.XPATH,"//a[@it='hudson.model.Hudson@32e2f63a']")
+    create_new_item = browser.find_element(By.XPATH,"//a[@href='/view/all/newJob']")
     time.sleep(2)
     assert create_new_item.is_displayed()
 
 def test_create_new_item(browser):#Проверка ввода имени в поле ввода New Item
     time.sleep(2)
-    create_new_item = browser.find_element(By.XPATH, "//a[@it='hudson.model.Hudson@32e2f63a']")
+    create_new_item = browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']")
     create_new_item.click()
     time.sleep(2)
     item_name_fild = browser.find_element(By.XPATH,"//input[@id='name']")
@@ -45,7 +45,7 @@ def test_create_new_item(browser):#Проверка ввода имени в п�
 
 def test_select_type_item(browser):#Проверка что выбранный тип активировался после нажатия на него
     time.sleep(2)
-    create_new_item = browser.find_element(By.XPATH, "//a[@it='hudson.model.Hudson@32e2f63a']")
+    create_new_item = browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']")
     create_new_item.click()
     time.sleep(2)
     item_name_fild = browser.find_element(By.XPATH, "//input[@id='name']")
@@ -60,7 +60,7 @@ def test_select_type_item(browser):#Проверка что выбранный �
 
 def test_open_configuration_page(browser):
     time.sleep(2)
-    create_new_item = browser.find_element(By.XPATH, "//a[@it='hudson.model.Hudson@32e2f63a']")
+    create_new_item = browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']")
     create_new_item.click()
     time.sleep(2)
     item_name_fild = browser.find_element(By.XPATH, "//input[@id='name']")
@@ -75,7 +75,7 @@ def test_open_configuration_page(browser):
 
 def test_input_configuration_page(browser):
     time.sleep(2)
-    create_new_item = browser.find_element(By.XPATH, "//a[@it='hudson.model.Hudson@32e2f63a']")
+    create_new_item = browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']']")
     create_new_item.click()
     time.sleep(2)
     item_name_fild = browser.find_element(By.XPATH, "//input[@id='name']")
