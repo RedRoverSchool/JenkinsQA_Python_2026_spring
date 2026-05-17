@@ -1,7 +1,4 @@
 import pytest
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
 from pages.home_page import HomePage
 
 MULTICONFIGURATION_PROJECT_NAME = "MultiConfigName"
@@ -60,52 +57,40 @@ def test_verify_enable_toggle_has_tooltip(browser):
     "!", "%", "&", "#", "@", "*", "?", "^", "|", "/", "]", "["
 ])
 def test_create_item_with_special_characters(browser, special_characters):
-    browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
+    error_message = (
+        HomePage(browser)
+        .click_new_item()
+        .set_project_name(MULTICONFIGURATION_PROJECT_NAME+special_characters)
+        .select_multiconfiguration_project_and_ok_click()
+        .get_unsafe_character_error_message()
+    )
 
-    browser.find_element(By.ID, "name").send_keys(f"{MULTICONFIGURATION_PROJECT_NAME}{special_characters}")
-    browser.find_element(By.CLASS_NAME, "hudson_matrix_MatrixProject").click()
-
-    error_message = WebDriverWait(browser, 10).until(
-        EC.visibility_of_element_located((By.ID, "itemname-invalid"))).text
-
-    expected_error_message = f"‘{special_characters}’ is an unsafe character"
-    assert error_message == "» " + f"‘{special_characters}’ is an unsafe character"
-
-    browser.find_element(By.ID, "ok-button").click()
-    assert browser.find_element(By.TAG_NAME, "p").text == expected_error_message
+    assert error_message == f"‘{special_characters}’ is an unsafe character"
 
 @pytest.mark.dependency(depends=["test_create_multi_configuration_project"])
 def test_search_created_project(browser):
-    browser.find_element(By.ID, "root-action-SearchAction").click()
+    created_project_name = (
+        HomePage(browser)
+        .click_search_icon()
+        .set_created_project_name(MULTICONFIGURATION_PROJECT_NAME)
+        .click_searched_project_name(MULTICONFIGURATION_PROJECT_NAME)
+        .get_project_name()
+    )
 
-    browser.find_element(By.ID, "command-bar").send_keys(MULTICONFIGURATION_PROJECT_NAME)
+    assert created_project_name == MULTICONFIGURATION_PROJECT_NAME
 
-    WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable(
-            (By.XPATH, f"//a[contains(@href, '/job/{MULTICONFIGURATION_PROJECT_NAME}/')]"))).click()
-
-    WebDriverWait(browser, 10).until(
-        EC.url_contains(f"/job/{MULTICONFIGURATION_PROJECT_NAME}/"))
-
-    assert WebDriverWait(browser, 10).until(
-         EC.visibility_of_element_located((By.TAG_NAME, "h1"))).text == MULTICONFIGURATION_PROJECT_NAME
-
-@pytest.mark.skip
 @pytest.mark.dependency(depends=["test_create_multi_configuration_project"])
 def test_check_delete_view_on_dashboard(browser):
     view_name = "NewView"
 
-    browser.find_element(By.CLASS_NAME, "addTab").click()
-    browser.find_element(By.ID, "name").send_keys(view_name)
-    browser.find_element(By.CSS_SELECTOR, "label[for='hudson.model.MyView']").click()
-    browser.find_element(By.ID, "ok").click()
-
-    browser.find_element(By.CSS_SELECTOR, "a[data-title='Delete View']").click()
-    WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable(
-            (By.CSS_SELECTOR, "button[data-id='ok']"))).click()
-
-    view_panel_elements = WebDriverWait(browser, 10).until(
-         EC.visibility_of_element_located((By.CLASS_NAME, "tabBarFrame"))).text
+    view_panel_elements = (
+        HomePage(browser)
+        .click_new_view_link()
+        .set_new_view_name(view_name)
+        .check_my_view_radio_btn()
+        .click_create_btn()
+        .delete_user_view()
+        .get_view_panel_elements()
+    )
 
     assert view_name not in view_panel_elements

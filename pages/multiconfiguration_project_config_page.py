@@ -1,3 +1,4 @@
+
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from pages.base_config_page import BaseConfigPage
@@ -23,3 +24,6 @@ class MulticonfigurationProjectConfigPage(BaseConfigPage):
         ActionChains(self.driver).move_to_element(enabled_toggle).perform()
 
         return self.wait10.until(EC.visibility_of_element_located((By.CLASS_NAME, "tippy-content"))).text
+
+    def get_unsafe_character_error_message(self):
+        return self.wait10.until(EC.visibility_of_element_located((By.TAG_NAME, "p"))).text
