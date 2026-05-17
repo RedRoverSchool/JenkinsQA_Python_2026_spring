@@ -132,12 +132,12 @@ def test_build_steps_configure_shell_option(browser):
     project_page = (
     HomePage(browser)
     .click_project_name(JOB_NAME)
-    .click_project_configure()
+    .click_project_configure("freestyle_project")
 
     .button_add_build_step_click()
     .select_execute_shell_option()
     .set_shell_script(command_shell)
-    .button_save_click()
+    .click_save()
     )
 
     assert project_page.get_project_name() == JOB_NAME

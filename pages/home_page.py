@@ -8,9 +8,9 @@ from pages.folder_page import FolderPage
 from pages.manage_page import ManagePage
 from pages.multibranch_pipeline_page import MultiBranchPipelinePage
 from pages.new_item_page import NewItemPage
-from pages.rename_project_page import RanameProjectPage
+from pages.rename_project_page import RenameProjectPage
 from pages.pipeline_project_page import PipelineProjectPage
-from pages.project_page import ProjectPage
+from pages.base_project_page import BaseProjectPage
 
 
 
@@ -84,7 +84,7 @@ class HomePage(BasePage):
     def click_project_name(self, job_name: str, job_type="project"):
         self.driver.find_element(By.XPATH, f"//*[@id='job_{job_name}']/td[3]/a").click()
         if job_type == "project":
-            return ProjectPage(self.driver)
+            return BaseProjectPage(self.driver)
         elif job_type == "pipeline":
             return PipelineProjectPage(self.driver)
         elif job_type == "folder":
@@ -109,7 +109,7 @@ class HomePage(BasePage):
     def click_project_rename(self, job_name):
         self.wait10.until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT, 'Rename'))).click()
 
-        return RanameProjectPage(self.driver)
+        return RenameProjectPage(self.driver)
 
     def new_job_click(self):
         self.wait10.until(
