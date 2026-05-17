@@ -8,7 +8,7 @@ def test_create_new_view(browser):
         .click_new_item()
         .set_project_name("pipe_line_project")
         .select_pipeline_and_ok_click()
-        .click_submit_button()
+        .click_save()
         .go_home_page()
         .click_new_view_link()
         .set_new_view_name(new_view_name)
