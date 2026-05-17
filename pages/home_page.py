@@ -134,8 +134,9 @@ class HomePage(BasePage):
         return self
 
     def set_created_project_name(self, name):
-        return self.wait10.until(EC.visibility_of_element_located((By.ID, "command-bar"))).send_keys(name)
+        self.wait10.until(EC.visibility_of_element_located((By.ID, "command-bar"))).send_keys(name)
 
+        return self
 
     def click_searched_project_name(self, name):
         self.wait10.until(
