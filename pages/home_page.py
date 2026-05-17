@@ -11,6 +11,7 @@ from pages.new_item_page import NewItemPage
 from pages.rename_project_page import RenameProjectPage
 from pages.pipeline_project_page import PipelineProjectPage
 from pages.base_project_page import BaseProjectPage
+from pages.new_view_page import NewViewPage
 
 
 
@@ -113,3 +114,14 @@ class HomePage(BasePage):
         ).click()
 
         return NewItemPage(self.driver)
+
+    def click_new_view_link(self):
+        self.wait10.until(EC.visibility_of_element_located((By.CSS_SELECTOR,"a[href = '/newView']"))).click()
+
+        return NewViewPage(self.driver)
+
+    def get_view_names_list(self):
+        tabs = self.driver.find_elements(By.XPATH, "//div[@class='tab']/a[not(@tooltip='New View')] ")
+        tab_names = [element.text for element in tabs]
+
+        return tab_names
