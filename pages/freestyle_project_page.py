@@ -17,6 +17,7 @@ class FreestyleProjectPage(BasePage):
         enable_button = self.driver.find_element(By.NAME, "Submit")
 
         return enable_button
+
     def click_project_configure(self):
         from pages.freestyle_config_page import FreestyleConfigPage
         # Импорт внутри метода чтобы избежать ошибки ImportError due to a circular import
