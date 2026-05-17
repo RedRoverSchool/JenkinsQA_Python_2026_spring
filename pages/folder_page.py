@@ -1,10 +1,10 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 import pages
-from pages.project_page import ProjectPage
+from pages.base_project_page import BaseProjectPage
 
 
-class FolderPage(ProjectPage):
+class FolderPage(BaseProjectPage):
 
     def get_config_description(self):
         return self.wait10.until(EC.visibility_of_element_located((By.ID, "view-message"))).text
@@ -20,7 +20,3 @@ class FolderPage(ProjectPage):
         self.wait10.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".job-index-headline.page-headline")))
         return [line for line in self.driver.find_element(By.ID, "main-panel").text.split('\n') if
                 line.startswith("Full folder name: ")][0]
-
-    def get_new_item_name(self):
-        return self.wait10.until(
-            EC.visibility_of_element_located((By.XPATH, "//*[@class='job-index-headline page-headline']"))).text

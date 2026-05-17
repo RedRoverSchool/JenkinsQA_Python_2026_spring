@@ -13,7 +13,7 @@ def test_create_freestyle_project(browser):
         .set_project_name(FREESTYLE_PROJECT_NAME)
         .select_freestyle_and_ok_click()
         .set_description(DESCRIPTION)
-        .button_save_click()
+        .click_save()
     )
 
     assert project_page.get_description() == DESCRIPTION

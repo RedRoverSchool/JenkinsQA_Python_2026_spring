@@ -1,13 +1,11 @@
+from pages.base_config_page import BaseConfigPage
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-
-from pages.base_page import BasePage
 from pages.multiconfiguration_project_page import MulticonfigurationProjectPage
 
 
-class MulticonfigurationProjectConfigPage(BasePage):
-
+class MulticonfigurationProjectConfigPage(BaseConfigPage):
     def click_save_button(self):
         self.wait10.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
 
