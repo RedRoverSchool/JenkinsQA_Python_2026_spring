@@ -5,6 +5,7 @@ from selenium.common.exceptions import StaleElementReferenceException
 
 from pages.base_page import BasePage
 from pages.folder_page import FolderPage
+from pages.freestyle_config_page import FreestyleConfigPage
 from pages.manage_page import ManagePage
 from pages.multibranch_pipeline_page import MultiBranchPipelinePage
 from pages.new_item_page import NewItemPage
@@ -107,6 +108,11 @@ class HomePage(BasePage):
         self.wait10.until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT, 'Rename'))).click()
 
         return RenameProjectPage(self.driver)
+
+    def click_configure_link(self):
+        self.wait10.until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT, 'Configure'))).click()
+
+        return FreestyleConfigPage(self.driver)
 
     def new_job_click(self):
         self.wait10.until(

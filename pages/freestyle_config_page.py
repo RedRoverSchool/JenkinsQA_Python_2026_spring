@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 from pages.base_config_page import BaseConfigPage
+from pages.freestyle_project_page import FreestyleProjectPage
 
 
 class FreestyleConfigPage(BaseConfigPage):
@@ -30,3 +31,5 @@ class FreestyleConfigPage(BaseConfigPage):
         self.wait10.until(EC.element_to_be_clickable((By.XPATH, "//label[@data-title='Disabled']"))).click()
 
         return self
+
+

@@ -23,3 +23,17 @@ class BaseConfigPage(BasePage):
         self.driver.find_element(By.XPATH, "//textarea[contains(@name, 'description')]").send_keys(description)
 
         return self
+
+    def click_preview_button(self):
+        self.driver.find_element(By.CLASS_NAME, "textarea-show-preview").click()
+
+        return self
+
+    def is_preview_textarea_displayed(self):
+        return self.wait10.until(EC.visibility_of_element_located((By.CLASS_NAME, "textarea-preview")))
+
+    def get_preview_textarea_text(self):
+        return self.driver.find_element(By.CLASS_NAME, "textarea-preview").text
+
+    def get_description_text(self):
+        return self.driver.find_element(By.XPATH, "//textarea[@name='description']").get_attribute("value")
