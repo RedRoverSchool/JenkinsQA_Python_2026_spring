@@ -85,12 +85,8 @@ class HomePage(BasePage):
         self.driver.find_element(By.XPATH, f"//*[@id='job_{job_name}']/td[3]/a").click()
         if job_type == "project":
             return BaseProjectPage(self.driver)
-        elif job_type == "pipeline":
-            return PipelineProjectPage(self.driver)
         elif job_type == "folder":
             return FolderPage(self.driver)
-        elif job_type == "multibranch":
-            return MultiBranchPipelinePage(self.driver)
         return None
 
     def get_project_name(self):
