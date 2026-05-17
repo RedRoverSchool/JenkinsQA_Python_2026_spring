@@ -63,6 +63,8 @@ class FreestyleConfigPage(BasePage):
 
     def click_save(self):
         self.driver.find_element(By.NAME, "Submit").click()
+        from pages.freestyle_project_page import FreestyleProjectPage
+        # Импорт внутри метода чтобы избежать ошибки ImportError due to a circular import
 
         return FreestyleProjectPage(self.driver)
 
