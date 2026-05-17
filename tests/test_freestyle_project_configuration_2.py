@@ -12,7 +12,7 @@ def test_freestyle_project_configuration(browser):
      .set_project_name(random_name)
      .select_freestyle_and_ok_click()
      .click_enable_disable_button()
-     .button_save_click_2()
+     .click_save("freestyle_project")
     )
 
     assert "This project is currently disabled" in project_page.get_warning_message(random_name)

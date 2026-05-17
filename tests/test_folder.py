@@ -49,7 +49,7 @@ def test_create_folder_with_description(browser):
         .set_project_name(FOLDER_NAME)
         .select_folder_and_ok_click()
         .set_description(FOLDER_DESCRIPTION)
-        .click_save()
+        .click_save("folder")
         .get_config_description()
     )
 
@@ -64,7 +64,7 @@ def test_create_nested_folder(browser):
         .click_new_item()
         .set_project_name(SECOND_FOLDER_NAME)
         .select_folder_and_ok_click()
-        .click_save())
+        .click_save("folder"))
 
     assert nested_folder_page.get_full_folder_name() == f"Full folder name: {FOLDER_NAME}/{SECOND_FOLDER_NAME}"
     assert nested_folder_page.get_breadcrumb_texts_list() == [FOLDER_NAME, SECOND_FOLDER_NAME]

@@ -25,3 +25,12 @@ class BasePage:
             return [crumb.text for crumb in breadcrumb_elements if crumb.text.strip()]
         except:
             return []
+
+    def refresh_page(self):
+        self.driver.refresh()
+
+        return self
+
+    def click_main_panel(self):
+        self.driver.find_element(By.ID, 'main-panel').click()
+        return self
