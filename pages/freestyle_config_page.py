@@ -3,7 +3,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 from pages.base_config_page import BaseConfigPage
-from pages.freestyle_project_page import FreestyleProjectPage
 
 
 class FreestyleConfigPage(BaseConfigPage):
