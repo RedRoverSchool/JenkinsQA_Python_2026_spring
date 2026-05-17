@@ -52,3 +52,44 @@ class FreestyleConfigPage(BasePage):
         self.wait10.until(EC.element_to_be_clickable((By.XPATH, "//label[@data-title='Disabled']"))).click()
 
         return self
+
+    def enable_delete_workspace_before_build_starts(self):
+        checkbox_label = self.wait5.until(
+
+            EC.element_to_be_clickable(
+
+                (By.XPATH,
+
+                 "//label[contains(.,'Delete workspace before build starts')]")
+
+            )
+
+        )
+
+        self.driver.execute_script(
+
+            "arguments[0].scrollIntoView({block:'center'});",
+
+            checkbox_label
+
+        )
+
+        checkbox_label.click()
+
+        return self
+
+    def click_save(self):
+        self.driver.find_element(By.NAME, "Submit").click()
+
+        return FreestyleProjectPage(self.driver)
+
+    def is_delete_workspace_before_build_starts_selected(self):
+        return self.wait5.until(
+
+            EC.presence_of_element_located(
+
+                (By.NAME, "hudson-plugins-ws_cleanup-PreBuildCleanup")
+
+            )
+
+        ).is_selected()

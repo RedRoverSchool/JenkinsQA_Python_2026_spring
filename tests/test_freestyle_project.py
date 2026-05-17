@@ -75,21 +75,14 @@ def test_blank_rename_field(browser):
 
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
 def test_enable_delete_workspace_before_build_starts(browser):
-    wait = WebDriverWait(browser, 10)
+    is_selected = (
+        HomePage(browser)
+        .click_project_name(FREESTYLE_PROJECT_NAME)
+        .click_project_configure()
+        .enable_delete_workspace_before_build_starts()
+        .click_save()
+        .click_project_configure()
+        .is_delete_workspace_before_build_starts_selected()
+    )
 
-    (wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, f'[href="job/{FREESTYLE_PROJECT_NAME}/"]'))).
-        click())
-
-    (wait.until(EC.element_to_be_clickable((By.XPATH, "//a[contains(@href,'configure')]"))).
-        click())
-
-    checkbox_label = wait.until(EC.element_to_be_clickable((By.XPATH,"//label[contains(.,'Delete workspace before build starts')]")))
-    browser.execute_script("arguments[0].scrollIntoView({block:'center'});",checkbox_label)
-    checkbox_label.click()
-    browser.find_element(By.NAME, "Submit").click()
-
-    (wait.until(EC.element_to_be_clickable((By.XPATH, "//a[contains(@href,'configure')]"))).
-        click())
-
-    actual_checkbox = wait.until(EC.presence_of_element_located((By.NAME, "hudson-plugins-ws_cleanup-PreBuildCleanup")))
-    assert actual_checkbox.is_selected()
+    assert is_selected
