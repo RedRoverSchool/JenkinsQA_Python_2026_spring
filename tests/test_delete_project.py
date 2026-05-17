@@ -19,10 +19,9 @@ def test_cancel_delete_job(browser):
      .click_new_item()
      .set_project_name(current_project_name)
      .select_pipeline_and_ok_click()
-     .click_submit_button()
-     .click_delete_pipeline()
-     .click_cancel_delete_button()
-     .refresh_pipeline_project_page()
+     .click_save()
+     .click_delete()
+     .refresh_page()
      .get_project_name())
 
     assert result_project_name == current_project_name
@@ -34,7 +33,7 @@ def test_delete_job(browser):
     try:
         (HomePage(browser)
          .click_pipeline_job(current_project_name)
-         .click_delete_pipeline()
+         .click_delete()
          .click_confirm_delete_button()
          .click_pipeline_job(current_project_name))
 
