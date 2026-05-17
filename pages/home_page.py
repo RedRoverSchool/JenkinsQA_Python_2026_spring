@@ -11,7 +11,6 @@ from pages.new_item_page import NewItemPage
 from pages.rename_project_page import RenameProjectPage
 from pages.pipeline_project_page import PipelineProjectPage
 from pages.base_project_page import BaseProjectPage
-from pages.project_page import ProjectPage
 from pages.new_view_page import NewViewPage
 
 
