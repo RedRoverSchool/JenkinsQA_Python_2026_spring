@@ -25,9 +25,9 @@ def test_view_type_selection_options(browser,setup_precondition_pipeline):
         .click_add_new_view_tab()
     )
 
-    assert new_view_page.is_list_view_displayed(), "Радіо-кнопка 'List View' не відображається!"
-    assert new_view_page.is_my_view_displayed(), "Радіо-кнопка 'My View' не відображається!"
-    assert new_view_page.is_create_button_disabled(), "Кнопка 'Create' повинна бути заблокована за замовчуванням!"
+    assert new_view_page.is_list_view_displayed(), "The 'List View' radio button is not displayed!"
+    assert new_view_page.is_my_view_displayed(), "The 'My View' radio button is not displayed!"
+    assert new_view_page.is_create_button_disabled(), "The 'Create' button should be disabled by default"
 
 @pytest.mark.dependency(depends=["test_view_type_selection_options"])
 def test_creation_button_displayed_with_valid_name_only(browser):
@@ -38,8 +38,8 @@ def test_creation_button_displayed_with_valid_name_only(browser):
     )
 
     assert new_view_page.is_create_button_disabled(), (
-        f"Кнопка 'Create' розблокувалася після введення імені '{LIST_VIEW_NAME}', "
-        f"хоча тип View ще не було обрано!"
+        f"The 'Create' button was unlocked after entering a name '{LIST_VIEW_NAME}', "
+        f"although the View type has not yet been selected!"
     )
 
 @pytest.mark.dependency(depends=["test_creation_button_displayed_with_valid_name_only"])
@@ -51,8 +51,8 @@ def test_successful_creation_of_list_view(browser):
     .click_create())
 
     assert "configure" in browser.current_url, (
-        f"Користувача не було перенаправлено на сторінку конфігурації! "
-        f"Поточний URL: {browser.current_url}"
+        f"The user was not redirected to the configuration page! "
+        f"Current URL: {browser.current_url}"
     )
 
 @pytest.fixture()
