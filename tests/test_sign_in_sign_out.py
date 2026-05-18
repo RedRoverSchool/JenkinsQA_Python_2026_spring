@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 from pages.home_page import HomePage
 from pages.login_page import LoginPage
 
-
 load_dotenv()
 USERNAME = os.getenv("JENKINS_USERNAME")
 PASSWORD = os.getenv("JENKINS_PASSWORD")

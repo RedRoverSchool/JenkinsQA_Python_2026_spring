@@ -102,6 +102,7 @@ class HomePage(BasePage):
         self.wait10.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, f'[href="job/{job_name}/"] .jenkins-menu-dropdown-chevron'))
         ).click()
+
         return self
 
     def click_project_rename(self, job_name):
@@ -141,24 +142,31 @@ class HomePage(BasePage):
     def click_searched_project_name(self, name):
         self.wait10.until(
             EC.element_to_be_clickable((By.XPATH, f"//a[contains(@href, '/job/{name}/')]"))).click()
+
         return MulticonfigurationProjectPage(self.driver)
 
+    def open_project_dropdown(self, job_name):
+        self.wait10.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, f'[href="job/{job_name}/"] .jenkins-menu-dropdown-chevron'))
+        ).click()
+        return self
+
     def click_add_new_view_tab(self):
-       self.wait10.until(
-           EC.element_to_be_clickable((By.XPATH, "//a[@href='/newView']"))
-       ).click()
-       from pages.new_view_page import NewViewPage
-       return NewViewPage(self.driver)
+        self.wait10.until(
+            EC.element_to_be_clickable((By.XPATH, "//a[@href='/newView']"))
+        ).click()
+        from pages.new_view_page import NewViewPage
+        return NewViewPage(self.driver)
 
     def get_view_tab_names(self):
-       self.wait10.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".tabBar")))
-       tabs = self.driver.find_elements(By.CSS_SELECTOR, ".tabBar .tab a")
-       return [tab.text for tab in tabs if tab.text not in ["+", "All", ""]]
+        self.wait10.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".tabBar")))
+        tabs = self.driver.find_elements(By.CSS_SELECTOR, ".tabBar .tab a")
+        return [tab.text for tab in tabs if tab.text not in ["+", "All", ""]]
 
     def is_project_exist(self, project_name):
-       try:
-           WebDriverWait(self.driver,5).until(
-               EC.visibility_of_element_located((By.XPATH, f"//a[span[text()='{project_name}']]")))
-           return True
-       except TimeoutException:
-           return False
+        try:
+            WebDriverWait(self.driver,5).until(
+                EC.visibility_of_element_located((By.XPATH, f"//a[span[text()='{project_name}']]")))
+            return True
+        except TimeoutException:
+            return False
