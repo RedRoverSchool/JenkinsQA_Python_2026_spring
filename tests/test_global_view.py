@@ -34,7 +34,7 @@ def test_creation_button_displayed_with_valid_name_only(browser):
     new_view_page = (
         HomePage(browser)
         .click_add_new_view_tab()
-        .set_view_name(LIST_VIEW_NAME)
+        .set_new_view_name(LIST_VIEW_NAME)
     )
 
     assert new_view_page.is_create_button_disabled(), (
@@ -46,9 +46,9 @@ def test_creation_button_displayed_with_valid_name_only(browser):
 def test_successful_creation_of_list_view(browser):
     (HomePage(browser)
     .click_add_new_view_tab()
-    .set_view_name(LIST_VIEW_NAME)
+    .set_new_view_name(LIST_VIEW_NAME)
     .select_list_view()
-    .click_create())
+    .click_create_btn())
 
     assert "configure" in browser.current_url, (
         f"The user was not redirected to the configuration page! "
@@ -60,9 +60,9 @@ def create_remaining_precondition_views(browser):
     for name in REMAINING_PRECONDITION_NAMES:
         (HomePage(browser)
          .click_add_new_view_tab()
-         .set_view_name(name)
+         .set_new_view_name(name)
          .select_list_view()
-         .click_create()
+         .click_create_btn()
          .click_save())
     return browser
 
@@ -70,9 +70,9 @@ def create_remaining_precondition_views(browser):
 def test_displaying_and_sorting_of_created_views_in_tab_bar(create_remaining_precondition_views):
     (HomePage(create_remaining_precondition_views)
     .click_add_new_view_tab()
-    .set_view_name(TARGET_VIEW_NAME)
+    .set_new_view_name(TARGET_VIEW_NAME)
     .select_list_view()
-    .click_create()
+    .click_create_btn()
     .click_save()
 )
     actual_view = HomePage(create_remaining_precondition_views).get_view_tab_names()
