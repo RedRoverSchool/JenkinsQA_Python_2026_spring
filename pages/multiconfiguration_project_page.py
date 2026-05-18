@@ -1,6 +1,5 @@
-from pages.project_page import ProjectPage
-from pages.base_page import BasePage
+from pages.base_project_page import BaseProjectPage
 
 
-class MulticonfigurationProjectPage(ProjectPage):
+class MulticonfigurationProjectPage(BaseProjectPage):
     pass

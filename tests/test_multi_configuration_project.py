@@ -28,20 +28,32 @@ def create_multi_configuration_project(browser, name):
                     var logo = document.querySelector('.jenkins-mobile-hide');
                     if (logo) logo.click();
                 """)
-@pytest.mark.skip
+
 @pytest.mark.dependency()
 def test_create_multi_configuration_project(browser):
     multi_configuration_project_name = (
         HomePage(browser)
-        .new_item_click()
+        .click_new_item()
         .set_project_name(MULTICONFIGURATION_PROJECT_NAME)
         .select_multiconfiguration_project_and_ok_click()
-        .save_button_click()
+        .click_save()
         .go_home_page()
-        .get_project_name(MULTICONFIGURATION_PROJECT_NAME)
+        .get_project_name()
     )
 
     assert multi_configuration_project_name == MULTICONFIGURATION_PROJECT_NAME
+
+@pytest.mark.dependency(depends=["test_create_multi_configuration_project"])
+def test_create_project_with_exist_name(browser):
+    error_message_text = (
+        HomePage(browser)
+        .click_new_item()
+        .set_project_name(MULTICONFIGURATION_PROJECT_NAME)
+        .select_multiconfiguration_project()
+        .get_unsafe_character_and_existed_name_error_message()
+    )
+
+    assert error_message_text == f"» A job already exists with the name ‘{MULTICONFIGURATION_PROJECT_NAME}’"
 
 @pytest.mark.skip
 def test_verify_status_switching_enable_button(browser):
@@ -98,18 +110,6 @@ def test_create_item_with_special_characters(browser, special_characters):
     browser.find_element(By.ID, "ok-button").click()
     assert browser.find_element(By.TAG_NAME, "p").text == expected_error_message
 
-@pytest.mark.skip
-@pytest.mark.dependency(depends=["test_create_multi_configuration_project"])
-def test_create_project_with_exist_name(browser):
-    browser.find_element(By.XPATH, "//a[contains(@href, '/newJob')]").click()
-    browser.find_element(By.ID, "name").send_keys(MULTICONFIGURATION_PROJECT_NAME)
-
-    error_message = WebDriverWait(browser, 5).until(
-         EC.visibility_of_element_located((By.ID, "itemname-invalid"))).text
-
-    assert error_message == f"» A job already exists with the name ‘{MULTICONFIGURATION_PROJECT_NAME}’"
-
-@pytest.mark.skip
 @pytest.mark.dependency(depends=["test_create_multi_configuration_project"])
 def test_search_created_project(browser):
     browser.find_element(By.ID, "root-action-SearchAction").click()
