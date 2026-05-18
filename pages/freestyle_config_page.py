@@ -30,3 +30,5 @@ class FreestyleConfigPage(BaseConfigPage):
         self.wait10.until(EC.element_to_be_clickable((By.XPATH, "//label[@data-title='Disabled']"))).click()
 
         return self
+
+
