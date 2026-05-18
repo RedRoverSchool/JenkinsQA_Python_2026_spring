@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import BasePage
+from pages.view_page import ViewPage
 
 
 class NewViewPage(BasePage):
@@ -9,8 +10,10 @@ class NewViewPage(BasePage):
     MY_VIEW_RADIO = (By.XPATH, "//label[contains(text(), 'My View')]")  # Додано
     CREATE_BUTTON = (By.ID, "ok")
 
-    def set_new_view_name(self, name: str):
-        self.wait10.until(EC.visibility_of_element_located(self.NAME_INPUT)).send_keys(name)
+    def set_new_view_name(self, new_view_name):
+        self.wait10.until(EC.visibility_of_element_located((By.ID, 'name'))).send_keys(new_view_name)
+    #def set_new_view_name(self, name: str):
+        #self.wait10.until(EC.visibility_of_element_located(self.NAME_INPUT)).send_keys(name)
         return self
 
     def select_list_view(self):
@@ -31,6 +34,10 @@ class NewViewPage(BasePage):
         return not self.driver.find_element(*self.CREATE_BUTTON).is_enabled() or self.driver.find_element(*self.CREATE_BUTTON).get_attribute("disabled") is not None
 
     def click_create_btn(self):
+        self.wait10.until(EC.visibility_of_element_located((By.ID, 'ok'))).click()
+        return ViewPage(self.driver)
+
+    def click_create(self):
         self.wait10.until(EC.element_to_be_clickable(self.CREATE_BUTTON)).click()
         self.wait10.until(EC.url_contains("configure"))
         from pages.view_page import ViewPage

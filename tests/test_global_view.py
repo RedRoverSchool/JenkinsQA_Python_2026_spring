@@ -48,7 +48,7 @@ def test_successful_creation_of_list_view(browser):
     .click_add_new_view_tab()
     .set_new_view_name(LIST_VIEW_NAME)
     .select_list_view()
-    .click_create_btn())
+    .click_create())
 
     assert "configure" in browser.current_url, (
         f"The user was not redirected to the configuration page! "
@@ -62,7 +62,7 @@ def create_remaining_precondition_views(browser):
          .click_add_new_view_tab()
          .set_new_view_name(name)
          .select_list_view()
-         .click_create_btn()
+         .click_create()
          .click_save())
     return browser
 
@@ -72,7 +72,7 @@ def test_displaying_and_sorting_of_created_views_in_tab_bar(create_remaining_pre
     .click_add_new_view_tab()
     .set_new_view_name(TARGET_VIEW_NAME)
     .select_list_view()
-    .click_create_btn()
+    .click_create()
     .click_save()
 )
     actual_view = HomePage(create_remaining_precondition_views).get_view_tab_names()
