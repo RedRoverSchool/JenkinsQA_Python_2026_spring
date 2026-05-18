@@ -7,6 +7,7 @@ from pages.base_page import BasePage
 from pages.folder_page import FolderPage
 from pages.manage_page import ManagePage
 from pages.multibranch_pipeline_page import MultiBranchPipelinePage
+from pages.multiconfiguration_project_page import MulticonfigurationProjectPage
 from pages.new_item_page import NewItemPage
 from pages.rename_project_page import RenameProjectPage
 from pages.pipeline_project_page import PipelineProjectPage
@@ -125,3 +126,20 @@ class HomePage(BasePage):
         tab_names = [element.text for element in tabs]
 
         return tab_names
+
+    def click_search_icon(self):
+        self.wait10.until(
+            EC.element_to_be_clickable((By.ID, "root-action-SearchAction"))).click()
+
+        return self
+
+    def set_created_project_name(self, name):
+        self.wait10.until(EC.visibility_of_element_located((By.ID, "command-bar"))).send_keys(name)
+
+        return self
+
+    def click_searched_project_name(self, name):
+        self.wait10.until(
+            EC.element_to_be_clickable((By.XPATH, f"//a[contains(@href, '/job/{name}/')]"))).click()
+
+        return MulticonfigurationProjectPage(self.driver)
