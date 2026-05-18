@@ -26,6 +26,7 @@ class NewViewPage(BasePage):
     
     def check_my_view_radio_btn(self):
         self.wait10.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "label[for='hudson.model.MyView']" ))).click()
+        return self
 
     def is_create_button_disabled(self):
         button = self.driver.find_element(*self.CREATE_BUTTON)
@@ -35,6 +36,7 @@ class NewViewPage(BasePage):
         self.wait10.until(EC.element_to_be_clickable(self.CREATE_BUTTON)).click()
         self.wait10.until(EC.url_contains("configure"))
         return self
+
 
     def click_save(self):
         self.wait10.until(EC.element_to_be_clickable(self.SAVE_BUTTON)).click()
