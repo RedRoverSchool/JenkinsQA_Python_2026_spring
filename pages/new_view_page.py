@@ -28,8 +28,7 @@ class NewViewPage(BasePage):
         return self
 
     def is_create_button_disabled(self):
-        button = self.driver.find_element(*self.CREATE_BUTTON)
-        return not button.is_enabled() or button.get_attribute("disabled") is not None
+        return not self.driver.find_element(*self.CREATE_BUTTON).is_enabled() or self.driver.find_element(*self.CREATE_BUTTON).get_attribute("disabled") is not None
 
     def click_create_btn(self):
         self.wait10.until(EC.element_to_be_clickable(self.CREATE_BUTTON)).click()
