@@ -8,7 +8,6 @@ class NewViewPage(BasePage):
     LIST_VIEW_RADIO = (By.XPATH, "//label[contains(text(), 'List View')]")
     MY_VIEW_RADIO = (By.XPATH, "//label[contains(text(), 'My View')]")  # Додано
     CREATE_BUTTON = (By.ID, "ok")
-    SAVE_BUTTON = (By.XPATH, "//button[contains(text(), 'Save')]")
 
     def set_new_view_name(self, name: str):
         self.wait10.until(EC.visibility_of_element_located(self.NAME_INPUT)).send_keys(name)
@@ -35,9 +34,5 @@ class NewViewPage(BasePage):
     def click_create_btn(self):
         self.wait10.until(EC.element_to_be_clickable(self.CREATE_BUTTON)).click()
         self.wait10.until(EC.url_contains("configure"))
-        return self
-
-
-    def click_save(self):
-        self.wait10.until(EC.element_to_be_clickable(self.SAVE_BUTTON)).click()
-        return self
+        from pages.view_page import ViewPage
+        return ViewPage(self.driver)
