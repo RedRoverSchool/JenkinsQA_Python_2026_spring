@@ -83,8 +83,3 @@ def test_displaying_and_sorting_of_created_views_in_tab_bar(create_remaining_pre
     f"Tabs order is wrong!\n"
     f"Expected: {expected_order}\n"
     f"Got: {actual_view}")
-
-
-
-
-
