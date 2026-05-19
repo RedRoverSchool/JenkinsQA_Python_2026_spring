@@ -8,11 +8,11 @@ random_name = "item" + ''.join(random.choices(string.ascii_lowercase + string.di
 def test_freestyle_project_configuration(browser):
     project_page = (
       HomePage(browser)
-     .new_item_click()
+     .click_new_item()
      .set_project_name(random_name)
      .select_freestyle_and_ok_click()
      .click_enable_disable_button()
-     .button_save_click_2()
+     .click_save("freestyle_project")
     )
 
     assert "This project is currently disabled" in project_page.get_warning_message(random_name)

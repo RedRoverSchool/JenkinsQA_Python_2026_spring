@@ -52,13 +52,17 @@ class NewItemPage(BasePage):
 
         return MulticonfigurationProjectConfigPage(self.driver)
 
+    def select_multiconfiguration_project(self):
+        self.driver.find_element(By.CLASS_NAME, "hudson_matrix_MatrixProject").click()
+
+        return self
 
     def select_folder(self):
         self.driver.find_element(By.CLASS_NAME, "com_cloudbees_hudson_plugins_folder_Folder").click()
 
         return self
 
-    def get_unsafe_character_error_message(self):
+    def get_unsafe_character_and_existed_name_error_message(self):
         return self.wait10.until(EC.visibility_of_element_located((By.ID, "itemname-invalid"))).text
 
     def get_empty_name_error_message(self):

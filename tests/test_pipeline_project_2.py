@@ -12,10 +12,10 @@ PIPELINE_NAME = "test_1"
 def test_create_pipeline_project(browser):
     created_pipeline_name = (
         HomePage(browser)
-        .new_item_click()
+        .click_new_item()
         .set_project_name(PIPELINE_NAME)
         .select_pipeline_and_ok_click()
-        .click_submit_button()
+        .click_save()
         .go_home_page()
         .get_project_name(PIPELINE_NAME)
     )
@@ -28,8 +28,8 @@ def test_add_description_pipeline(browser):
 
     added_description = (
         HomePage(browser)
-        .project_name_click(PIPELINE_NAME)
-        .project_configure_click()
+        .click_project_name(PIPELINE_NAME)
+        .click_project_configure()
         .set_description(text_description)
         .button_save_click()
         .get_description()

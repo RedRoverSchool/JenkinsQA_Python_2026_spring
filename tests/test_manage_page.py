@@ -49,15 +49,15 @@ def test_build_queue_visibility(browser):
 
     for job_name in item_name:
         (HomePage(browser)
-         .new_item_click()
+         .click_new_item()
          .set_project_name(job_name)
          .select_freestyle_and_ok_click()
          .button_add_build_step_click()
          .select_execute_shell_option()
          .set_shell_script("echo $EXECUTOR_NUMBER\npwd\nls -lsa /\nsleep 60")
-         .button_save_click()
+         .click_save()
          .go_home_page()
-         .schedule_build_click(job_name))
+         .click_schedule_build(job_name))
 
     list_jobs_name = HomePage(browser).get_names_jobs_list_build_queue()
 

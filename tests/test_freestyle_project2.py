@@ -1,46 +1,35 @@
 import pytest
-from selenium.webdriver import ActionChains
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+
+from pages import base_project_page
+from pages.home_page import HomePage
+
 
 FREESTYLE_PROJECT_NAME = "Test_Freestyle"
+DESCRIPTION = "Test description"
+JOB_TYPE = "freestyle_project"
 
 @pytest.mark.dependency
 def test_create_freestyle_project(browser):
-    wait = WebDriverWait(browser, 10)
+    freestyle_job_page = (
+        HomePage(browser)
+        .click_new_item()
+        .set_project_name(FREESTYLE_PROJECT_NAME)
+        .select_freestyle_and_ok_click()
+        .click_save(JOB_TYPE)
+    )
 
-    browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
-    browser.find_element(By.ID, "name").send_keys(FREESTYLE_PROJECT_NAME)
-    browser.find_element(By.CLASS_NAME, "hudson_model_FreeStyleProject").click()
-    browser.find_element(By.ID, "ok-button").click()
-
-    wait.until(
-        EC.element_to_be_clickable((By.NAME, "Submit"))
-    ).click()
-
-    assert browser.find_element(By.CSS_SELECTOR, ".job-index-headline.page-headline").text == FREESTYLE_PROJECT_NAME
+    assert freestyle_job_page.get_project_name() == FREESTYLE_PROJECT_NAME
 
 
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
 def test_description_preview(browser):
-    wait = WebDriverWait(browser, 10)
-
-    freestyle_project = browser.find_element(By.CSS_SELECTOR, f'[href="job/{FREESTYLE_PROJECT_NAME}/"]')
-    ActionChains(browser).move_to_element(freestyle_project).perform()
-    browser.find_element(By.CSS_SELECTOR, '[id="job_Test_Freestyle"] .jenkins-menu-dropdown-chevron').click()
-
-    wait.until(
-        EC.element_to_be_clickable((By.XPATH, f"//a[@href='/job/{FREESTYLE_PROJECT_NAME}/configure']")
-    )).click()
-
-    description_textarea = browser.find_element(By.XPATH, "//textarea[@name='description']")
-    description_textarea.send_keys("test preview")
-    browser.find_element(By.CLASS_NAME, "textarea-show-preview").click()
-
-    preview_textarea = wait.until(
-        EC.visibility_of_element_located((By.CLASS_NAME, "textarea-preview"))
+    freestyle_config_page = (
+        HomePage(browser)
+        .open_project_dropdown(FREESTYLE_PROJECT_NAME)
+        .click_configure_link()
+        .set_description(DESCRIPTION)
+        .click_preview_button()
     )
 
-    assert preview_textarea.is_displayed()
-    assert preview_textarea.text == description_textarea.get_attribute("value")
+    assert freestyle_config_page.is_preview_textarea_displayed()
+    assert freestyle_config_page.get_preview_textarea_text() == freestyle_config_page.get_description_text()

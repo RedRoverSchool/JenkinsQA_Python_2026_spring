@@ -1,7 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-
+import pages
 
 class BasePage:
     def __init__(self, driver, timeout=10):
@@ -10,32 +10,36 @@ class BasePage:
         self.wait5 = WebDriverWait(driver, 5)
 
     def go_home_page(self):
-        from pages.home_page import HomePage
-
         self.driver.execute_script("""
             var logo = document.querySelector('.jenkins-mobile-hide');
             if (logo) logo.click();
         """)
 
-        return HomePage(self.driver)
+        return pages.home_page.HomePage(self.driver)
 
     def get_breadcrumb_texts_list(self):
         try:
             breadcrumb_elements = self.wait10.until(
-                EC.presence_of_all_elements_located(
-                    (By.CSS_SELECTOR, ".jenkins-breadcrumbs__list-item")
-                )
+                EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".jenkins-breadcrumbs__list-item"))
             )
             return [crumb.text for crumb in breadcrumb_elements if crumb.text.strip()]
         except:
             return []
 
+    def refresh_page(self):
+        self.driver.refresh()
+
+        return self
+
+    def click_main_panel(self):
+        self.driver.find_element(By.ID, 'main-panel').click()
+        return self
+
     def click_profile_icon_in_header(self):
-        from pages.profile_page import ProfilePage
 
         self.wait5.until(
             EC.element_to_be_clickable((By.ID, "root-action-UserAction"))
         ).click()
         self.wait5.until(EC.url_contains("user"))
 
-        return ProfilePage(self.driver)
+        return pages.profile_page.ProfilePage(self.driver)
