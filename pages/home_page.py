@@ -67,7 +67,7 @@ class HomePage(BasePage):
         return LoginPage(self.driver)
 
     def sign_out(self):
-        return self.show_dropdown_menu_from_profile_icon().dropdown_menu_sign_out_click()
+        return self.show_dropdown_menu_from_profile_icon().click_dropdown_menu_sign_out()
 
     def is_jenkins_icon_visible(self):
         return self.wait10.until(
@@ -93,7 +93,7 @@ class HomePage(BasePage):
         return None
 
     def get_project_name(self):
-
+      
         return self.wait5.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, ".jenkins-table__link >span:first-child"))
         ).text
@@ -161,6 +161,7 @@ class HomePage(BasePage):
             EC.element_to_be_clickable((By.XPATH, "//a[@href='/newView']"))
         ).click()
         from pages.new_view_page import NewViewPage
+
         return NewViewPage(self.driver)
 
     def get_view_tab_names(self):
@@ -175,11 +176,3 @@ class HomePage(BasePage):
             return True
         except TimeoutException:
             return False
-
-    def click_item_in_profile_icon_dropdown_menu(self, name):
-        item_locator = (By.XPATH, f'//a[contains(@href, "{name}")]')
-
-        self.show_dropdown_menu_from_profile_icon()
-        self.wait10.until(EC.element_to_be_clickable(item_locator)).click()
-
-        return pages.profile_page.ProfilePage(self.driver)
