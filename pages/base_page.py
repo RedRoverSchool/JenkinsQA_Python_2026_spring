@@ -22,8 +22,20 @@ class BasePage:
     def get_breadcrumb_texts_list(self):
         try:
             breadcrumb_elements = self.wait10.until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".jenkins-breadcrumbs__list-item"))
+                EC.presence_of_all_elements_located(
+                    (By.CSS_SELECTOR, ".jenkins-breadcrumbs__list-item")
+                )
             )
             return [crumb.text for crumb in breadcrumb_elements if crumb.text.strip()]
         except:
             return []
+
+    def click_profile_icon_in_header(self):
+        from pages.profile_page import ProfilePage
+
+        self.wait5.until(
+            EC.element_to_be_clickable((By.ID, "root-action-UserAction"))
+        ).click()
+        self.wait5.until(EC.url_contains("user"))
+
+        return ProfilePage(self.driver)
