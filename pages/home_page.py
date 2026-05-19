@@ -12,8 +12,6 @@ from pages.new_item_page import NewItemPage
 from pages.pipeline_project_page import PipelineProjectPage
 from pages.project_page import ProjectPage
 
-
-
 class HomePage(BasePage):
     def new_item_click(self):
         self.wait10.until(
@@ -105,3 +103,24 @@ class HomePage(BasePage):
         ).click()
 
         return NewItemPage(self.driver)
+
+    def find_element_dropdown_menu_from_profile_icon(self):
+        return self.driver.find_elements(By.ID, "account-theme-picker")
+
+    def dropdown_menu_appearance_click(self):
+        xpath_appearance = "//a[contains(normalize-space(), 'Appearance')]"
+        user_icon = self.wait10.until(
+            EC.visibility_of_element_located((By.ID, "root-action-UserAction"))
+        )
+
+        for _ in range(3):
+            ActionChains(self.driver).move_to_element(user_icon).perform()
+            try:
+                self.wait10.until(
+                    EC.element_to_be_clickable((By.XPATH, xpath_appearance))
+                ).click()
+                return self
+            except StaleElementReferenceException:
+                pass
+
+        return self

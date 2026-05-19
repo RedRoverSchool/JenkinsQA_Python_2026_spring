@@ -25,7 +25,7 @@ def browser(request):
     driver.implicitly_wait(5)
 
     print("getting page")
-    driver.get(get_url())
+    driver.get(f"{get_url()}login?from=%2F")
     login(driver)
     try:
         yield driver

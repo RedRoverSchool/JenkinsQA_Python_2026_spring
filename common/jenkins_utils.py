@@ -10,6 +10,8 @@ from urllib.request import HTTPCookieProcessor, Request, build_opener
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 try:
     from .project_utils import get_password, get_url, get_user_name
@@ -252,9 +254,23 @@ class JenkinsUtils:
         login_user = user_name or get_user_name()
         login_password = password or get_password()
 
-        driver.find_element(By.NAME, "j_username").send_keys(login_user)
-        driver.find_element(By.NAME, "j_password").send_keys(login_password)
-        driver.find_element(By.NAME, "Submit").click()
+        username = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.NAME, "j_username"))
+        )
+        username.click()
+        username.clear()
+        username.send_keys(login_user)
+
+        password_input = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.NAME, "j_password"))
+        )
+        password_input.click()
+        password_input.clear()
+        password_input.send_keys(login_password)
+
+        WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.NAME, "Submit"))
+        ).click()
 
     @staticmethod
     def logout(driver: WebDriver) -> None:
