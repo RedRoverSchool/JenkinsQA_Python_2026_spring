@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 import pages
 
+
 class BasePage:
     def __init__(self, driver, timeout=10):
         self.driver = driver
@@ -20,7 +21,9 @@ class BasePage:
     def get_breadcrumb_texts_list(self):
         try:
             breadcrumb_elements = self.wait10.until(
-                EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".jenkins-breadcrumbs__list-item"))
+                EC.presence_of_all_elements_located(
+                    (By.CSS_SELECTOR, ".jenkins-breadcrumbs__list-item")
+                )
             )
             return [crumb.text for crumb in breadcrumb_elements if crumb.text.strip()]
         except:
@@ -32,14 +35,24 @@ class BasePage:
         return self
 
     def click_main_panel(self):
-        self.driver.find_element(By.ID, 'main-panel').click()
+        self.driver.find_element(By.ID, "main-panel").click()
         return self
 
     def click_profile_icon_in_header(self):
-
         self.wait5.until(
             EC.element_to_be_clickable((By.ID, "root-action-UserAction"))
         ).click()
         self.wait5.until(EC.url_contains("user"))
 
-        return pages.profile_page.ProfilePage(self.driver)
+        return self
+
+    def get_current_url(self):
+        return self.driver.current_url
+
+    def click_item_in_profile_icon_dropdown_menu(self, name):
+        item_locator = (By.XPATH, f'//a[contains(@href, "{name}")]')
+
+        self.show_dropdown_menu_from_profile_icon()
+        self.wait10.until(EC.element_to_be_clickable(item_locator)).click()
+
+        return self
