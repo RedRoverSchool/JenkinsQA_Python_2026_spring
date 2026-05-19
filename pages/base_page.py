@@ -48,11 +48,3 @@ class BasePage:
 
     def get_current_url(self):
         return self.driver.current_url
-
-    def click_item_in_profile_icon_dropdown_menu(self, name):
-        item_locator = (By.XPATH, f'//a[contains(@href, "{name}")]')
-
-        self.show_dropdown_menu_from_profile_icon()
-        self.wait10.until(EC.element_to_be_clickable(item_locator)).click()
-
-        return self
