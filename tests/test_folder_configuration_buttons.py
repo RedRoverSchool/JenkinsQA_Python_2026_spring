@@ -32,7 +32,8 @@ def test_create_folder(browser):
 def test_config_save(browser):
     wait = WebDriverWait(browser, 10)
     wait.until(EC.visibility_of_element_located((By.XPATH, "//a[contains(@href, 'newJob')]")))
-    browser.get("http://localhost:8080/job/Folder/configure")
+    wait.until(EC.element_to_be_clickable((By.XPATH, '//a[@href="job/Folder/"]'))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, '//a[contains(@href, "/configure")]'))).click()
     wait.until(EC.visibility_of_element_located((By.XPATH, '//input[@name="_.displayNameOrNull"]'))).send_keys(rnd(15))
     wait.until(EC.visibility_of_element_located((By.XPATH, '//textarea[@name="_.description"]'))).send_keys(rnd(50))
     wait.until(EC.visibility_of_element_located((By.XPATH, '//button[@name = "Submit"]'))).click()
@@ -43,7 +44,8 @@ def test_config_save(browser):
 def test_config_apply(browser):
     wait = WebDriverWait(browser, 10)
     wait.until(EC.visibility_of_element_located((By.XPATH, "//a[contains(@href, 'newJob')]")))
-    browser.get("http://localhost:8080/job/Folder/configure")
+    wait.until(EC.element_to_be_clickable((By.XPATH, '//a[@href="job/Folder/"]'))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, '//a[contains(@href, "/configure")]'))).click()
     wait.until(EC.element_to_be_clickable((By.XPATH, '//input[@name="_.displayNameOrNull"]'))).clear()
     wait.until(EC.element_to_be_clickable((By.XPATH, '//textarea[@name="_.description"]'))).clear()
     wait.until(EC.element_to_be_clickable((By.XPATH, '//button[@name="Apply"]'))).click()
