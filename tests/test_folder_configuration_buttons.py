@@ -37,6 +37,7 @@ def test_config_save(browser):
     wait.until(EC.visibility_of_element_located((By.XPATH, '//input[@name="_.displayNameOrNull"]'))).send_keys(rnd(15))
     wait.until(EC.visibility_of_element_located((By.XPATH, '//textarea[@name="_.description"]'))).send_keys(rnd(50))
     wait.until(EC.visibility_of_element_located((By.XPATH, '//button[@name = "Submit"]'))).click()
+    WebDriverWait(browser, 10).until(EC.url_changes(browser.current_url))
 
     assert ("configure" not in browser.current_url), "Url changed, Save button redirected"
 
@@ -52,6 +53,5 @@ def test_config_apply(browser):
     wait.until(EC.visibility_of_element_located((By.XPATH, "//*[@id='notification-bar']//span[text()='Saved']")))
     wait.until(EC.element_to_be_clickable((By.XPATH, '//button[@name="Apply"]'))).click()
     wait.until(EC.presence_of_element_located((By.XPATH , "//*[@id='notification-bar']//span[text()='Saved']")))
-    WebDriverWait(browser, 10).until(EC.url_changes(browser.current_url))
 
     assert "configure" in browser.current_url, "Apply применяется, редиректа нет"
