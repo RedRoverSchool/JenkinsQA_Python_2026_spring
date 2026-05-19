@@ -24,7 +24,7 @@ class FreestyleConfigPage(BaseConfigPage):
 
         return self
 
-    def set_script(self, command, xpath):
+    def set_shell_script(self, command, xpath="//div[contains(@class, 'cm-s-default')]"):
         (ActionChains(self.driver)
          .move_to_element(self.driver.find_element(By.XPATH, xpath))
          .click().send_keys(command).perform())

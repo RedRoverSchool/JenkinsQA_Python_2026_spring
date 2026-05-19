@@ -138,7 +138,7 @@ def test_build_steps_configure_first_two_options(browser, option):
     .click_project_configure("freestyle_project")
     .button_add_build_step_click()
     .select_execute_option(option[0])
-    .set_script(option[1], option[2])
+    .set_shell_script(option[1], option[2])
     .click_save()
     )
 
