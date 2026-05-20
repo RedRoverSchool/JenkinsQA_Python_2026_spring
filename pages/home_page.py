@@ -99,6 +99,12 @@ class HomePage(BasePage):
             EC.visibility_of_element_located((By.CSS_SELECTOR, ".jenkins-table__link >span:first-child"))
         ).text
 
+    def get_created_project_name(self,job_name: str):
+
+        return self.wait5.until(
+            EC.visibility_of_element_located((By.XPATH, f"(//a[@href='job/{job_name}/'])[1]"))
+        ).text
+
     def open_project_dropdown(self, job_name):
         self.wait10.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, f'[href="job/{job_name}/"] .jenkins-menu-dropdown-chevron'))
@@ -148,7 +154,6 @@ class HomePage(BasePage):
     def click_searched_project_name(self, name):
         self.wait10.until(
             EC.element_to_be_clickable((By.XPATH, f"//a[contains(@href, '/job/{name}/')]"))).click()
-
         return MulticonfigurationProjectPage(self.driver)
 
     def open_project_dropdown(self, job_name):
