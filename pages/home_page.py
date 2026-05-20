@@ -76,7 +76,7 @@ class HomePage(BasePage):
         ).is_displayed()
 
     def click_pipeline_job(self, job_name: str):
-        self.wait5.until(EC.element_to_be_clickable((By.XPATH, f"(//a[@href='job/{job_name}/'])[1]"))).click()
+        self.wait5.until(EC.element_to_be_clickable((By.XPATH, f"//td/a/span[text() = '{job_name}']/.."))).click()
 
         return PipelineProjectPage(self.driver)
 
