@@ -47,3 +47,8 @@ class BasePage:
 
     def get_current_url(self):
         return self.driver.current_url
+
+    def get_heading(self):
+        return self.wait10.until(
+            EC.visibility_of_element_located((By.TAG_NAME, "h1"))
+        ).text

@@ -52,17 +52,17 @@ def test_header_change_theme_through_appearance_page(browser):
 
 
 def test_profile_icon_click(browser):
-    result_page = HomePage(browser).click_profile_icon_in_header().get_current_url()
+    result_heading = HomePage(browser).click_profile_icon_in_header().get_heading()
 
-    assert CURRENT_USER_NAME in result_page
+    assert CURRENT_USER_NAME in result_heading
 
 
 @pytest.mark.parametrize("item", AVAILABLE_ITEMS)
 def test_profile_icon_dropdown_menu_item_click(browser, item):
-    result_page = (
+    result_url = (
         HomePage(browser)
         .click_item_in_profile_icon_dropdown_menu(item)
         .get_current_url()
     )
-
-    assert item in result_page
+    print(result_url)
+    assert f"/{item}" in result_url
