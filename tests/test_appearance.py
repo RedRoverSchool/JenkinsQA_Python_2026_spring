@@ -1,48 +1,22 @@
 import pytest
 from selenium.webdriver.common.by import By
 
-def test_appearance_to_dark(browser):
-    themes={'none': 'dark', 'dark': 'dark-system', 'dark-system': 'none'}
-    browser.find_element(By.XPATH, "//a[@id='root-action-ManageJenkinsAction']").click()
-    browser.find_element(By.XPATH, "//a[@href='appearance']").click()
-
-    theme = browser.find_element(By.TAG_NAME, "html").get_attribute("data-theme")
-
-    browser.find_element(By.XPATH, f'//div[@data-theme="{themes[theme]}"]/parent::label').click()
-
-    theme_new = browser.find_element(By.TAG_NAME, "html").get_attribute("data-theme")
-
-    assert theme != theme_new
+from pages.home_page import HomePage
 
 
-def test_appearance_to_dark_system(browser):
-    themes = {'none': 'dark', 'dark': 'dark-system', 'dark-system': 'none'}
-    browser.find_element(By.XPATH, "//a[@id='root-action-ManageJenkinsAction']").click()
-    browser.find_element(By.XPATH, "//a[@href='appearance']").click()
+@pytest.mark.parametrize("themes", ["none", "dark", "dark-system"])
+def test_appearance_theme(browser, themes):
 
-    browser.find_element(By.XPATH, '//div[@data-theme="dark"]/parent::label').click()
-    theme = browser.find_element(By.TAG_NAME, "html").get_attribute("data-theme")
+    theme = (
+        HomePage(browser)
+             .click_manage_gear()
+             .click_appearance()
+             .set_theme(themes)
+             .click_apply_button()
+             .get_theme()
+    )
 
-    browser.find_element(By.XPATH, f'//div[@data-theme="{themes[theme]}"]/parent::label').click()
-
-    theme_new = browser.find_element(By.TAG_NAME, "html").get_attribute("data-theme")
-
-    assert theme != theme_new
-
-
-def test_appearance_to_light(browser):
-    themes = {'none': 'dark', 'dark': 'dark-system', 'dark-system': 'none'}
-    browser.find_element(By.XPATH, "//a[@id='root-action-ManageJenkinsAction']").click()
-    browser.find_element(By.XPATH, "//a[@href='appearance']").click()
-
-    browser.find_element(By.XPATH, '//div[@data-theme="dark-system"]/parent::label').click()
-    theme = browser.find_element(By.TAG_NAME, "html").get_attribute("data-theme")
-
-    browser.find_element(By.XPATH, f'//div[@data-theme="{themes[theme]}"]/parent::label').click()
-
-    theme_new = browser.find_element(By.TAG_NAME, "html").get_attribute("data-theme")
-
-    assert theme != theme_new
+    assert themes == theme
 
 
 @pytest.mark.skip()
@@ -60,6 +34,3 @@ def test_appearance_show_pipeline_stages(browser):
     browser.execute_script("arguments[0].click();", job_link)
     stages_loc = browser.find_element(By.XPATH, "//a[@href='multi-pipeline-graph']")
     assert stages_loc.is_displayed()
-
-
-

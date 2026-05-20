@@ -8,7 +8,7 @@ def test_navigation_to_tools(browser):
 
     description_on_the_page = (HomePage(browser)
                                .click_manage_gear()
-                               .tools_click()
+                               .click_tools()
                                .get_page_description())
 
     assert text in description_on_the_page
@@ -21,7 +21,7 @@ def test_configuration_sections(browser):
 
     actual_section_titles = (HomePage(browser)
                              .click_manage_gear()
-                             .tools_click()
+                             .click_tools()
                              .get_section_titles())
 
     assert actual_section_titles == expected_section_titles
