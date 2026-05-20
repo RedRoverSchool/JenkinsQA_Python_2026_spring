@@ -39,9 +39,11 @@ class BasePage:
         return self
 
     def click_profile_icon_in_header(self):
+        current_url = self.get_current_url()
         self.wait5.until(
             EC.element_to_be_clickable((By.ID, "root-action-UserAction"))
         ).click()
+        self.wait10.until(EC.url_changes(current_url))
 
         return self
 
