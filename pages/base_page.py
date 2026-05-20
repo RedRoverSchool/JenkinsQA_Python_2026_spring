@@ -42,7 +42,6 @@ class BasePage:
         self.wait5.until(
             EC.element_to_be_clickable((By.ID, "root-action-UserAction"))
         ).click()
-        self.wait5.until(EC.url_contains("user"))
 
         return self
 
