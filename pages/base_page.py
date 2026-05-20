@@ -1,6 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import StaleElementReferenceException
 import pages
 
 
@@ -40,9 +41,15 @@ class BasePage:
 
     def click_profile_icon_in_header(self):
         current_url = self.get_current_url()
-        self.wait5.until(
-            EC.element_to_be_clickable((By.ID, "root-action-UserAction"))
-        ).click()
+        profile_icon_locator = (By.ID, "root-action-UserAction")
+        profile_icon_button = self.wait10.until(
+            EC.element_to_be_clickable(profile_icon_locator)
+        )
+
+        try:
+            profile_icon_button.click()
+        except StaleElementReferenceException:
+            self.wait10.until(EC.element_to_be_clickable(profile_icon_locator)).click()
         self.wait10.until(EC.url_changes(current_url))
 
         return self
