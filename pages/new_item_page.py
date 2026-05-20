@@ -67,3 +67,13 @@ class NewItemPage(BasePage):
 
     def get_empty_name_error_message(self):
         return self.wait10.until(EC.visibility_of_element_located((By.ID, "itemname-required"))).text
+
+    def select_multibranch_scroll_and_ok_click(self):
+        element = self.wait10.until(
+                EC.visibility_of_element_located((By.XPATH, "//li[contains(@class, 'WorkflowMultiBranchProject')]")))
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
+        self.wait10.until( EC.element_to_be_clickable((By.XPATH, "//li[contains(@class, 'WorkflowMultiBranchProject')]"))).click()
+        self.wait10.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='ok-button']"))).click()
+
+        return MultiBranchPipelineConfigPage(self.driver)
+

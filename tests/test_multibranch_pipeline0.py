@@ -1,6 +1,8 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from pages.home_page import HomePage
+
 
 def test_create(browser):
     item_name = "test-pipeline"
@@ -41,3 +43,22 @@ def test_create(browser):
     )
 
     assert actual_project_name.text == item_name
+
+NAME = "test-pipeline"
+
+def test_redirect_multibranch_pipeline_from_dashboard(browser):
+    result = (HomePage(browser)
+              .click_new_item()
+              .set_project_name("test-pipeline")
+              .select_multibranch_scroll_and_ok_click()
+              .click_save()
+              .get_project_name())
+    assert result == NAME
+
+
+
+
+
+
+
+
