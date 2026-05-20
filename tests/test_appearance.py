@@ -1,5 +1,4 @@
 import pytest
-from selenium.webdriver.common.by import By
 
 from pages.home_page import HomePage
 
@@ -19,18 +18,19 @@ def test_appearance_theme(browser, themes):
     assert themes == theme
 
 
-@pytest.mark.skip()
 def test_appearance_show_pipeline_stages(browser):
-    browser.find_element(By.XPATH, "//a[@id='root-action-ManageJenkinsAction']").click()
-    browser.find_element(By.XPATH, "//a[@href='appearance']").click()
+    stages = (HomePage(browser)
+              .click_manage_gear()
+              .click_appearance()
+              .select_checkbox_show_pipeline_stages_on_job_page()
+              .click_apply_button()
+              .go_home_page()
+              .click_new_item()
+              .set_project_name("appearance show")
+              .select_pipeline_and_ok_click()
+              .go_home_page()
+              .click_pipeline_job("appearance show")
+              .is_display_stages()
+    )
 
-    checkbox_stages_1 = (browser.find_element
-                  (By.XPATH, '//input[@name="_.showGraphOnJobPage"]/parent::span'))
-    browser.execute_script("arguments[0].scrollIntoView(true);", checkbox_stages_1)
-    checkbox_stages_1.click()
-
-    browser.get("http://localhost:8080/")
-    job_link = browser.find_element(By.XPATH, '//a[@href="job/test/"]')
-    browser.execute_script("arguments[0].click();", job_link)
-    stages_loc = browser.find_element(By.XPATH, "//a[@href='multi-pipeline-graph']")
-    assert stages_loc.is_displayed()
+    assert stages
