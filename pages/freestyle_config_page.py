@@ -19,10 +19,15 @@ class FreestyleConfigPage(BaseConfigPage):
 
         return self
 
-    def set_shell_script(self, command_shell):
+    def select_execute_option(self, option):
+        self.driver.find_element(By.XPATH, f"//button[normalize-space()='{option}']").click()
+
+        return self
+
+    def set_shell_script(self, command, xpath="//div[contains(@class, 'cm-s-default')]"):
         (ActionChains(self.driver)
-         .move_to_element(self.driver.find_element(By.XPATH, "//div[contains(@class, 'cm-s-default')]"))
-         .click().send_keys(command_shell).perform())
+         .move_to_element(self.driver.find_element(By.XPATH, xpath))
+         .click().send_keys(command).perform())
 
         return self
 
