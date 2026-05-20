@@ -1,26 +1,31 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
 
 from pages.base_page import BasePage
 from pages.folder_page import FolderPage
+from pages.freestyle_config_page import FreestyleConfigPage
 from pages.manage_page import ManagePage
 from pages.multibranch_pipeline_page import MultiBranchPipelinePage
+from pages.multiconfiguration_project_page import MulticonfigurationProjectPage
 from pages.new_item_page import NewItemPage
-
+from pages.rename_project_page import RenameProjectPage
 from pages.pipeline_project_page import PipelineProjectPage
-from pages.project_page import ProjectPage
+from pages.base_project_page import BaseProjectPage
+from pages.new_view_page import NewViewPage
+
 
 class HomePage(BasePage):
-    def new_item_click(self):
+    def click_new_item(self):
         self.wait10.until(
             EC.element_to_be_clickable((By.XPATH, "//a[@href='/view/all/newJob']"))
         ).click()
 
         return NewItemPage(self.driver)
 
-    def manage_gear_click(self):
+    def click_manage_gear(self):
         self.wait10.until(
             EC.element_to_be_clickable((By.XPATH, "//*[@href = '/manage']"))
         ).click()
@@ -33,7 +38,7 @@ class HomePage(BasePage):
 
         return project_names
 
-    def schedule_build_click(self, job_name: str):
+    def click_schedule_build(self, job_name: str):
         self.driver.find_element(By.XPATH, f"//tr/td[7]//a[@tooltip='Schedule a Build for {job_name}']").click()
 
         return self
@@ -49,7 +54,7 @@ class HomePage(BasePage):
 
         return self
 
-    def dropdown_menu_sign_out_click(self):
+    def click_dropdown_menu_sign_out(self):
         xpath_logout = "//a[contains(@href, '/logout')]"
         sign_out_button = self.wait10.until(EC.element_to_be_clickable((By.XPATH, xpath_logout)))
 
@@ -62,7 +67,7 @@ class HomePage(BasePage):
         return LoginPage(self.driver)
 
     def sign_out(self):
-        return self.show_dropdown_menu_from_profile_icon().dropdown_menu_sign_out_click()
+        return self.show_dropdown_menu_from_profile_icon().click_dropdown_menu_sign_out()
 
     def is_jenkins_icon_visible(self):
         return self.wait10.until(
@@ -79,23 +84,34 @@ class HomePage(BasePage):
 
         return MultiBranchPipelinePage(self.driver)
 
-    def project_name_click(self, job_name: str, job_type="project"):
+    def click_project_name(self, job_name: str, job_type="project"):
         self.driver.find_element(By.XPATH, f"//*[@id='job_{job_name}']/td[3]/a").click()
         if job_type == "project":
-            return ProjectPage(self.driver)
-        elif job_type == "pipeline":
-            return PipelineProjectPage(self.driver)
+            return BaseProjectPage(self.driver)
         elif job_type == "folder":
             return FolderPage(self.driver)
-        elif job_type == "multibranch":
-            return MultiBranchPipelinePage(self.driver)
         return None
 
-    def get_project_name(self, job_name: str):
-      
-        return self.wait10.until(
-            EC.visibility_of_element_located((By.XPATH, f"(//a[@href='job/{job_name}/'])[1]"))
+    def get_project_name(self):
+        return self.wait5.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, ".jenkins-table__link >span:first-child"))
         ).text
+
+    def open_project_dropdown(self, job_name):
+        self.wait10.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, f'[href="job/{job_name}/"] .jenkins-menu-dropdown-chevron'))
+        ).click()
+        return self
+
+    def click_project_rename(self, job_name):
+        self.wait10.until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT, 'Rename'))).click()
+
+        return RenameProjectPage(self.driver)
+
+    def click_configure_link(self):
+        self.wait10.until(EC.visibility_of_element_located((By.PARTIAL_LINK_TEXT, 'Configure'))).click()
+
+        return FreestyleConfigPage(self.driver)
 
     def new_job_click(self):
         self.wait10.until(
@@ -124,3 +140,51 @@ class HomePage(BasePage):
                 pass
 
         return self
+
+    def click_new_view_link(self):
+        self.wait10.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "a[href='/newView']"))).click()
+
+        return NewViewPage(self.driver)
+
+    def get_view_names_list(self):
+        tabs = self.driver.find_elements(By.XPATH, "//div[@class='tab']/a[not(@tooltip='New View')] ")
+        tab_names = [element.text for element in tabs]
+
+        return tab_names
+
+    def click_search_icon(self):
+        self.wait10.until(
+            EC.element_to_be_clickable((By.ID, "root-action-SearchAction"))).click()
+
+        return self
+
+    def set_created_project_name(self, name):
+        self.wait10.until(EC.visibility_of_element_located((By.ID, "command-bar"))).send_keys(name)
+
+        return self
+
+    def click_searched_project_name(self, name):
+        self.wait10.until(
+            EC.element_to_be_clickable((By.XPATH, f"//a[contains(@href, '/job/{name}/')]"))).click()
+
+        return MulticonfigurationProjectPage(self.driver)
+
+    def click_add_new_view_tab(self):
+        self.wait10.until(
+            EC.element_to_be_clickable((By.XPATH, "//a[@href='/newView']"))
+        ).click()
+        from pages.new_view_page import NewViewPage
+        return NewViewPage(self.driver)
+
+    def get_view_tab_names(self):
+        self.wait10.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".tabBar")))
+        tabs = self.driver.find_elements(By.CSS_SELECTOR, ".tabBar .tab a")
+        return [tab.text for tab in tabs if tab.text not in ["+", "All", ""]]
+
+    def is_project_exist(self, project_name):
+        try:
+            WebDriverWait(self.driver, 5).until(
+                EC.visibility_of_element_located((By.XPATH, f"//a[span[text()='{project_name}']]")))
+            return True
+        except TimeoutException:
+            return False

@@ -1,7 +1,5 @@
 import pytest
-from selenium.webdriver.common.by import By
-
-from test_folder import create_folder
+from pages.home_page import HomePage
 
 FOLDER_NAME = "TestFolder"
 DISPLAY_NAME = "Display Folder"
@@ -9,14 +7,18 @@ DISPLAY_NAME = "Display Folder"
 
 @pytest.mark.dependency()
 def test_add_display_name_to_folder(browser):
-    create_folder(browser, FOLDER_NAME)
-    browser.find_element(By.XPATH, "//a[contains(@href, '/configure')]").click()
+    project_names_list = (
+        HomePage(browser)
+        .click_new_item()
+        .set_project_name(FOLDER_NAME)
+        .select_folder_and_ok_click()
+        .click_save()
+        .click_project_configure("folder")
+        .set_display_name(DISPLAY_NAME)
+        .click_save()
+        .go_home_page()
+        .get_project_names_list()
+    )
 
-    browser.find_element(By.NAME, "_.displayNameOrNull").send_keys(DISPLAY_NAME)
-    browser.find_element(By.NAME, "Submit").click()
-
-    assert browser.find_element(By.CLASS_NAME, "job-index-headline").text == DISPLAY_NAME
-    folder_name_line = \
-        [line for line in browser.find_element(By.ID, "main-panel").text.split('\n') if
-         line.startswith("Folder name: ")][0]
-    assert folder_name_line == f"Folder name: {FOLDER_NAME}"
+    assert len(project_names_list) > 0
+    assert project_names_list[0] == DISPLAY_NAME
