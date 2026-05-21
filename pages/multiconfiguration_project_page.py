@@ -1,6 +1,12 @@
-from pages.project_page import ProjectPage
-from pages.base_page import BasePage
+
+from pages.base_project_page import BaseProjectPage
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 
 
-class MulticonfigurationProjectPage(ProjectPage):
-    pass
+class MulticonfigurationProjectPage(BaseProjectPage):
+    def get_disable_project_message(self):
+        return self.wait10.until(EC.visibility_of_element_located((By.ID, "enable-project"))).text
+
+    def get_project_name(self):
+        return self.wait10.until(EC.visibility_of_element_located((By.TAG_NAME, "h1"))).text

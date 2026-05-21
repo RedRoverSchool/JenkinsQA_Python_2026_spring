@@ -15,7 +15,7 @@ def test_create_pipeline_project(browser):
         .click_new_item()
         .set_project_name(PIPELINE_NAME)
         .select_pipeline_and_ok_click()
-        .click_submit_button()
+        .click_save()
         .go_home_page()
         .get_project_name(PIPELINE_NAME)
     )

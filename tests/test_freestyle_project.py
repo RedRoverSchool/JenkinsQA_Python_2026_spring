@@ -53,8 +53,8 @@ def test_special_characters_in_rename_field(browser, special_character):
         .click_rename_project()
         .clear_rename_field()
         .set_new_project_name(special_character)
-        .click_main_panel()
     )
+
     error_message = f"‘{special_character}’ is an unsafe character"
     assert rename_project_page.get_rename_project_error_message() == error_message
 
