@@ -31,7 +31,8 @@ class CredentialsPage(BasePage):
 
     def click_submit_button(self):
         self.driver.find_element(By.ID, "cr-dialog-submit").click()
-        self.wait10.until(EC.presence_of_element_located((By.XPATH, "//div[@id='notification-bar']")))
+        jenkins_dialog_title = self.driver.find_element(By.XPATH, "//div[@class='jenkins-dialog__title']")
+        self.wait10.until(EC.staleness_of(jenkins_dialog_title))
 
         return self
 
