@@ -44,6 +44,8 @@ def test_create(browser):
 
     assert actual_project_name.text == item_name
 
+
+
 NAME = "test-pipeline"
 
 def test_redirect_multibranch_pipeline_from_dashboard(browser):
