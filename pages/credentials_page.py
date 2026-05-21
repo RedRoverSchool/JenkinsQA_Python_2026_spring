@@ -30,9 +30,9 @@ class CredentialsPage(BasePage):
         return self
 
     def click_submit_button(self):
-        dialog_menu = self.driver.find_element(By.XPATH, "//dialog[@class='jenkins-dialog']")
         self.driver.find_element(By.ID, "cr-dialog-submit").click()
-        self.wait10.until(EC.visibility_of(dialog_menu))
+        jenkins_dialog_title = self.driver.find_element(By.XPATH, "//div[@class='jenkins-dialog__title']")
+        self.wait10.until(EC.visibility_of(jenkins_dialog_title))
 
         return self
 
