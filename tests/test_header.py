@@ -56,10 +56,7 @@ def test_profile_icon_click(browser):
 
     assert result_page.is_profile_page_opened(), "No redirect to the profile page..."
 
-    assert (
-        result_page.is_profile_header_visible(),
-        "Profile page header isn't visible!",
-    )
+    assert result_page.is_profile_header_visible(), "Profile page header isn't visible!"
 
 
 @pytest.mark.parametrize("item", AVAILABLE_ITEMS)
