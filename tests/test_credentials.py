@@ -76,6 +76,5 @@ def test_add_credentials_ssh_username(browser):
         .click_submit_button()
         .get_credential_cards()
     )
-    for card in credential_cards:
-        print(f"{card.text = }")
+
     assert any("testID" in card.text for card in credential_cards)
