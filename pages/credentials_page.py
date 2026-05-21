@@ -31,7 +31,7 @@ class CredentialsPage(BasePage):
 
     def click_submit_button(self):
         self.driver.find_element(By.ID, "cr-dialog-submit").click()
-        self.wait10.until(EC.visibility_of_element_located((By.XPATH, "//div[@id='notification-bar']")))
+        self.wait10.until(EC.presence_of_element_located((By.XPATH, "//div[@id='notification-bar']")))
 
         return self
 
