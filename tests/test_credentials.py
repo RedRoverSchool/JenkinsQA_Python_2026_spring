@@ -1,8 +1,4 @@
 import pytest
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.select import Select
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 from pages.home_page import HomePage
 
@@ -18,15 +14,15 @@ def test_create(browser):
         HomePage(browser)
         .click_manage_gear()
         .credentials_click()
-        .add_credentials_button_click()
+        .click_add_credentials_button()
         .select_username_with_password_type()
-        .next_button_click()
+        .click_next_button()
         .fill_credential_form(
             USERNAME,
             PASSWORD,
             CREDENTIAL_ID,
             DESCRIPTION)
-        .submit_button_click()
+        .click_submit_button()
     )
 
     assert credentials_page.is_credential_present(
@@ -43,10 +39,10 @@ def test_delete(browser):
         .click_manage_gear()
         .credentials_click()
         .open_actions_menu()
-        .delete_click()
+        .click_delete()
         .cancel_delete()
         .open_actions_menu()
-        .delete_click()
+        .click_delete()
         .confirm_delete()
     )
 
@@ -61,26 +57,24 @@ def test_delete(browser):
 
 
 def test_add_credentials_ssh_username(browser):
-    browser.find_element(By.ID, 'root-action-ManageJenkinsAction').click()
-    browser.find_element(By.CSS_SELECTOR, "a[href='credentials']").click()
+    credential_cards = (
+        HomePage(browser)
+        .click_manage_gear()
+        .credentials_click()
+        .click_add_credentials_button()
+        .select_ssh_username_with_private_key()
+        .click_next_button()
+        .select_system_in_add_ssh_username()
+        .set_id("testID")
+        .set_description("testDescription")
+        .set_username("testUsername")
+        .select_checkbox_treat_username_as_secret()
+        .select_radiobutton_enter_directly()
+        .click_add_in_privet_key()
+        .set_privet_key("testKey")
+        .set_passphrase("testPassphrase")
+        .click_submit_button()
+        .get_credential_cards()
+    )
 
-    browser.find_element(By.CSS_SELECTOR, "button[data-type='credentials-add-store-item']").click()
-    browser.find_element(By.XPATH, "//div[contains(text(),'SSH Username with private key')]").click()
-    browser.find_element(By.ID, 'cr-dialog-next').click()
-
-    Select(browser.find_element(By.NAME, '_.scope')).select_by_value('SYSTEM')
-    browser.find_element(By.NAME, '_.id').send_keys("testID")
-    browser.find_element(By.NAME, '_.description').send_keys("testDescription")
-    browser.find_element(By.NAME, '_.username').send_keys("testUsername")
-    browser.find_element(By.XPATH, "//label[normalize-space()='Treat username as secret']").click()
-    browser.find_element(By.XPATH, "//label[normalize-space()='Enter directly']").click()
-    browser.find_element(By.XPATH, "//button[normalize-space()='Add']").click()
-    browser.find_element(By.NAME, '_.privateKey').send_keys("testKey")
-    browser.find_element(By.NAME, '_.passphrase').send_keys("testPassphrase")
-    browser.find_element(By.ID, 'cr-dialog-submit').click()
-
-    (WebDriverWait(browser, 10)
-    .until(EC.presence_of_element_located(
-        (By.XPATH, "//*[contains(@class,'credentials-card') and contains(.,'testID')]"))))
-    cards = browser.find_elements(By.CSS_SELECTOR, ".credentials-card")
-    assert any("testID" in card.text for card in cards)
+    assert any("testID" in card.text for card in credential_cards)
