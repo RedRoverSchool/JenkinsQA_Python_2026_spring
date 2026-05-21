@@ -70,7 +70,7 @@ class CredentialsPage(BasePage):
 
         return self.driver.find_element(*locator)
 
-    def get_credentials_card(self):
+    def get_credential_cards(self):
 
         return self.driver.find_elements(By.CSS_SELECTOR, ".credentials-card")
 
