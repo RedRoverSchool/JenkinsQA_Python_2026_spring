@@ -230,14 +230,19 @@ class HomePage(BasePage):
 
     def click_profile_icon_in_header(self):
         profile_icon_locator = (By.ID, "root-action-UserAction")
-        profile_icon = self.wait10.until(
-            EC.visibility_of_element_located(profile_icon_locator)
-        )
-        self.driver.execute_script(
-            "arguments[0].scrollIntoView({block: 'center'});", profile_icon
-        )
-        self.wait10.until(EC.element_to_be_clickable(profile_icon_locator))
-        self.driver.execute_script("arguments[0].click();", profile_icon)
+        jenkins_icon_locator = (By.ID, "jenkins-head-icon")
+
+        print(self.driver.title)
+        self.wait10.until_not(EC.url_contains("/login"))
+        self.wait10.until(EC.presence_of_element_located(jenkins_icon_locator))
+
+        # profile_icon = (
+        self.wait10.until(EC.visibility_of_element_located(profile_icon_locator))
+        # self.driver.execute_script(
+        #     "arguments[0].scrollIntoView({block: 'center'});", profile_icon
+        # )
+        self.wait10.until(EC.element_to_be_clickable(profile_icon_locator)).click()
+        # self.driver.execute_script("arguments[0].click();", profile_icon)
 
         return ProfilePage(self.driver)
 
