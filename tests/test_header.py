@@ -52,9 +52,14 @@ def test_header_change_theme_through_appearance_page(browser):
 
 
 def test_profile_icon_click(browser):
-    result_heading = HomePage(browser).click_profile_icon_in_header().get_heading()
+    result_page = HomePage(browser).click_profile_icon_in_header()
 
-    assert CURRENT_USER_NAME in result_heading
+    assert result_page.is_profile_page_opened(), "No redirect to the profile page..."
+
+    assert (
+        result_page.is_profile_header_visible(),
+        "Profile page header isn't visible!",
+    )
 
 
 @pytest.mark.parametrize("item", AVAILABLE_ITEMS)
@@ -64,5 +69,5 @@ def test_profile_icon_dropdown_menu_item_click(browser, item):
         .click_item_in_profile_icon_dropdown_menu(item)
         .get_current_url()
     )
-    print(result_url)
+
     assert f"/{item}" in result_url

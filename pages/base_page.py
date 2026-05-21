@@ -39,25 +39,5 @@ class BasePage:
         self.driver.find_element(By.ID, "main-panel").click()
         return self
 
-    def click_profile_icon_in_header(self):
-        current_url = self.get_current_url()
-        profile_icon_locator = (By.ID, "root-action-UserAction")
-        profile_icon_button = self.wait10.until(
-            EC.element_to_be_clickable(profile_icon_locator)
-        )
-
-        try:
-            profile_icon_button.click()
-        except StaleElementReferenceException:
-            self.wait10.until(EC.element_to_be_clickable(profile_icon_locator)).click()
-        self.wait10.until(EC.url_changes(current_url))
-
-        return self
-
     def get_current_url(self):
         return self.driver.current_url
-
-    def get_heading(self):
-        return self.wait10.until(
-            EC.visibility_of_element_located((By.TAG_NAME, "h1"))
-        ).text

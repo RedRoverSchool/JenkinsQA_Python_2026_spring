@@ -15,6 +15,7 @@ from pages.rename_project_page import RenameProjectPage
 from pages.pipeline_project_page import PipelineProjectPage
 from pages.base_project_page import BaseProjectPage
 from pages.new_view_page import NewViewPage
+from pages.profile_page import ProfilePage
 
 
 class HomePage(BasePage):
@@ -224,6 +225,12 @@ class HomePage(BasePage):
             return True
         except TimeoutException:
             return False
+
+    def click_profile_icon_in_header(self):
+        profile_icon_locator = (By.XPATH, '//a[@id="root-action-UserAction"]')
+        self.wait10.until(EC.element_to_be_clickable(profile_icon_locator)).click()
+
+        return ProfilePage(self.driver)
 
     def click_item_in_profile_icon_dropdown_menu(self, name):
         item_locator = (By.XPATH, f'//a[contains(@href, "{name}")]')
