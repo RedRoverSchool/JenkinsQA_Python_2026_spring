@@ -18,7 +18,7 @@ class FreestyleProjectPage(BasePage):
 
         return enable_button
 
-    def click_project_configure(self):
+    def click_configure(self):
         from pages.freestyle_config_page import FreestyleConfigPage
         # Импорт внутри метода чтобы избежать ошибки ImportError due to a circular import
         self.driver.find_element(By.XPATH, "//a[contains(., 'Configure')]").click()

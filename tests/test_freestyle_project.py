@@ -23,6 +23,21 @@ def test_create_freestyle_project(browser):
 
 
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
+def test_enable_delete_workspace_before_build_starts(browser):
+    is_selected = (
+        HomePage(browser)
+        .click_project_name(FREESTYLE_PROJECT_NAME)
+        .click_project_configure()
+        .enable_delete_workspace_before_build_starts()
+        .click_save()
+        .click_configure()
+        .is_delete_workspace_before_build_starts_selected()
+    )
+
+    assert is_selected
+
+
+@pytest.mark.dependency(depends=["test_create_freestyle_project"])
 def test_rename_freestyle_project_page_from_dashboard(browser):
     rename_project_page = (
         HomePage(browser)
@@ -71,18 +86,3 @@ def test_blank_rename_field(browser):
 
     error_message = 'No name is specified'
     assert rename_project_page.get_rename_project_error_message() == error_message
-
-
-@pytest.mark.dependency(depends=["test_create_freestyle_project"])
-def test_enable_delete_workspace_before_build_starts(browser):
-    is_selected = (
-        HomePage(browser)
-        .click_project_name(FREESTYLE_PROJECT_NAME)
-        .click_project_configure()
-        .enable_delete_workspace_before_build_starts()
-        .click_save()
-        .click_project_configure()
-        .is_delete_workspace_before_build_starts_selected()
-    )
-
-    assert is_selected
