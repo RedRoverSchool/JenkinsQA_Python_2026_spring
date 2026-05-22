@@ -16,3 +16,4 @@ venv.bak/
 
 # Environment variables
 .env
+pytest.ini

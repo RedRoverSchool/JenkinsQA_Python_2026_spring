@@ -1,6 +1,6 @@
 import pytest
-
 from pages.home_page import HomePage
+
 
 @pytest.mark.skip
 def test_navigation_to_tools(browser):
@@ -14,6 +14,7 @@ def test_navigation_to_tools(browser):
     assert text in description_on_the_page
     assert f"/manage/configureTools/" in browser.current_url
 
+
 @pytest.mark.skip
 def test_configuration_sections(browser):
     expected_section_titles = ['maven configuration', 'jdk installations', 'git installations', 'gradle installations',
@@ -25,3 +26,17 @@ def test_configuration_sections(browser):
                              .get_section_titles())
 
     assert actual_section_titles == expected_section_titles
+
+
+def test_add_jdk_and_save(browser):
+    tools = HomePage(browser).click_manage_gear().click_tools()
+    tools.open_jdk_block()
+    tools.click_add_jdk()
+    tools.fill_jdk("JDK11", "/usr/lib/jvm/java-111")
+
+    manage = tools.click_save()
+    assert "/manage/" in browser.current_url
+
+    tools_again = manage.click_tools()
+    assert tools_again.get_jdk_name() == "JDK11"
+
