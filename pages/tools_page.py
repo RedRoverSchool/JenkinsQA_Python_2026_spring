@@ -46,9 +46,16 @@ class ToolsPage(BasePage):
         return len(self.driver.find_elements(*locator)) > 0
 
     def open_jdk_block(self):
-        element = self.wait10.until(EC.presence_of_element_located(self.JDK_INSTALLATION))
+        buttons = self.driver.find_elements(*self.ADD_JDK)
+        if len(buttons) > 0 and buttons[0].is_displayed():
+            return self
+        toggle_locator = (By.XPATH, "//button[contains(@class, 'advanced-button') and contains(., 'JDK')]")
+        element = self.wait10.until(EC.presence_of_element_located(toggle_locator))
         self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
         self.driver.execute_script("arguments[0].click();", element)
+
+        self.wait10.until(EC.visibility_of_element_located(self.ADD_JDK))
+
         return self
 
     def click_add_jdk(self):
