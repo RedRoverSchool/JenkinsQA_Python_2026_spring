@@ -29,7 +29,7 @@ def test_enable_delete_workspace_before_build_starts(browser):
         .click_project_name(FREESTYLE_PROJECT_NAME)
         .click_project_configure("freestyle_project")
         .enable_delete_workspace_before_build_starts()
-        .click_save()
+        .click_project_save()
         .click_configure()
         .is_delete_workspace_before_build_starts_selected()
     )
