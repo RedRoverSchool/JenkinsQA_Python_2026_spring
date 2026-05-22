@@ -6,10 +6,6 @@ from pages.base_page import BasePage
 class ToolsPage(BasePage):
     ADD_JDK = (By.XPATH, "//button[contains(., 'Add JDK')]")
     JDK_INSTALLATION = (By.XPATH, "//button[contains(., 'JDK installations')]")
-    JDK_NAME = (By.XPATH,
-                "//*[@id='main-panel']/form/div[1]/section[2]/div[3]/div/div[1]/div/div[1]/div[2]/div/div[1]/div[2]/input")
-    JDK_HOME = (By.XPATH,
-                "//*[@id='main-panel']/form/div[1]/section[2]/div[3]/div/div[1]/div/div[1]/div[2]/div/div[2]/div[2]/input")
 
     def get_section_titles(self):
         section_titles = self.wait10.until(
@@ -64,19 +60,25 @@ class ToolsPage(BasePage):
         return self
 
     def fill_jdk(self, name, java_home):
-        name_element = (self.wait10.until(EC.visibility_of_element_located(self.JDK_NAME)))
-        name_element.clear()
-        name_element.send_keys(name)
-        home_element = self.wait10.until(EC.visibility_of_element_located(self.JDK_HOME))
-        home_element.clear()
-        home_element.send_keys(java_home)
+        name_inputs = self.wait10.until(
+            EC.presence_of_all_elements_located((By.NAME, "_.name"))
+        )
+        name_input = name_inputs[-1]
+        self.driver.execute_script("arguments[0].value = arguments[1];", name_input, name)
+        home_inputs = self.wait10.until(
+            EC.presence_of_all_elements_located((By.XPATH, "//input[contains(@name, 'home')]"))
+        )
+        home_input = home_inputs[-1]
+
+        self.driver.execute_script("arguments[0].value = arguments[1];", home_input, java_home)
 
         return self
 
     def get_jdk_name(self):
         self.open_jdk_block()
-        element = self.wait10.until(EC.presence_of_element_located(self.JDK_NAME))
-        return element.get_attribute("value")
+        self.wait10.until(EC.presence_of_element_located((By.NAME, "_.name")))
+        inputs = self.driver.find_elements(By.NAME, "_.name")
+        return inputs[-1].get_attribute("value")
 
     def click_add_git(self):
         self.driver.find_element(By.XPATH, "//*[@id='main-panel']/form/div[1]/section[3]/div[2]/span/button]").click()
