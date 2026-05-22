@@ -53,7 +53,6 @@ class ToolsPage(BasePage):
         element = self.wait10.until(EC.presence_of_element_located(toggle_locator))
         self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
         self.driver.execute_script("arguments[0].click();", element)
-
         self.wait10.until(EC.visibility_of_element_located(self.ADD_JDK))
 
         return self
