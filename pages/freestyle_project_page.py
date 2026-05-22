@@ -1,10 +1,10 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
-from pages.base_page import BasePage
+from pages.base_project_page import BaseProjectPage
 
 
-class FreestyleProjectPage(BasePage):
+class FreestyleProjectPage(BaseProjectPage):
 
     def get_warning_message(self, random_name):
         self.wait10.until(EC.visibility_of_element_located((By.XPATH, f"//h1[contains(text(), '{random_name}')]")))

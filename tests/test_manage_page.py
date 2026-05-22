@@ -55,7 +55,7 @@ def test_build_queue_visibility(browser):
          .button_add_build_step_click()
          .select_execute_shell_option()
          .set_shell_script("echo $EXECUTOR_NUMBER\npwd\nls -lsa /\nsleep 60")
-         .button_save_click()
+         .click_save()
          .go_home_page()
          .click_schedule_build(job_name))
 

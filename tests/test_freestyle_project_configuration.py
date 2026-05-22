@@ -9,6 +9,9 @@ from pages.home_page import HomePage
 FREESTYLE_PROJECT_NAME = "Freestyle Project"
 SCM_TITLE_EXPECTED = "Source Code Management"
 JOB_NAME = "Test"
+BUILD_OPTIONS = [
+('Execute Windows batch command', 'echo Hello World', '//textarea[@name="command"]'),
+('Execute shell', 'echo "Starting process...; echo "Hostname: $(hostname)"', '//div[contains(@class, "cm-s-default")]')]
 
 def wait_until_clickable(browser: WebDriver, locator: tuple[str, str], timeout=10):
     return WebDriverWait(browser, timeout).until(
@@ -127,17 +130,17 @@ def test_build_steps_field_is_available(browser):
 
 
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
-def test_build_steps_configure_shell_option(browser):
-    command_shell = 'echo "Starting process...; echo "Hostname: $(hostname)"'
+@pytest.mark.parametrize("option", BUILD_OPTIONS)
+def test_build_steps_configure_first_two_options(browser, option):
     project_page = (
     HomePage(browser)
     .click_project_name(JOB_NAME)
-    .click_project_configure()
-
+    .click_project_configure("freestyle_project")
     .button_add_build_step_click()
-    .select_execute_shell_option()
-    .set_shell_script(command_shell)
-    .button_save_click()
+    .select_execute_option(option[0])
+    .set_shell_script(option[1], option[2])
+    .click_save()
     )
 
     assert project_page.get_project_name() == JOB_NAME
+
