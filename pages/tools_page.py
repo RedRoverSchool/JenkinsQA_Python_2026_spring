@@ -5,7 +5,7 @@ from pages.base_page import BasePage
 
 class ToolsPage(BasePage):
     ADD_JDK = (By.XPATH, "//button[contains(., 'Add JDK')]")
-    JDK_INSTALLATION = (By.XPATH, "/html/body/div[2]/div/form/div[1]/section[2]/div[2]/div[1]/button")
+    JDK_INSTALLATION = (By.XPATH, "//button[contains(., 'JDK installations')]")
     JDK_NAME = (By.XPATH,
                 "//*[@id='main-panel']/form/div[1]/section[2]/div[3]/div/div[1]/div/div[1]/div[2]/div/div[1]/div[2]/input")
     JDK_HOME = (By.XPATH,
