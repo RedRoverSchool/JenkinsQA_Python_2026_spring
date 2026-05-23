@@ -34,3 +34,6 @@ class ManagePage(BasePage):
         self.driver.find_element(By.XPATH, "//a[@href='appearance']").click()
 
         return AppearancePage(self.driver)
+
+    def check_appearance_visibility(self):
+        return self.driver.find_element(By.XPATH, "//a[@href='appearance']").is_displayed()

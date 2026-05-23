@@ -26,12 +26,25 @@ class HomePage(BasePage):
 
         return NewItemPage(self.driver)
 
+    def hover_to_manage_gear(self):
+        ActionChains(self.driver).move_to_element(
+            self.wait10.until(
+                EC.visibility_of_element_located((By.ID, "root-action-ManageJenkinsAction"))
+            )
+        ).perform()
+        return self
+
     def click_manage_gear(self):
         self.wait10.until(
             EC.element_to_be_clickable((By.XPATH, "//*[@href = '/manage']"))
         ).click()
 
         return ManagePage(self.driver)
+
+    def get_manage_gear_tooltip_text(self):
+        return self.wait10.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, ".tippy-content>div"))
+        ).text
 
     def get_project_names_list(self):
         project_elements = self.driver.find_elements(By.CLASS_NAME, "jenkins-table__link")

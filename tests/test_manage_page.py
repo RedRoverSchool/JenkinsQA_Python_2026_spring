@@ -22,25 +22,18 @@ def test_verify_icon_is_visible(browser):
     assert wait.until(EC.visibility_of_element_located((By.ID, "root-action-ManageJenkinsAction"))).is_displayed()
 
 
-def test_verify_tooltip_and_clickable(browser):
-    wait = WebDriverWait(browser, 10)
-    actions = ActionChains(browser)
+def test_verify_tooltip_text_and_clickability(browser):
 
-    actions.move_to_element(
-        wait.until(
-            EC.visibility_of_element_located((By.ID, "root-action-ManageJenkinsAction"))
-        )
-    ).perform()
+    home_page = HomePage(browser)
+    home_page.hover_to_manage_gear()
+    gear = browser.find_element(By.ID, "root-action-ManageJenkinsAction")
 
-    element = wait.until(EC.visibility_of_element_located((By.ID, "root-action-ManageJenkinsAction")))
+    assert home_page.get_cursor_type(gear) == "pointer"
+    assert home_page.get_manage_gear_tooltip_text() == "Manage Jenkins"
 
-    assert wait.until(EC.visibility_of_element_located((By.XPATH, "//*[contains(text(),'Manage Jenkins')]")))
+    manage_page = home_page.click_manage_gear()
 
-    cursor = element.value_of_css_property("cursor")
-
-    wait.until(EC.element_to_be_clickable((By.ID, "root-action-ManageJenkinsAction"))).click()
-
-    assert cursor == "pointer"
+    assert manage_page.check_appearance_visibility()
 
 
 def test_build_queue_visibility(browser):
