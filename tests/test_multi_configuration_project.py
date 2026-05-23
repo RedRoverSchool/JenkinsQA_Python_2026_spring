@@ -94,3 +94,38 @@ def test_check_delete_view_on_dashboard(browser):
     )
 
     assert view_name not in view_panel_elements
+
+def test_search_project_from_several_created_project(browser):
+    multiconfig_projects = [
+        "FirstMultiConfig",
+        "SecondMultiConfig",
+        "ThirdMultiConfig",
+        "ForthMultiConfig"
+    ]
+    created_project_list = []
+
+    for project_name in multiconfig_projects:
+        multiconfig_project = (
+            HomePage(browser)
+            .click_new_item()
+            .set_project_name(project_name)
+            .select_multiconfiguration_project_and_ok_click()
+            .click_save()
+            .go_home_page()
+        )
+
+        created_project_name = multiconfig_project.get_created_project_name(project_name)
+        assert created_project_name == project_name
+        created_project_list.append(created_project_name)
+
+    assert len(created_project_list) == len(multiconfig_projects)
+
+    project_list_name = (
+        HomePage(browser)
+        .click_search_icon()
+        .set_created_project_name(multiconfig_projects[1])
+        .click_searched_project_name(multiconfig_projects[1])
+        .get_project_name()
+    )
+
+    assert project_list_name == multiconfig_projects[1]
