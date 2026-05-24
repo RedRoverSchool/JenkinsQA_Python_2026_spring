@@ -36,4 +36,7 @@ class FreestyleConfigPage(BaseConfigPage):
 
         return self
 
+    def get_status_enable_button(self):
+        self.wait10.until(EC.presence_of_element_located((By.ID, "enable-disable-project"))).is_selected()
 
+        return self
