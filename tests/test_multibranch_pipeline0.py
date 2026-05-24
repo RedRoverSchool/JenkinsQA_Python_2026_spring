@@ -54,7 +54,10 @@ def test_redirect_multibranch_pipeline_from_dashboard(browser):
               .set_project_name("test-pipeline")
               .select_multibranch_scroll_and_ok_click()
               .click_save()
+              .go_home_page()
+              .click_project_name(f"{NAME}")
               .get_project_name())
+
     assert result == NAME
 
 
