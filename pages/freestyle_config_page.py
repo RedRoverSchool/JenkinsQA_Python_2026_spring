@@ -36,6 +36,24 @@ class FreestyleConfigPage(BaseConfigPage):
 
         return self
 
+    def enable_delete_workspace_before_build_starts(self):
+        checkbox_label = self.wait5.until(EC.element_to_be_clickable((By.XPATH,"//label[contains(.,'Delete workspace before build starts')]")))
+
+        self.driver.execute_script("arguments[0].scrollIntoView({block:'center'});",checkbox_label)
+        checkbox_label.click()
+
+        return self
+
+    def click_project_save(self):
+        self.driver.find_element(By.NAME, "Submit").click()
+        from pages.freestyle_project_page import FreestyleProjectPage
+        # Импорт внутри метода чтобы избежать ошибки ImportError due to a circular import
+
+        return FreestyleProjectPage(self.driver)
+
+    def is_delete_workspace_before_build_starts_selected(self):
+        return (self.wait5.until(EC.presence_of_element_located((By.NAME, "hudson-plugins-ws_cleanup-PreBuildCleanup"))).
+                is_selected())
     def get_status_enable_button(self):
         self.wait10.until(EC.presence_of_element_located((By.ID, "enable-disable-project"))).is_selected()
 
