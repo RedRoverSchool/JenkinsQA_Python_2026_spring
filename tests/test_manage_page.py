@@ -26,9 +26,8 @@ def test_verify_tooltip_text_and_clickability(browser):
 
     home_page = HomePage(browser)
     home_page.hover_to_manage_gear()
-    gear = browser.find_element(By.ID, "root-action-ManageJenkinsAction")
 
-    assert home_page.get_cursor_type(gear) == "pointer"
+    assert home_page.get_cursor_type() == "pointer"
     assert home_page.get_manage_gear_tooltip_text() == "Manage Jenkins"
 
     manage_page = home_page.click_manage_gear()
