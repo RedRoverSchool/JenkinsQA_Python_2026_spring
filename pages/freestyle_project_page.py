@@ -17,3 +17,8 @@ class FreestyleProjectPage(BaseProjectPage):
         enable_button = self.driver.find_element(By.NAME, "Submit")
 
         return enable_button
+
+    def click_enable_button(self):
+        self.wait10.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[name='Submit'][value='Enable']"))).click()
+
+        return self
