@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from pages.base_page import BasePage
 from pages.folder_page import FolderPage
 from pages.freestyle_config_page import FreestyleConfigPage
+from pages.freestyle_project_page import FreestyleProjectPage
 from pages.manage_page import ManagePage
 from pages.multibranch_pipeline_page import MultiBranchPipelinePage
 from pages.multiconfiguration_project_page import MulticonfigurationProjectPage
@@ -86,17 +87,29 @@ class HomePage(BasePage):
         return MultiBranchPipelinePage(self.driver)
 
     def click_project_name(self, job_name: str, job_type="project"):
-        self.driver.find_element(By.XPATH, f"//*[@id='job_{job_name}']/td[3]/a").click()
+        element = self.driver.find_element(By.XPATH, f"//*[@id='job_{job_name}']/td[3]/a")
+        ActionChains(self.driver) \
+            .move_to_element(element) \
+            .click() \
+            .perform()
         if job_type == "project":
             return BaseProjectPage(self.driver)
         elif job_type == "folder":
             return FolderPage(self.driver)
+        elif job_type == "freestyle_project":
+            return FreestyleProjectPage(self.driver)
         return None
 
     def get_project_name(self):
       
         return self.wait5.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, ".jenkins-table__link >span:first-child"))
+        ).text
+
+    def get_created_project_name(self,job_name: str):
+
+        return self.wait5.until(
+            EC.visibility_of_element_located((By.XPATH, f"(//a[@href='job/{job_name}/'])[1]"))
         ).text
 
     def open_project_dropdown(self, job_name):
@@ -148,7 +161,6 @@ class HomePage(BasePage):
     def click_searched_project_name(self, name):
         self.wait10.until(
             EC.element_to_be_clickable((By.XPATH, f"//a[contains(@href, '/job/{name}/')]"))).click()
-
         return MulticonfigurationProjectPage(self.driver)
 
     def open_project_dropdown(self, job_name):

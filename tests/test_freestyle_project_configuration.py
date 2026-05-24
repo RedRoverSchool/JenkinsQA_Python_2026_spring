@@ -9,6 +9,8 @@ from pages.home_page import HomePage
 FREESTYLE_PROJECT_NAME = "Freestyle Project"
 SCM_TITLE_EXPECTED = "Source Code Management"
 JOB_NAME = "Test"
+DESCRIPTION = "Test description"
+UPDATED_DESCRIPTION = "New test description"
 BUILD_OPTIONS = [
 ('Execute Windows batch command', 'echo Hello World', '//textarea[@name="command"]'),
 ('Execute shell', 'echo "Starting process...; echo "Hostname: $(hostname)"', '//div[contains(@class, "cm-s-default")]')]
@@ -28,49 +30,28 @@ def test_create_freestyle_project(browser):
 
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
 def test_disable_active_project(browser):
-    wait = WebDriverWait(browser, 10)
-
-    wait.until(EC.visibility_of_element_located((By.ID, "main-panel")))
-    wait.until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, "a.app-jenkins-logo"))
-    ).click()
-
-    wait.until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, "button.jenkins-menu-dropdown-chevron"))
-    ).click()
-    wait.until(
-        EC.presence_of_element_located((By.XPATH, "//a[contains(@href, 'configure')]"))
+    project_page = (
+            HomePage(browser)
+            .open_project_dropdown(JOB_NAME)
+            .click_configure_link()
+            .click_enable_disable_button()
+            .click_save(job_type="freestyle_project")
     )
-    browser.find_element(By.XPATH, "//a[contains(@href, 'configure')]").click()
 
-    browser.find_element(By.CSS_SELECTOR, 'label[for="enable-disable-project"]').click()
-    browser.find_element(By.NAME, "Submit").click()
+    assert "This project is currently disabled" in project_page.get_warning_message(JOB_NAME)
+    assert project_page.get_status_button().is_displayed()
 
-    assert browser.find_element(
-        By.XPATH, "//*[contains(text(), 'This project is currently disabled')]"
-    )
 
 @pytest.mark.dependency(depends=["test_disable_active_project"])
 def test_enable_disabled_project_using_enable_button(browser):
-    wait = WebDriverWait(browser, 10)
-
-    wait.until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, "button.jenkins-menu-dropdown-chevron"))
-    ).click()
-    wait.until(
-        EC.element_to_be_clickable((By.XPATH, "//a[contains(@href, 'configure')]"))
-    ).click()
-    browser.find_element(By.XPATH, "//a[@href='/job/Test/']").click()
-
-    wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[name='Submit'][value='Enable']"))).click()
-    wait.until(
-        EC.invisibility_of_element_located(
-            (By.XPATH, "//*[contains(text(), 'This project is currently disabled')]")
-        )
+    project_page = (
+        HomePage(browser)
+        .click_project_name(JOB_NAME, "freestyle_project")
+        .click_enable_button()
+        .click_project_configure(job_type="freestyle_project")
     )
-    browser.find_element(By.LINK_TEXT, "Configure").click()
 
-    assert browser.find_element (By.ID, "enable-disable-project").is_selected()
+    assert project_page.get_status_enable_button()
 
 
 def test_access_scm_title(browser):
@@ -87,33 +68,28 @@ def test_access_scm_title(browser):
 
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
 def test_add_description_to_existing_freestyle_project(browser):
-    wait = WebDriverWait(browser, 10)
-
-    browser.find_element(By.ID, "description-link").click()
-    browser.find_element(By.NAME, "description").send_keys("Test description")
-    browser.find_element(By.NAME, "Submit").click()
-
-    assert wait.until(
-    EC.visibility_of_element_located(
-        (By.XPATH, "//*[@id='description-content' and contains(., 'Test description')]")
+    project_description = (
+            HomePage(browser)
+            .click_project_name(JOB_NAME, "freestyle_project")
+            .click_add_description_link()
+            .add_description(DESCRIPTION)
+            .get_description()
     )
-)
+
+    assert project_description == DESCRIPTION
 
 
 @pytest.mark.dependency(depends=["test_add_description_to_existing_freestyle_project"])
 def test_edit_description_of_freestyle_project(browser):
-    wait = WebDriverWait(browser, 10)
-
-    browser.find_element(By.ID, "description-link").click()
-    browser.find_element(By.NAME, "description").clear()
-    browser.find_element(By.NAME, "description").send_keys("Updated description")
-    browser.find_element(By.NAME, "Submit").click()
-
-    assert wait.until(
-        EC.visibility_of_element_located(
-            (By.XPATH, "//*[@id='description-content' and .='Updated description']")
-        )
+    project_description = (
+        HomePage(browser)
+        .click_project_name(JOB_NAME, "freestyle_project")
+        .click_add_description_link()
+        .edit_description(UPDATED_DESCRIPTION)
+        .get_description()
     )
+
+    assert project_description == UPDATED_DESCRIPTION
 
 
 def test_build_steps_field_is_available(browser):

@@ -16,7 +16,7 @@ class BaseProjectPage(BasePage):
         ).text
 
     def click_project_configure(self, job_type="project"):
-        self.driver.find_element(By.XPATH, "//a[contains(., 'Configure')]").click()
+        self.wait10.until(EC.element_to_be_clickable((By.XPATH, "//a[normalize-space()='Configure']"))).click()
         if job_type == "project":
             return pages.base_config_page.BaseConfigPage(self.driver)
         elif job_type == "folder":
@@ -43,6 +43,13 @@ class BaseProjectPage(BasePage):
 
     def add_description(self, new_description):
         self.wait10.until(EC.visibility_of_element_located((By.NAME, "description"))).send_keys(new_description)
+        self.wait10.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
+
+        return self
+
+    def edit_description(self, updated_description):
+        self.wait10.until(EC.visibility_of_element_located((By.NAME, "description"))).clear()
+        self.wait10.until(EC.visibility_of_element_located((By.NAME, "description"))).send_keys(updated_description)
         self.wait10.until(EC.element_to_be_clickable((By.NAME, "Submit"))).click()
 
         return self

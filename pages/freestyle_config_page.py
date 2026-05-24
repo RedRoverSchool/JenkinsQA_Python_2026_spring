@@ -54,4 +54,7 @@ class FreestyleConfigPage(BaseConfigPage):
     def is_delete_workspace_before_build_starts_selected(self):
         return (self.wait5.until(EC.presence_of_element_located((By.NAME, "hudson-plugins-ws_cleanup-PreBuildCleanup"))).
                 is_selected())
+    def get_status_enable_button(self):
+        self.wait10.until(EC.presence_of_element_located((By.ID, "enable-disable-project"))).is_selected()
 
+        return self
