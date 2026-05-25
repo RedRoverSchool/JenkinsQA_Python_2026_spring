@@ -51,7 +51,3 @@ def test_delete_multibranch_pipeline_from_dashboard(browser):
 
 
 
-
-
-
-
