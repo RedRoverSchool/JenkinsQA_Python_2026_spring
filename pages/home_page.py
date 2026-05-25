@@ -212,3 +212,4 @@ class HomePage(BasePage):
        self.wait10.until(EC.element_to_be_clickable((By.XPATH, "//button[@data-id='ok']"))).click()
 
        return self
+
