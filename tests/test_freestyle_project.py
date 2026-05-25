@@ -11,15 +11,17 @@ DESCRIPTION = "Description Freestyle Project"
 
 @pytest.mark.dependency()
 def test_create_freestyle_project(browser):
-    browser.find_element(By.XPATH, "//a[@href='/view/all/newJob']").click()
-    browser.find_element(By.ID, "name").send_keys(FREESTYLE_PROJECT_NAME)
-    browser.find_element(By.CLASS_NAME, "hudson_model_FreeStyleProject").click()
-    browser.find_element(By.ID, "ok-button").click()
-    browser.find_element(By.XPATH, "//textarea[@name='description']").send_keys(DESCRIPTION)
-    browser.find_element(By.NAME, "Submit").click()
-    assert browser.find_element(By.ID, "description-content").text == DESCRIPTION
+    project_page=(
+        HomePage(browser)
+        .click_new_item()
+        .set_project_name(FREESTYLE_PROJECT_NAME)
+        .select_freestyle_and_ok_click()
+        .set_description(DESCRIPTION)
+        .click_save()
+     )
 
-    assert browser.find_element(By.CSS_SELECTOR, ".job-index-headline.page-headline").text == FREESTYLE_PROJECT_NAME
+    assert project_page.get_description() == DESCRIPTION
+    assert project_page.get_project_name() == FREESTYLE_PROJECT_NAME
 
 
 @pytest.mark.dependency(depends=["test_create_freestyle_project"])
