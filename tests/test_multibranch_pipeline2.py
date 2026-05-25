@@ -22,8 +22,6 @@ def test_redirect_multibranch_pipeline_from_dashboard(browser):
 
     assert result == NAME
 
-
-
 def test_delete_multibranch_pipeline_from_sidepanel(browser):
     test_create_multibranch_pipeline(browser)
     ((BasePage(browser))
@@ -35,9 +33,6 @@ def test_delete_multibranch_pipeline_from_sidepanel(browser):
                         .click_confirm_delete_button())
 
     assert HomePage(browser).is_project_disappeared(NAME)
-
-
-
 
 def test_delete_multibranch_pipeline_from_dashboard(browser):
     test_create_multibranch_pipeline(browser)
@@ -51,16 +46,3 @@ def test_delete_multibranch_pipeline_from_dashboard(browser):
                             .click_confirm_delete_button_homepage())
 
     assert HomePage(browser).is_project_disappeared(NAME)
-
-
-
-
-
-
-
-
-
-
-
-
-
