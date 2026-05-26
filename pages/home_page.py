@@ -188,3 +188,28 @@ class HomePage(BasePage):
             return True
         except TimeoutException:
             return False
+
+    def is_project_disappeared(self, project_name):
+        try:
+            WebDriverWait(self.driver, 5).until(
+                EC.invisibility_of_element_located((By.XPATH, f"//a[span[text()='{project_name}']]")
+                                                   ))
+            return True
+        except TimeoutException:
+            return False
+
+    def click_delete_project_in_dropdown_menu(self, project_name: str):
+        self.wait10.until(
+            EC.visibility_of_element_located((By.XPATH, f"//button[contains(@href, '/job/{project_name}/doDelete')]")
+                                             )).click()
+        return self
+
+    def click_cancel_delete_button_homepage(self):
+        self.wait10.until(EC.element_to_be_clickable((By.XPATH, "//button[@data-id='cancel']"))).click()
+
+        return self
+
+    def click_confirm_delete_button_homepage(self):
+        self.wait10.until(EC.element_to_be_clickable((By.XPATH, "//button[@data-id='ok']"))).click()
+
+        return self
