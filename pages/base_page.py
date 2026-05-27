@@ -55,3 +55,6 @@ class BasePage:
     def click_about_jenkins(self):
         self.wait10.until(EC.element_to_be_clickable((By.XPATH, f"//a[normalize-space()='About Jenkins']"))).click()
         return self
+
+    def get_cursor_type(self):
+        return self.driver.find_element(By.ID, "root-action-ManageJenkinsAction").value_of_css_property("cursor")
