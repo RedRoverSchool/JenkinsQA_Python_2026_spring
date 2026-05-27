@@ -31,7 +31,7 @@ def test_folder_apply_button(browser):
     assert apply_result == "Saved"
     assert "configure" in browser.current_url, "Apply применяется, редиректа нет"
 
-@pytest.mark.dependency(depends=['test_create_folder'])
+@pytest.mark.dependency(depends=['test_folder_apply_button'])
 def test_folder_save_button(browser):
     save_result = (HomePage(browser)
         .click_project_name(FOLDER_NAME, 'folder')
@@ -41,3 +41,4 @@ def test_folder_save_button(browser):
     )
 
     assert "configure" not in browser.current_url, "Save button redirected to the main page"
+

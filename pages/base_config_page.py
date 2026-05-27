@@ -44,3 +44,5 @@ class BaseConfigPage(BasePage):
 
     def get_notification_saved(self):
         return self.wait10.until(EC.visibility_of_element_located((By.XPATH, "//span[text()='Saved']"))).text
+
+
