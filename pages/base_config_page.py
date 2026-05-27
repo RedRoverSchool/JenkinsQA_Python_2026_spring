@@ -37,3 +37,10 @@ class BaseConfigPage(BasePage):
 
     def get_description_text(self):
         return self.driver.find_element(By.XPATH, "//textarea[@name='description']").get_attribute("value")
+
+    def click_apply(self):
+        self.driver.find_element(By.XPATH, "//button[contains(text(), 'Apply')]").click()
+        return self
+
+    def get_notification_saved(self):
+        return self.wait10.until(EC.visibility_of_element_located((By.XPATH, "//span[text()='Saved']"))).text
