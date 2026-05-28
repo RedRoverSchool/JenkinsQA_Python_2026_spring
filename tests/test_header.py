@@ -1,6 +1,8 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 
+from pages.home_page import HomePage
+
 
 
 def test_header_quick_change_theme(browser):
@@ -27,3 +29,11 @@ def test_header_change_theme_through_appearance_page(browser):
     theme = browser.find_element(By.TAG_NAME, "html").get_attribute("data-theme")
 
     assert theme.lower() == "dark"
+
+
+def  test_navigate_dashboard_from_admin_page_clicking_logo(browser):
+    result = (HomePage(browser)
+              .click_profile_icon()
+              .go_home_page())
+
+    assert result.get_title_name() == "Welcome to Jenkins!"
