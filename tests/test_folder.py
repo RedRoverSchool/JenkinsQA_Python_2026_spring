@@ -169,3 +169,26 @@ def test_add_description_after_creation(browser):
     )
 
     assert description_content == FOLDER_DESCRIPTION
+
+@pytest.mark.dependency(depends=['test_create_folder'])
+def test_folder_apply_button(browser):
+    apply_result = (
+        HomePage(browser)
+        .click_project_name(FOLDER_NAME, 'folder')
+        .click_project_configure('folder')
+        .set_display_name("Display_name")
+        .click_apply()
+        .get_notification_saved()
+    )
+
+    assert apply_result == "Saved"
+    assert "configure" in browser.current_url, "Apply применяется, редиректа нет"
+
+@pytest.mark.dependency(depends=['test_folder_apply_button'])
+def test_folder_save_button(browser):
+    save_result = (HomePage(browser)
+        .click_project_name(FOLDER_NAME, 'folder')
+        .click_project_configure('folder')
+        .set_display_name("Display_name")
+        .click_save('folder')
+    )
