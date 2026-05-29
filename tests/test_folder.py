@@ -182,7 +182,7 @@ def test_folder_apply_button(browser):
     )
 
     assert apply_result == "Saved"
-    assert "configure" in browser.current_url, "Apply применяется, редиректа нет"
+    assert "configure" in browser.current_url, "User was redirected from the configuration page after clicking Apply"
 
 @pytest.mark.dependency(depends=['test_folder_apply_button'])
 def test_folder_save_button(browser):
@@ -192,3 +192,5 @@ def test_folder_save_button(browser):
         .set_display_name("Display_name")
         .click_save('folder')
     )
+
+    assert "configure" not in browser.current_url, "Error: Save button failed to redirect the user to the Folder's main page!"
