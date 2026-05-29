@@ -1,3 +1,6 @@
+import time
+from time import sleep
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
@@ -16,7 +19,7 @@ from pages.rename_project_page import RenameProjectPage
 from pages.pipeline_project_page import PipelineProjectPage
 from pages.base_project_page import BaseProjectPage
 from pages.new_view_page import NewViewPage
-
+from pages.user_page import UserPage
 
 
 class HomePage(BasePage):
@@ -226,3 +229,12 @@ class HomePage(BasePage):
         self.wait10.until(EC.element_to_be_clickable((By.XPATH, "//button[@data-id='ok']"))).click()
 
         return self
+
+    def click_profile_icon(self):
+        self.wait10.until(EC.element_to_be_clickable((By.XPATH, '//*[ @ id = "root-action-UserAction"]'))).click()
+
+        return UserPage(self.driver)
+
+    def get_title_name(self):
+
+       return self.driver.find_element(By.XPATH, '//*[@id="main-panel"]/div[2]/div/h1').text
