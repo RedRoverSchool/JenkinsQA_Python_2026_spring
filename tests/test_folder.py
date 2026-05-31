@@ -194,3 +194,4 @@ def test_folder_save_button(browser):
     )
 
     assert "configure" not in browser.current_url, "Error: Save button failed to redirect the user to the Folder's main page!"
+
