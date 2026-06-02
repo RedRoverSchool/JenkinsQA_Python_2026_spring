@@ -17,7 +17,7 @@ def test_create_pipeline_project(browser):
         .select_pipeline_and_ok_click()
         .click_save()
         .go_home_page()
-        .get_project_name2(PIPELINE_NAME)
+        .get_created_project_name(PIPELINE_NAME)
     )
     assert created_pipeline_name == PIPELINE_NAME
 
