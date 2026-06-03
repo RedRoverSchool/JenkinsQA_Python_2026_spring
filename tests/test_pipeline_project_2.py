@@ -7,7 +7,7 @@ from pages.home_page import HomePage
 
 PIPELINE_NAME = "test_1"
 
-@pytest.mark.skip()
+
 @pytest.mark.dependency()
 def test_create_pipeline_project(browser):
     created_pipeline_name = (
@@ -17,11 +17,11 @@ def test_create_pipeline_project(browser):
         .select_pipeline_and_ok_click()
         .click_save()
         .go_home_page()
-        .get_project_name(PIPELINE_NAME)
+        .get_created_project_name(PIPELINE_NAME)
     )
     assert created_pipeline_name == PIPELINE_NAME
 
-@pytest.mark.skip()
+
 @pytest.mark.dependency(depends=["test_create_pipeline_project"])
 def test_add_description_pipeline(browser):
     text_description = "Description here"
@@ -29,14 +29,12 @@ def test_add_description_pipeline(browser):
     added_description = (
         HomePage(browser)
         .click_project_name(PIPELINE_NAME)
-        .click_project_configure()
-        .set_description(text_description)
-        .button_save_click()
+        .click_add_description_link()
+        .add_description(text_description)
         .get_description()
     )
     assert added_description == text_description
 
-@pytest.mark.skip()
 @pytest.mark.dependency(depends=["test_create_pipeline_project"])
 def test_configure_display_name_by_advanced(browser):
     advanced_name = "Display Name"
