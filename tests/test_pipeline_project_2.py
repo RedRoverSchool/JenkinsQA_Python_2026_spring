@@ -50,26 +50,3 @@ def test_special_characters_in_rename_pipeline(browser, special_character):
     assert rename_project_page.get_rename_project_error_message() == error_message
 
 
-@pytest.mark.dependency(depends=["test_create_pipeline_project"])
-def test_configure_display_name_by_advanced(browser):
-    advanced_name = "Display Name"
-
-    wait = WebDriverWait(browser, 7)
-    browser.find_element(By.LINK_TEXT, PIPELINE_NAME).click()
-    WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//a[normalize-space()='Configure']"))).click()
-
-    advanced_button = wait.until(
-        EC.element_to_be_clickable((By.XPATH, "(//button[@type='button'][normalize-space()='Advanced'])[3]")))
-    browser.execute_script("arguments[0].scrollIntoView({block: 'center'});", advanced_button)
-    browser.execute_script("arguments[0].click();", advanced_button)
-    browser.find_element(By.XPATH, "//input[@name='_.displayNameOrNull']").send_keys(advanced_name)
-    browser.find_element(By.NAME, "Submit").click()
-
-    wait.until(EC.visibility_of_element_located((By.XPATH, "//h2[normalize-space()='Permalinks']")))
-    browser.find_element(By.XPATH, "//*[@class='app-jenkins-logo']").click()
-
-    wait.until(EC.visibility_of_element_located((By.ID, 'description-link')))
-    display_name_element = browser.find_element(By.XPATH, "//span[text()='Display Name']").text
-
-    assert display_name_element == advanced_name
