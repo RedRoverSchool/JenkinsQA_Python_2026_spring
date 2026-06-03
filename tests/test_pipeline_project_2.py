@@ -48,5 +48,3 @@ def test_special_characters_in_rename_pipeline(browser, special_character):
 
     error_message = f"‘{special_character}’ is an unsafe character"
     assert rename_project_page.get_rename_project_error_message() == error_message
-
-
