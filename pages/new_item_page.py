@@ -6,6 +6,7 @@ from pages.freestyle_config_page import FreestyleConfigPage
 from pages.folder_config_page import FolderConfigPage
 from pages.multibranch_pipeline_config_page import MultiBranchPipelineConfigPage
 from pages.multiconfiguration_project_config_page import MulticonfigurationProjectConfigPage
+from pages.org_folder_config_page import ConfigOrgFolderPage
 from pages.pipeline_config_page import PipelineConfigPage
 
 class NewItemPage(BasePage):
@@ -77,4 +78,11 @@ class NewItemPage(BasePage):
         self.wait10.until(EC.element_to_be_clickable((By.XPATH, "//*[@id='ok-button']"))).click()
 
         return MultiBranchPipelineConfigPage(self.driver)
+
+    def set_org_folder_and_ok_click(self, name):
+        self.driver.find_element(By.ID, "name").send_keys(name)
+        self.driver.find_element(By.XPATH, "//*[@class='label'][.='Organization Folder']").click()
+        self.driver.find_element(By.ID, "ok-button").click()
+
+        return ConfigOrgFolderPage(self.driver)
 
