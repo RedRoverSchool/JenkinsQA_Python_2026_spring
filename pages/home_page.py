@@ -158,7 +158,7 @@ class HomePage(BasePage):
         return NewViewPage(self.driver)
 
     def get_view_names_list(self):
-        tabs = self.driver.find_elements(By.XPATH, "//div[@class='tab']/a[not(@tooltip='New View')] ")
+        tabs = self.driver.find_elements(By.CSS_SELECTOR, ".tab a")
         tab_names = [element.text for element in tabs]
 
         return tab_names
