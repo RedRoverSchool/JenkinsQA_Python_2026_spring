@@ -3,22 +3,24 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from pages.home_page import HomePage
+
+DISPLAY_NAME = "JenkinsQA_Python_2026"
+DESCRIPTION = "Very good Python automation course"
 
 @pytest.mark.dependency()
 def test_create_org_folder(browser):
-    browser.find_element(By.XPATH, "//*[contains(concat(' ', @href, ' '), ' newJob ')]" ).click()
-    browser.find_element(By.ID, "name").send_keys("Red Rover")
-    browser.find_element(By.XPATH, "//*[@class='label'][.='Organization Folder']").click()
-    browser.find_element(By.ID, "ok-button").click()
-    browser.find_element(By.NAME, "_.displayNameOrNull").send_keys("JenkinsQA_Python_2026")
-    browser.find_element(By.NAME, "_.description").send_keys("Very good Python automation course")
-    browser.find_element(By.NAME, "Submit").click()
+    project_page = (
+        HomePage(browser)
+        .click_new_item()
+        .set_org_folder_and_ok_click("Red Rover")
+        .set_display_name(DISPLAY_NAME)
+        .set_description_name(DESCRIPTION)
+        .click_save()
+    )
 
-    display_name = browser.find_element(By.CSS_SELECTOR, "h1.job-index-headline").text.strip()
-    description = browser.find_element(By.ID, "view-message").text.strip()
-
-    assert display_name == "JenkinsQA_Python_2026"
-    assert description == "Very good Python automation course"
+    assert project_page.get_display_name() == DISPLAY_NAME
+    assert project_page.get_description() == DESCRIPTION
 
 
 @pytest.mark.dependency(depends=["test_create_org_folder"])
