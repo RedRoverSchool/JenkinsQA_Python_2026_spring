@@ -2,7 +2,6 @@ import pytest
 
 from pages.home_page import HomePage
 
-@pytest.mark.skip
 def test_create_new_view(browser):
     new_view_name = "New_view"
 
