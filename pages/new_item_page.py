@@ -28,7 +28,7 @@ class NewItemPage(BasePage):
         return FolderConfigPage(self.driver)
 
     def select_pipeline_and_ok_click(self):
-        self.wait10.until(EC.element_to_be_clickable((By.XPATH, "((//ul[@class='j-item-options'])[1]//li)[1]"))).click()
+        self.driver.find_element(By.CLASS_NAME, "org_jenkinsci_plugins_workflow_job_WorkflowJob").click()
         self.driver.find_element(By.ID, "ok-button").click()
         self.wait5.until(EC.visibility_of_element_located((By.XPATH, "//label[text() = 'Pipeline speed/durability override']")))
 

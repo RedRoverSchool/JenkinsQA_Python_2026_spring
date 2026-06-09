@@ -2,7 +2,6 @@ import pytest
 
 from pages.home_page import HomePage
 
-@pytest.mark.skip
 def test_create_new_view(browser):
     new_view_name = "New_view"
 
@@ -18,7 +17,7 @@ def test_create_new_view(browser):
         .check_my_view_radio_btn()
         .click_create_btn()
         .go_home_page()
-        .get_view_names_list()
+        .get_view_tab_names()
     )
 
     assert new_view_name in view_names_list
