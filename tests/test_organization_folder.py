@@ -2,7 +2,6 @@ import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from pages.home_page import HomePage
 
 @pytest.mark.parametrize("display_name, description", [
