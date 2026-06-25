@@ -2,25 +2,27 @@ import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from pages.home_page import HomePage
 
-DISPLAY_NAME = "JenkinsQA_Python_2026"
-DESCRIPTION = "Very good Python automation course"
+@pytest.mark.parametrize("display_name, description", [
+    ("JenkinsQA_Python_2026", "Very good Python automation course"),
+    ("JenkinsQA_Java_2026", "Very good Java automation course"),
+    ("JenkinsQA_JavaScript_2026", "Very good Javascript automation course")
+])
 
 @pytest.mark.dependency()
-def test_create_org_folder(browser):
+def test_create_org_folder(browser, display_name, description):
     project_page = (
         HomePage(browser)
         .click_new_item()
         .set_org_folder_and_ok_click("Red Rover")
-        .set_display_name(DISPLAY_NAME)
-        .set_description_name(DESCRIPTION)
+        .set_display_name(display_name)
+        .set_description_name(description)
         .click_save()
     )
 
-    assert project_page.get_display_name() == DISPLAY_NAME
-    assert project_page.get_description() == DESCRIPTION
+    assert project_page.get_display_name() == display_name
+    assert project_page.get_description() == description
 
 
 @pytest.mark.dependency(depends=["test_create_org_folder"])
