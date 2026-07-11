@@ -7,7 +7,7 @@ from common.order_utils import reorder_items_by_dependency
 from common.project_utils import get_browser, get_options, get_url
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
 def browser(request):
     get_browser()
 
