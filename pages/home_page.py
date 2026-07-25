@@ -21,7 +21,6 @@ from pages.base_project_page import BaseProjectPage
 from pages.new_view_page import NewViewPage
 from pages.user_page import UserPage
 
-
 class HomePage(BasePage):
     def click_new_item(self):
         self.wait10.until(
@@ -117,7 +116,6 @@ class HomePage(BasePage):
         return None
 
     def get_project_name(self):
-      
         return self.wait5.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, ".jenkins-table__link >span:first-child"))
         ).text
@@ -132,7 +130,6 @@ class HomePage(BasePage):
         self.wait10.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, f'[href="job/{job_name}/"] .jenkins-menu-dropdown-chevron'))
         ).click()
-
         return self
 
     def click_project_rename(self, job_name):
@@ -152,8 +149,29 @@ class HomePage(BasePage):
 
         return NewItemPage(self.driver)
 
+    def find_element_dropdown_menu_from_profile_icon(self):
+        return self.driver.find_elements(By.ID, "account-theme-picker")
+
+    def dropdown_menu_appearance_click(self):
+        xpath_appearance = "//a[contains(normalize-space(), 'Appearance')]"
+        user_icon = self.wait10.until(
+            EC.visibility_of_element_located((By.ID, "root-action-UserAction"))
+        )
+
+        for _ in range(3):
+            ActionChains(self.driver).move_to_element(user_icon).perform()
+            try:
+                self.wait10.until(
+                    EC.element_to_be_clickable((By.XPATH, xpath_appearance))
+                ).click()
+                return self
+            except StaleElementReferenceException:
+                pass
+
+        return self
+
     def click_new_view_link(self):
-        self.wait10.until(EC.visibility_of_element_located((By.CSS_SELECTOR,"a[href = '/newView']"))).click()
+        self.wait10.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "a[href='/newView']"))).click()
 
         return NewViewPage(self.driver)
 
@@ -179,12 +197,6 @@ class HomePage(BasePage):
             EC.element_to_be_clickable((By.XPATH, f"//a[contains(@href, '/job/{name}/')]"))).click()
         return MulticonfigurationProjectPage(self.driver)
 
-    def open_project_dropdown(self, job_name):
-        self.wait10.until(
-            EC.visibility_of_element_located((By.CSS_SELECTOR, f'[href="job/{job_name}/"] .jenkins-menu-dropdown-chevron'))
-        ).click()
-        return self
-
     def click_add_new_view_tab(self):
         self.wait10.until(
             EC.element_to_be_clickable((By.XPATH, "//a[@href='/newView']"))
@@ -199,7 +211,7 @@ class HomePage(BasePage):
 
     def is_project_exist(self, project_name):
         try:
-            WebDriverWait(self.driver,5).until(
+            WebDriverWait(self.driver, 5).until(
                 EC.visibility_of_element_located((By.XPATH, f"//a[span[text()='{project_name}']]")))
             return True
         except TimeoutException:
